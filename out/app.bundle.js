@@ -1443,27 +1443,7 @@
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-var Index = function () {
-  function Index() {
-    console.log("My name is");
-  }
-
-  Index.getColor = function () {
-    return 'red';
-  };
-
-  return Index;
-}();
-
-chrome.browserAction.onClicked.addListener(function (tab) {
-  console.log('Turning 1' + tab.url + ' red!');
-  chrome.tabs.executeScript({
-    code: "document.body.style.backgroundColor=\"" + Index.getColor() + "\""
-  });
-});
-module.exports = {
-  Index: Index
-};
+throw new Error("Module build failed (from ./node_modules/ts-loader/index.js):\nError: ENOENT: no such file or directory, open '/Users/himanshu/Desktop/projects/testing/src/index.ts'");
 
 /***/ })
 

@@ -4,11 +4,12 @@ module.exports = {
     mode: "development", // The plugin is activated only if mode is set to development
     watch: true,
     entry: {
-        'content-script': path.resolve(__dirname, '../src')
+        'background-script': path.resolve(__dirname, '../src/background.ts'),
+        'content-script': path.resolve(__dirname, '../src/content.ts')
     },
     output: {
         path: path.resolve(__dirname, '../out'),
-        filename: 'app.bundle.js'
+        filename: '[name].js'
     },
     resolve: {
         extensions: ['.ts']
