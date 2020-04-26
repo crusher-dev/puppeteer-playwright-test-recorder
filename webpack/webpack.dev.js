@@ -1,18 +1,43 @@
 var path = require('path');
+const webpack = require('webpack');
 const ExtensionReloader  = require('webpack-extension-reloader');
+const customPath = path.join(__dirname, './customPublicPath');
+const host = 'localhost';
+const port = 3000;
 module.exports = {
     mode: "development", // The plugin is activated only if mode is set to development
+    node: {
+        fs: "empty"
+    },
     watch: true,
     entry: {
-        'background-script': path.resolve(__dirname, '../src/background.ts'),
-        'content-script': path.resolve(__dirname, '../src/content.ts')
+        'background': [customPath, path.resolve(__dirname, '../src/background.ts')],
+        'inject': [customPath, path.resolve(__dirname, '../src/inject.ts')]
     },
+    devMiddleware: {
+        publicPath: `http://${host}:${port}/js`,
+        stats: {
+            colors: true
+        },
+        noInfo: true,
+        headers: { 'Access-Control-Allow-Origin': '*' }
+    },
+    plugins: [
+        new webpack.DefinePlugin({
+            __HOST__: `'${host}'`,
+            __PORT__: port,
+            'process.env': {
+                NODE_ENV: JSON.stringify('development')
+            }
+        })
+    ],
     output: {
-        path: path.resolve(__dirname, '../out'),
-        filename: '[name].js'
+        filename: '[name].js',
+        path: path.resolve(__dirname, '../dev/js/'),
     },
     resolve: {
-        extensions: ['.ts']
+        extensions: ['.ts', '.js', '.jsx']
+        // modules: ["node_modules"]
     },
     module: {
         rules: [{
@@ -23,14 +48,5 @@ module.exports = {
         },
             { test: /\.tsx?$/, loader: "ts-loader" }],
     },
-    devtool: "source-map",
-    plugins: [
-        new ExtensionReloader({
-            port: 9090, // Which port use to create the server
-            reloadPage: true, // Force the reload of the page also
-            entries: { // The entries used for the content/background scripts or extension pages
-                contentScript: 'content-script',
-            }
-        }),
-    ]
+    devtool: 'eval-cheap-module-source-map',
 }
