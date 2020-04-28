@@ -1,5 +1,7 @@
 import {Chrome} from "./utils/types";
 import {loadScript} from "./utils/helpers";
+import * as Messages from "./scripts/background/messages/index";
+import {EVENT_CAPTURED} from "./constants";
 
 Chrome.browserAction.onClicked.addListener(function(tab:any) {
     console.log(`Running config on current tab ${tab.url}`);
@@ -8,4 +10,7 @@ Chrome.browserAction.onClicked.addListener(function(tab:any) {
     Chrome.browserAction.setBadgeText({text: 'ON'});
     // // @ts-ignore
     Chrome.browserAction.setBadgeBackgroundColor({color: '#4688F1'});
+
+    Messages.init();
 });
+

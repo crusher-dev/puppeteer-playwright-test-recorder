@@ -1,4 +1,4 @@
-.overlay{
+#overlay{
     width: 100%; height: 100%; position: fixed; top:0; left: 0; z-index: 100000; background: rgba(27, 27, 29, 0.94);
     display: flex;
     justify-content: center;
@@ -30,7 +30,7 @@
     padding: 0 20px;
 }
 
-.overlay-wizard-button{
+#overlay-wizard-button{
     width: 81px;
     height: 33px;
 
@@ -94,4 +94,15 @@
 .overlay p{
     font-size: 18px;
     line-height: 2.76;
+}
+#add_actions_overlay{
+    border-radius: 55px;
+    border-width: 2px;
+    background-color: red;
+    color: white;
+    padding: 6px 10px;
+    font-size: 16px;
+    position: absolute;
+    transform: translate(-50%, -50%);
+    z-index: 100001;
 }

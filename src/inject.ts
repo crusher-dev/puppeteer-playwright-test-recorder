@@ -1,6 +1,7 @@
 import {loadContentInBody} from "./utils/dom";
 import {getHTMLContentOfTemplate} from "./utils/helpers";
 import {Chrome} from "./utils/types";
+import {registerOverlayEvents} from "./scripts/inject/overlayActions";
 
 function initContentScript() {
     // @ts-ignore
@@ -15,6 +16,7 @@ function initContentScript() {
         loadContentInBody(res +
             `<link rel='stylesheet' href='${Chrome.runtime.getURL('styles/overlay.css')}'/>`
         );
+        registerOverlayEvents();
     });
 }
 
