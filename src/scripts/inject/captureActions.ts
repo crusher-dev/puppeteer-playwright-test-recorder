@@ -1,14 +1,41 @@
 import {sendMessageToBackground} from "../../utils/messageUtil";
 import {EVENT_CAPTURED} from "../../constants";
+import { createPopper } from '@popperjs/core';
 
 let actions: Array<any> = [];
 let events = ["click", "mousemove"];
 let event_handler: any = {"mousemove": handleMouseMove};
 let lastHoverElement : any = null;
 let add_action_element: any = null;
+let add_action_icon: any = null;
+let close_action_icon: any = null;
+let add_action_tether: any = null;
+
+function toggleEventsBox(){
+    const eventBox : any = document.querySelector("#overlay_add_events_container");
+    eventBox.style.display = eventBox.style.display !== "block" ? "block" : "none";
+}
+
+function initNodes(){
+    if(!add_action_element){
+        add_action_element =  document.querySelector("#overlay_add_action");
+    }
+    if(!add_action_icon){
+        add_action_icon = document.querySelector("#overlay_add_icon");
+        add_action_icon.addEventListener('click', function(){
+            toggleEventsBox();
+        });
+    }
+    if(!close_action_icon){
+        close_action_icon = document.querySelector("#overlay_add_events_container .overlay_close_icon");
+        close_action_icon.addEventListener('click', function(){
+           toggleEventsBox();
+        });
+    }
+}
 
 function handleMouseMove(e: Event){
-        if(e.target === lastHoverElement || e.target === add_action_element){
+        if(e.target === lastHoverElement || add_action_element && add_action_element.contains(e.target)){
             return e.preventDefault();
         }
 
@@ -20,21 +47,26 @@ function handleMouseMove(e: Event){
         target.style.outlineStyle = 'dotted';
         target.style.outlineColor = '#ff577c';
         target.style.outlineWidth = '2px';
-        lastHoverElement = target;
 
-    const rightPos = lastHoverElement.getBoundingClientRect().x + lastHoverElement.getBoundingClientRect().width;
-    const topPos = lastHoverElement.getBoundingClientRect().y;
+        initNodes();
 
-    if(!add_action_element){
-        add_action_element =  document.createElement("div");
-        add_action_element.innerHTML = "+";
-        add_action_element.id = "add_actions_overlay";
-        document.body.appendChild(add_action_element);
-    }
+        if(e.target !== lastHoverElement && lastHoverElement){
+            if(add_action_tether) add_action_tether.destroy();
+            add_action_tether = createPopper(target, add_action_element, {
+                placement: 'right-start',
+                modifiers: [
+                    {
+                        name: 'flip',
+                        enabled: false,
+                    }
+                    ]
+            });
+        }
 
-    const add : any = document.querySelector("#add_actions_overlay");
-    add.style.top = topPos + "px";
-    add.style.left = rightPos + "px";
+        add_action_element.style.display = "block";
+
+    lastHoverElement = target;
+
 }
 
 function addToList(event: any, event_type: string){
@@ -57,8 +89,3 @@ export function registerEvents(){
         }, true);
     });
 }
-
-var currentElement;
-document.body.addEventListener('mousemove',function(e){
-
-}, true)

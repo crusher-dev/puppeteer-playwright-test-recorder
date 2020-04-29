@@ -1,2 +1,24 @@
 #overlay_add_action
-
+    #overlay_add_icon +
+    #overlay_add_events_container.arrow_box
+        .overlay_heading Select action you want to take
+        .overlay_grid
+            .overlay_add_event_item(data-action="click")
+                | Click
+            .overlay_add_event_item
+                | Input
+            .overlay_add_event_item
+                | Hover
+            .overlay_add_event_item
+                | Scroll To view
+            .overlay_add_event_item
+                | Assert Text
+            .overlay_add_event_item
+                | Extract Info
+            .overlay_add_event_item
+                | Screenshot
+            .overlay_add_event_item
+                | Blackout
+            .overlay_add_event_item
+                | Wait for them
+        .overlay_close_icon X
