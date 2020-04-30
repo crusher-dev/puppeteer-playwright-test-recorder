@@ -10,7 +10,7 @@ export function init() {
       switch (type) {
         case EVENT_CAPTURED:
           const { action_type, target } = request;
-          dispatch({ type: SAVE_EVENT, event: { action_type, target } });
+          dispatch({ type: SAVE_EVENT, event: { action_type, target }, tabId: sender.tab.id });
           return sendResponse(getState());
         default:
           break;

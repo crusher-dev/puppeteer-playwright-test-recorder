@@ -139,9 +139,6 @@
 }
 #overlay_add_events_container{
     min-width: 240px;
-    padding-top: 18px;
-    padding-left: 20px;
-    padding-right: 20px;
     border: 2px solid #E0114F;
     background: #F1326B;
     margin-top: 14px;
@@ -150,6 +147,8 @@
     font-weight: 500;
     font-size: 16px;
     display: none;
+    position: absolute;
+    padding: 18px 20px 10px;
 }
 .overlay_grid{
     display: grid;
@@ -176,4 +175,5 @@
 }
 .overlay_add_event_item{
     padding: 10px 10px 10px 0px;
+    cursor: pointer;
 }
