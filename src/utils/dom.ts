@@ -1,3 +1,3 @@
-export function loadContentInBody(content: string) {
-    document.body.innerHTML += content
-}
+module.exports = function loadContentInBody(content: string) {
+  document.body.innerHTML += content;
+};
