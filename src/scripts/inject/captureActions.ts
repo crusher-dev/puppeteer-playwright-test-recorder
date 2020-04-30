@@ -44,7 +44,7 @@ function handleMouseMove(e: Event) {
     lastHoverElement.style.outlineStyle = 'none';
     lastHoverElement.style.outlineColor = 'none';
   }
-  const { target } = e;
+  const target :any = e.target;
   target.style.outlineStyle = 'dotted';
   target.style.outlineColor = '#ff577c';
   target.style.outlineWidth = '2px';

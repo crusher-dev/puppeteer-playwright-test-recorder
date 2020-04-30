@@ -2,7 +2,7 @@ import { Chrome } from '../../../utils/types';
 import { EVENT_CAPTURED, SAVE_EVENT } from '../../../constants';
 import { dispatch, getState } from '../store';
 
-module.exports = function init() {
+export function init() {
   Chrome.runtime.onMessage.addListener(
     (request: any, sender: any, sendResponse: any) => {
       console.log(request);
