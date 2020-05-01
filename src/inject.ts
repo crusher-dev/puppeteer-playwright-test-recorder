@@ -1,7 +1,7 @@
 import { loadContentInBody } from './utils/dom';
 import { getHTMLContentOfTemplate } from './utils/helpers';
 import { Chrome } from './utils/types';
-import { registerOverlayEvents } from './scripts/inject/overlayActions';
+import UIController from './scripts/inject/UIController';
 
 function initContentScript() {
   // @ts-ignore
@@ -14,7 +14,7 @@ function initContentScript() {
   // @ts-ignore
   getHTMLContentOfTemplate('overlay', (res) => {
     loadContentInBody(`${res}<link rel='stylesheet' href='${Chrome.runtime.getURL('styles/overlay.css')}'/>`);
-    registerOverlayEvents();
+    (new UIController()).boot();
   });
 }
 

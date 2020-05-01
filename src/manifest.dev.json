@@ -12,7 +12,8 @@
     "activeTab"
   ],
   "browser_action": {
-    "default_title": "Make this page red"
+    "default_title": "Make this page red",
+    "default_popup": "popup.html"
   },
   "web_accessible_resources": [
     "inject.html",

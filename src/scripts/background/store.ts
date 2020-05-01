@@ -15,6 +15,7 @@ export function dispatch(action: any) {
   }
 }
 
+// @ts-ignore
 export function getState() {
   return state;
 }

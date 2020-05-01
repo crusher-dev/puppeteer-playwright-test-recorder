@@ -145,7 +145,7 @@
     border: 2px solid #E0114F;
     background: #F1326B;
     margin-top: 14px;
-    position: relative;
+    position: absolute;
     color: #fff;
     font-weight: 500;
     font-size: 16px;
