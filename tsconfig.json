@@ -4,9 +4,21 @@
     "noImplicitAny": true,
     "removeComments": true,
     "preserveConstEnums": true,
-    "sourceMap": false
+    "sourceMap": true,
+    "strict": false,
+    "noImplicitReturns": true,
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "target": "es5",
+    "allowJs": true,
+    "jsx": "react"
   },
   "files": [
-    "src/background.ts"
+    "src/background.ts",
+    "src/inject.tsx",
+    "./node_modules/preact/dist/preact"
+  ],
+  "include": [
+    "./src/**/*"
   ]
 }
