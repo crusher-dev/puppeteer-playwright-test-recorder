@@ -6,10 +6,13 @@
     "webpack": "webpack --config webpack/webpack.dev.js"
   },
   "dependencies": {
-    "@babel/preset-env": "^7.9.5",
+    "@babel/preset-env": "^7.9.6",
+    "@babel/preset-react": "^7.9.4",
     "@popperjs/core": "^2.4.0",
     "babel-loader": "^8.1.0",
+    "babel-preset-react": "^6.24.1",
     "playwright": "^0.13.0",
+    "preact": "^10.4.1",
     "pug": "^2.0.4",
     "pug-cli": "^1.0.0-alpha6",
     "shelljs": "^0.8.4",
@@ -33,7 +36,8 @@
   "license": "MIT",
   "devDependencies": {
     "@babel/cli": "^7.8.4",
-    "@babel/core": "^7.9.0",
+    "@babel/core": "^7.9.6",
+    "@babel/plugin-transform-react-jsx": "^7.9.4",
     "@babel/preset-typescript": "latest",
     "@typescript-eslint/eslint-plugin": "^2.30.0",
     "@typescript-eslint/parser": "^2.30.0",

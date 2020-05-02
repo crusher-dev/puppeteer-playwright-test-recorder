@@ -11,6 +11,7 @@ module.exports = {
   entry: {
     background: [customPath, path.resolve(__dirname, '../src/background.ts')],
     inject: [customPath, path.resolve(__dirname, '../src/inject.ts')],
+    popup: [customPath, path.resolve(__dirname, '../src/scripts/popup/index.tsx')]
   },
   devMiddleware: {
     publicPath: `http://${host}:${port}/js`,
@@ -34,17 +35,23 @@ module.exports = {
     path: path.resolve(__dirname, '../dev/js/'),
   },
   resolve: {
-    extensions: ['.ts', '.js', '.jsx'],
+    extensions: ['.ts', '.tsx', '.js', '.jsx'],
     // modules: ["node_modules"]
   },
   module: {
     rules: [{
       // Include ts, tsx, js, and jsx files.
-      test: /\.ts?$/,
+      test: /\.(js|jsx|ts|tsx)$/,
       exclude: /node_modules/,
       loader: 'babel-loader',
+      options: {
+        presets: ['@babel/preset-env', "@babel/preset-react"],
+        plugins: [
+          ["@babel/plugin-transform-react-jsx", { "pragma":"h" }]
+        ]
+      }
     },
-    { test: /\.tsx?$/, loader: 'ts-loader' }],
+    { test: /\.ts(x)?$/, loader: 'ts-loader' }],
   },
   devtool: 'eval-cheap-module-source-map',
 };
