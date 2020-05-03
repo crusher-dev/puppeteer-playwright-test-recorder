@@ -1,0 +1,10 @@
+export const NAVIGATE_URL = 'NAVIGATE_URL';
+export const CLICK = "click";
+export const INPUT = "input";
+export const HOVER = "hover";
+export const SCROLL_TO_VIEW ="scroll-to-view";
+export const ASSERT_TEXT="assert-text";
+export const EXTRACT_INFO = "extract-info";
+export const SCREENSHOT = "screenshot";
+export const BLACKOUT = "blackout";
+export const WAIT = "wait";

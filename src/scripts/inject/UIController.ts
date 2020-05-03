@@ -1,4 +1,8 @@
 import RecordingOverlay from "./ui/recordingOverlay";
+import {START_RECORDING_SESSION, STOP_RECORDING, DELETE_RECORDING_SESSION} from "../../constants";
+import {Chrome} from "../../utils/types";
+import {sendMessageToBackground} from "../../utils/messageUtil";
+import {stopSession} from "../../utils/dom";
 
 const EventEmitter = require("events");
 
@@ -41,6 +45,7 @@ export default class UIControllerExtends extends EventEmitter{
                 this.startRecording();
             });
         }
+        Chrome.runtime.onMessage.addListener(this.handleIncomingMessages.bind(this));
     }
 
     showOnboardingOverlay(){
@@ -55,6 +60,18 @@ export default class UIControllerExtends extends EventEmitter{
             ...this.state,
             showingOnboardingOverlay: true
         };
+    }
+
+    handleIncomingMessages(request: any, sender: any, sendResponse: any){
+        const {type} = request;
+        switch(type){
+            case STOP_RECORDING:
+                this.stopRecording();
+                break;
+            default:
+                break;
+        }
+        sendResponse(true);
     }
 
     hideOnBoardingOverlay(){
@@ -77,7 +94,10 @@ export default class UIControllerExtends extends EventEmitter{
     startRecording(){
         console.debug("Staring recording actions");
         const {sessionGoingOn} = this.state;
+        sendMessageToBackground({type: START_RECORDING_SESSION}, function (res:any) {
+            console.log("Sent" + res)
 
+        });
         if(sessionGoingOn){
             console.warn("Can't start new recording session until current session has finished");
             return;
@@ -88,6 +108,10 @@ export default class UIControllerExtends extends EventEmitter{
 
     stopRecording(){
         console.debug("Stopping recording actions");
+        this.hideOnBoardingOverlay();
+        stopSession();
         this.recordingOverlay.shutDown();
+        this._overlay.remove();
+        document.querySelector("#overlay_css").remove();
     }
 }

@@ -1,20 +1,20 @@
-import { loadContentInBody } from './utils/dom';
+import {isSessionGoingOn, loadContentInBody, loadCSSIfNotAlreadyLoadedForSomeReason, startSession} from './utils/dom';
 import { getHTMLContentOfTemplate } from './utils/helpers';
 import { Chrome } from './utils/types';
 import UIController from './scripts/inject/UIController';
 
 function initContentScript() {
   // @ts-ignore
-  if (window.scriptLoaded) {
+  if (isSessionGoingOn()) {
     console.log('Already loaded, returning early');
     return;
   }
-  // @ts-ignore
-  window.scriptLoaded = true;
+  startSession();
   // @ts-ignore
   getHTMLContentOfTemplate('overlay', (res) => {
-    loadContentInBody(`${res}<link rel='stylesheet' href='${Chrome.runtime.getURL('styles/overlay.css')}'/>`);
-    (new UIController()).boot();
+      loadContentInBody(`${res}`);
+      loadCSSIfNotAlreadyLoadedForSomeReason(Chrome.runtime.getURL('styles/overlay.css'));
+      (new UIController()).boot();
   });
 }
 
