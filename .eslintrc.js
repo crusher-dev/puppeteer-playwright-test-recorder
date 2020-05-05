@@ -14,9 +14,13 @@ module.exports = {
   parserOptions: {
     ecmaVersion: 2018,
     sourceType: 'module',
+    ecmaFeatures: {
+      jsx: true // Allows for the parsing of JSX
+    }
   },
   plugins: [
     '@typescript-eslint',
+    "plugin:@typescript-eslint/recommended"
   ],
   rules: {
     'no-console': 'off'

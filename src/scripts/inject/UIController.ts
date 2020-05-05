@@ -25,50 +25,12 @@ export default class UIControllerExtends extends EventEmitter{
     }
 
     boot(){
-        this.initNodes();
         this.registerEvents();
-            sendMessageToBackground({type: CHECK_SESSION_STATUS},  (res: any)=> {
-                console.log( Chrome.runtime.lastError);
-                const isSessionGoingOn = res && res.isSessionGoingOn;
-                console.debug("CHECK_SESSION", res);
-                if(isSessionGoingOn){
-                    this.hideOnBoardingOverlay();
-                    this.startRecording();
-                } else {
-                    this.showOnboardingOverlay();
-                }
-            });
-            // Show onboarding overlay first
-    }
-
-    initNodes(){
-        this._overlay = document.querySelector("#overlay");
-        this._overlayStartButton = document.querySelector("#overlay-wizard-button");
+        this.startRecording();
     }
 
     registerEvents(){
-        if(!this._overlayStartButtonClickListener) {
-            this._overlayStartButtonClickListener = this._overlayStartButton.addEventListener("click", (event: MouseEvent)=> {
-                console.debug("Let's start recording");
-                this.hideOnBoardingOverlay();
-                this.startRecording();
-            });
-        }
         Chrome.runtime.onMessage.addListener(this.handleIncomingMessages.bind(this));
-    }
-
-    showOnboardingOverlay(){
-        console.debug("Showing Onboarding Overlay");
-        const {showingOnboardingOverlay} = this.state;
-        if(this.showingOnboardingOverlay){
-            console.debug("Onboarding Overlay is already displayed");
-            return;
-        }
-        this._overlay.style.display = "block";
-        this.state = {
-            ...this.state,
-            showingOnboardingOverlay: true
-        };
     }
 
     handleIncomingMessages(request: any, sender: any, sendResponse: any){
@@ -81,18 +43,6 @@ export default class UIControllerExtends extends EventEmitter{
                 break;
         }
         sendResponse(true);
-    }
-
-    hideOnBoardingOverlay(){
-        console.debug("Hiding Onboarding Overlay");
-        const {showingOnboardingOverlay} = this.state;
-
-        this.state = {
-            ...this.state,
-            showingOnboardingOverlay: false
-        }
-        this._overlayStartButton.removeEventListener("click", this._overlayStartButtonClickListener);
-        this._overlay.style.display = "none";
     }
 
     startRecording(){
@@ -112,10 +62,8 @@ export default class UIControllerExtends extends EventEmitter{
 
     stopRecording(){
         console.debug("Stopping recording actions");
-        this.hideOnBoardingOverlay();
         stopSession();
         this.recordingOverlay.shutDown();
-        this._overlay.remove();
         document.querySelector("#overlay_css").remove();
     }
 }

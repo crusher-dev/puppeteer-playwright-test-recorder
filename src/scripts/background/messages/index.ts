@@ -10,7 +10,7 @@ import {
 } from '../../../constants';
 import { dispatch, getState } from '../store';
 import {sendMessageToPage} from "../../../utils/messageUtil";
-import {getTabId, loadScript} from "../../../utils/helpers";
+import {getActiveTabId, loadScript} from "../../../utils/helpers";
 
 function handleNewEvent(payload: any, tabId: any){
     const {event_type, selector, value}  = payload;
@@ -46,7 +46,7 @@ export function init() {
                 return sendResponse(handleNewEvent(payload, sender.tab.id));
                 break;
             case CHECK_SESSION_STATUS:
-                getTabId().then(tabId => {
+                getActiveTabId().then(tabId => {
 
                     // @ts-ignore
                     sendResponse({isSessionGoingOn: !!getState().sessions[tabId]});

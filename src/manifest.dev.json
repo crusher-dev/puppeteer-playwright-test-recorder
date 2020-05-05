@@ -3,14 +3,13 @@
   "description": "Make the current page red",
   "version": "2.0",
   "permissions": [
-    "activeTab"
+    "activeTab",
+    "tabs",
+    "*://*/*"
   ],
   "background": {
     "page": "background.html"
   },
-  "permissions": [
-    "activeTab"
-  ],
   "browser_action": {
     "default_title": "Make this page red",
     "default_popup": "popup.html"
@@ -19,13 +18,13 @@
     "inject.html",
     "overlay.html",
     "styles/overlay.css",
+    "icons/bus.svg",
     "icons/chrome.svg",
     "icons/edge.svg",
     "icons/firefox.svg",
     "icons/safari.svg",
     "icons/overlay.css"
   ],
-  "permissions": ["tabs"],
   "manifest_version": 2,
   "content_security_policy": "default-src 'self'; script-src 'self' http://localhost:3000 https://localhost:3000 'unsafe-eval'; connect-src http://localhost:3000 https://localhost:3000; style-src * 'unsafe-inline' 'self' blob:; img-src 'self' data:;"
 }

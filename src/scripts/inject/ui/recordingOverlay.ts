@@ -3,7 +3,7 @@ import {sendMessageToBackground} from "../../../utils/messageUtil";
 import {EVENT_CAPTURED, START_RECORDING_SESSION, STOP_RECORDING} from "../../../constants";
 import {Chrome} from "../../../utils/types";
 import {removeAllBlankLinks} from "../../../utils/dom";
-import {getTabId} from "../../../utils/helpers";
+import {getActiveTabId} from "../../../utils/helpers";
 const EventEmitter = require("events");
 const {createPopper}  = require("@popperjs/core");
 const unique: any = require('unique-selector').default;
@@ -256,6 +256,7 @@ handleEventsGridClick(event: Event){
             this.removeHighLightFromNode(targetElement);
         }
         this.hideAddActionElement();
+        this._addActionElement.remove();
         this.state = {
             ...this.state,
             sessionGoingOn: false

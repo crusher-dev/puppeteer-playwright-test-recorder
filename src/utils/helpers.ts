@@ -31,7 +31,7 @@ export function getHTMLContentOfTemplate(template: string, cb:any) {
     .then((res) => { if(cb) { cb(res);} });
 }
 
-export function getTabId() {
+export function getActiveTabId() {
   return new Promise((resolve, reject) => {
     Chrome.tabs.query({active: true, currentWindow: true}, (tabs: any) => {
       resolve(tabs[0].id);
