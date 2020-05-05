@@ -1,4 +1,4 @@
-import {CLICK, NAVIGATE_URL, SCREENSHOT} from "../../../constants/DOMEventsToRecord";
+import {CLICK, HOVER, NAVIGATE_URL, SCREENSHOT, SCROLL_TO_VIEW} from "../../../constants/DOMEventsToRecord";
 import {sendMessageToBackground} from "../../../utils/messageUtil";
 import {EVENT_CAPTURED, START_RECORDING_SESSION, STOP_RECORDING} from "../../../constants";
 import {Chrome} from "../../../utils/types";
@@ -17,6 +17,8 @@ export default class RecordingOverlay extends EventEmitter{
             ...this.defaultState
         };
         this.handleMouseOver = this.handleMouseOver.bind(this);
+        this.handleAddIconClick = this.handleAddIconClick.bind(this);
+        this.handleEventsGridClick = this.handleEventsGridClick.bind(this);
     }
 
     toggleEventsBox(){
@@ -54,6 +56,7 @@ export default class RecordingOverlay extends EventEmitter{
     }
 
     showEventsList(){
+        console.debug("Showing events list", this._overlayAddEventsContainer);
         this._overlayAddEventsContainer.style.display = 'block';
 
         // Increase the height of actions container to give more space for not falling out of selection.
@@ -135,9 +138,24 @@ export default class RecordingOverlay extends EventEmitter{
 
     clickOnElement(element: any){
         try{
+            if(element.tagName === "A"){
+                return element.click();
+            }
             const event = new Event('click');
             event.initEvent("click",true,true);
             element.dispatchEvent(event);
+        } catch(err){
+            console.error(element, err);
+            return;
+        }
+    }
+
+    hoverOnElement(element: any){
+        try{
+            const el = document.querySelector(unique(element));
+            const event = new Event('MS');
+            event.initEvent("mouseover",true,true);
+            el.dispatchEvent(event);
         } catch(err){
             console.error(element, err);
             return;
@@ -154,8 +172,19 @@ export default class RecordingOverlay extends EventEmitter{
                     console.log(res);
                 });
                 break;
+           case HOVER:
+               this.hoverOnElement(this.state.targetElement);
+               sendMessageToBackground({type: EVENT_CAPTURED, payload: {event_type: HOVER, selector: unique(this.state.targetElement)}}, function (res: any) {
+                   console.log(res);
+               });
+               break;
            case SCREENSHOT:
                sendMessageToBackground({type: EVENT_CAPTURED, payload: {event_type: SCREENSHOT, selector: unique(this.state.targetElement)}}, function (res: any) {
+                   console.log(res);
+               });
+               break;
+           case SCROLL_TO_VIEW:
+               sendMessageToBackground({type: EVENT_CAPTURED, payload: {event_type: SCROLL_TO_VIEW, selector: unique(this.state.targetElement)}}, function (res: any) {
                    console.log(res);
                });
                break;
@@ -177,18 +206,28 @@ if(targetElement !== event.target){
 
 }
 
+handleAddIconClick(){
+    this.toggleEventsBox();
+}
+
+handleEventsGridClick(event: Event){
+    this.handleSelectedActionFromEventsList(event);
+    this.toggleEventsBox();
+}
+
     registerNodeListeners(){
-        this._mouseMoveListener = document.body.addEventListener("mousemove", this.handleMouseOver, true);
+        document.body.addEventListener("mousemove", this.handleMouseOver, true);
 
-        this._addIconListener = this._addActionIcon.addEventListener("click", ()=>{
-            this.toggleEventsBox();
-        });
+        this._addActionIcon.addEventListener("click", this.handleAddIconClick);
 
-        this._actionsListItemClickListener = this._overlayEventsGrid.addEventListener("click", (event: Event) => {
-            this.handleSelectedActionFromEventsList(event);
-            this.toggleEventsBox();
-        }, true);
+         this._overlayEventsGrid.addEventListener("click", this.handleEventsGridClick, true);
 
+    }
+
+    removeNodeListeners(){
+        document.body.removeEventListener("mousemove", this.handleMouseOver, true);
+        this._addActionIcon.removeEventListener("click", this.handleAddIconClick);
+        this._overlayEventsGrid.removeEventListener("click", this.handleEventsGridClick, true);
     }
 
     boot(){
@@ -212,7 +251,7 @@ if(targetElement !== event.target){
         const {targetElement} = this.state;
 
         console.debug("Shutting down Recording Overlay");
-        document.body.removeEventListener("mousemove", this.handleMouseOver, true);
+        this.removeNodeListeners();
         if(targetElement) {
             this.removeHighLightFromNode(targetElement);
         }

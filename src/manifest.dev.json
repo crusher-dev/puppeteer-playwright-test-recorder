@@ -25,7 +25,7 @@
     "icons/safari.svg",
     "icons/overlay.css"
   ],
+  "permissions": ["tabs"],
   "manifest_version": 2,
-  "permissions": "tabs",
   "content_security_policy": "default-src 'self'; script-src 'self' http://localhost:3000 https://localhost:3000 'unsafe-eval'; connect-src http://localhost:3000 https://localhost:3000; style-src * 'unsafe-inline' 'self' blob:; img-src 'self' data:;"
 }

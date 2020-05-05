@@ -9,6 +9,8 @@ import {
     DELETE_RECORDING_SESSION
 } from '../../../constants';
 import { dispatch, getState } from '../store';
+import {sendMessageToPage} from "../../../utils/messageUtil";
+import {getTabId, loadScript} from "../../../utils/helpers";
 
 function handleNewEvent(payload: any, tabId: any){
     const {event_type, selector, value}  = payload;
@@ -16,6 +18,15 @@ function handleNewEvent(payload: any, tabId: any){
 }
 
 export function init() {
+    Chrome.tabs.onUpdated.addListener(function(tabId: any, changeInfo: any, tab: any) {
+        if(!!getState().sessions[tabId]){
+            Chrome.tabs.query({ active: true, currentWindow: true }, async (tabs: any) => {
+                // @ts-ignore
+                await loadScript('inject', tabs[0].id);
+            });
+        }
+    });
+
   Chrome.runtime.onMessage.addListener(
     (request: any, sender: any, sendResponse: any) => {
         const {type, payload} = request;
@@ -35,9 +46,14 @@ export function init() {
                 return sendResponse(handleNewEvent(payload, sender.tab.id));
                 break;
             case CHECK_SESSION_STATUS:
-                // @ts-ignore
-                const {tabId} = payload;
-                return sendResponse({isSessionGoingOn: !!getState().sessions[tabId]});
+                getTabId().then(tabId => {
+
+                    // @ts-ignore
+                    sendResponse({isSessionGoingOn: !!getState().sessions[tabId]});
+                });
+
+                return true;
+
                 break;
             case GET_EVENTS:
                 try{

@@ -1,5 +1,6 @@
 export function loadContentInBody(content: string) {
-  document.body.innerHTML += content;
+  // @ts-ignore
+  document.body.insertAdjacentHTML( 'beforeend', content );
 };
 
 export function removeAllBlankLinks(){

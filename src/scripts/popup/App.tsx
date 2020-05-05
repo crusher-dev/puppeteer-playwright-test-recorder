@@ -15,7 +15,7 @@ class App extends Component<any, any> {
 
     }
 
-    startRecorder(){
+    injectRecorder(){
         return new Promise ((resolve, reject)=> {
             Chrome.tabs.query({ active: true, currentWindow: true }, async (tabs: any) => {
                 // @ts-ignore
@@ -31,7 +31,7 @@ class App extends Component<any, any> {
 
             sendMessageToBackground({type: GET_EVENTS, payload: {tabId: tabId}}, async (events: any)=>{
                 if(!isSessionGoingOn) {
-                    await this.startRecorder();
+                    await this.injectRecorder();
                 }
                 if(!events || events.length === 0){
                     return window.close();

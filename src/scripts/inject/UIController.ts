@@ -1,5 +1,5 @@
 import RecordingOverlay from "./ui/recordingOverlay";
-import {START_RECORDING_SESSION, STOP_RECORDING, DELETE_RECORDING_SESSION} from "../../constants";
+import {START_RECORDING_SESSION, STOP_RECORDING, DELETE_RECORDING_SESSION, CHECK_SESSION_STATUS} from "../../constants";
 import {Chrome} from "../../utils/types";
 import {sendMessageToBackground} from "../../utils/messageUtil";
 import {stopSession} from "../../utils/dom";
@@ -27,9 +27,18 @@ export default class UIControllerExtends extends EventEmitter{
     boot(){
         this.initNodes();
         this.registerEvents();
-
-        // Show onboarding overlay first
-        this.showOnboardingOverlay();
+            sendMessageToBackground({type: CHECK_SESSION_STATUS},  (res: any)=> {
+                console.log( Chrome.runtime.lastError);
+                const isSessionGoingOn = res && res.isSessionGoingOn;
+                console.debug("CHECK_SESSION", res);
+                if(isSessionGoingOn){
+                    this.hideOnBoardingOverlay();
+                    this.startRecording();
+                } else {
+                    this.showOnboardingOverlay();
+                }
+            });
+            // Show onboarding overlay first
     }
 
     initNodes(){
@@ -77,11 +86,6 @@ export default class UIControllerExtends extends EventEmitter{
     hideOnBoardingOverlay(){
         console.debug("Hiding Onboarding Overlay");
         const {showingOnboardingOverlay} = this.state;
-
-        if(!showingOnboardingOverlay){
-            console.warn("There's no onboarding overlay to hide");
-            return;
-        }
 
         this.state = {
             ...this.state,
