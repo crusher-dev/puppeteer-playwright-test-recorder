@@ -3,7 +3,7 @@ import React from 'preact/compat';
 import {Chrome} from "../../utils/types";
 import {loadScript} from "../../utils/helpers";
 import {getEventsList, sendMessageToBackground, sendMessageToPage} from "../../utils/messageUtil";
-import {GET_EVENTS, STOP_RECORDING, DELETE_RECORDING_SESSION} from "../../constants";
+import {GET_EVENTS, STOP_RECORDING, DELETE_RECORDING_SESSION, GET_CODE} from "../../constants";
 import CodeGenerator from "../code-generator";
 
 class App extends Component<any, any> {
@@ -63,11 +63,15 @@ class App extends Component<any, any> {
         sendMessageToBackground({type: DELETE_RECORDING_SESSION, payload: {tabId: tabId}});
     }
 
-    renderPlayWrightCode(){
+    getPlayWrightCode(){
+        const {events} = this.state;
         this.stopRecorder();
-        const _generator = new CodeGenerator({});
-        const code = _generator.generate(this.state.events);
-        alert("Here's your code, " + code);
+        // const _generator = new CodeGenerator({});
+        // const code = _generator.generate(this.state.events);
+        // alert("Here's your code, " + code);
+        sendMessageToPage({type: GET_CODE, events}, function(){
+            window.close();
+        });
     }
 
     renderSteps(){
@@ -92,7 +96,7 @@ class App extends Component<any, any> {
 
     handleExportTestsClick(){
         this.stopRecorder();
-        this.renderPlayWrightCode();
+        this.getPlayWrightCode();
         window.close();
     }
 

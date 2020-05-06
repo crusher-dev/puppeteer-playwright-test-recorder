@@ -1,19 +1,22 @@
 import RecordingOverlay from "./ui/recordingOverlay";
-import {START_RECORDING_SESSION, STOP_RECORDING, DELETE_RECORDING_SESSION, CHECK_SESSION_STATUS} from "../../constants";
+import {
+    START_RECORDING_SESSION,
+    STOP_RECORDING,
+    DELETE_RECORDING_SESSION,
+    CHECK_SESSION_STATUS,
+    GET_CODE
+} from "../../constants";
 import {Chrome} from "../../utils/types";
 import {sendMessageToBackground} from "../../utils/messageUtil";
 import {stopSession} from "../../utils/dom";
+import {sendPostDataWithForm} from "../../utils/helpers";
 
-const EventEmitter = require("events");
-
-export default class UIControllerExtends extends EventEmitter{
+export default class UIControllerExtends{
     state: any;
     defaultState: any = {showingOnboardingOverlay: false, sessionGoingOn: false};
     recordingOverlay: RecordingOverlay;
 
     constructor(options = {} as any) {
-        super();
-
         const {showingOnboardingOverlay, sessionGoingOn} = options;
         this.state = {
             ...this.defaultState,
@@ -33,11 +36,17 @@ export default class UIControllerExtends extends EventEmitter{
         Chrome.runtime.onMessage.addListener(this.handleIncomingMessages.bind(this));
     }
 
+
+
     handleIncomingMessages(request: any, sender: any, sendResponse: any){
         const {type} = request;
         switch(type){
             case STOP_RECORDING:
                 this.stopRecording();
+                break;
+            case GET_CODE:
+                const {events} = request;
+                sendPostDataWithForm("https://testing-preview.now.sh/", {actions: events})
                 break;
             default:
                 break;

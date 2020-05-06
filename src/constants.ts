@@ -8,3 +8,4 @@ export const SAVE_EVENT = 'SAVE_EVENT';
 export const GET_EVENTS = "GET_EVENTS";
 export const CHECK_SESSION_STATUS = "CHECK_SESSION_STATUS";
 export const STOP_RECORDING = "STOP_RECORDING";
+export const GET_CODE = "GET_CODE";
