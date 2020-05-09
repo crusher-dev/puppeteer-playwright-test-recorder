@@ -1,15 +1,6 @@
-// @ts-nocheck
-import domEvents from './dom-events-to-record'
-import pptrActions from './pptr-actions'
-import Block from './Block'
 import {CLICK, HOVER, NAVIGATE_URL, PAGE_SCREENSHOT, SCREENSHOT, SCROLL_TO_VIEW} from "../constants/DOMEventsToRecord";
 
 const importPlayWright = `const playwright = require('playwright');\n`
-
-const header = `const browser = await playwright["chrome"].launch();
-const page = await context.newPage();`
-
-const footer = `await browser.close()`
 
 const wrappedHeader = `(async () => {
   const browser = await playwright["chrome"].launch();
@@ -20,17 +11,19 @@ const wrappedFooter = `  await browser.close()
 
 
 export default class CodeGenerator {
-    constructor(options) {
+    constructor() {
 
     }
 
-    generate(events){
+    generate(events: Array<any>){
         return importPlayWright + wrappedHeader + this._handleEvents(events) + wrappedFooter;
     }
 
-    _handleEvents(events){
+    _handleEvents(events: Array<any>){
+        let screenShotFileName: string;
         let code = "\n";
-        for(let i = 0; i < events.length; i++){
+
+        for (let i = 0; i < events.length; i++) {
             const {event_type, selector, value} = events[i];
             switch (event_type) {
                 case NAVIGATE_URL:
@@ -43,11 +36,11 @@ export default class CodeGenerator {
                     code += `await page.hover('${selector});\n`;
                     break;
                 case SCREENSHOT:
-                    const screenShotFileName = selector.replace(/[^\w\s]/gi, '').replace(/ /g,"_") + `_${i}`;
+                    screenShotFileName = selector.replace(/[^\w\s]/gi, '').replace(/ /g, "_") + `_${i}`;
                     code += `const h_${i} =  await page.$('${selector}');\nh_${i}.screenshot({path: '${screenShotFileName}.png'});\n`
                     break;
                 case PAGE_SCREENSHOT:
-                    const screenShotFileName = value.replace(/[^\w\s]/gi, '').replace(/ /g,"_") + `_${i}`;
+                    screenShotFileName = value.replace(/[^\w\s]/gi, '').replace(/ /g,"_") + `_${i}`;
                     code += `await page.screenshot({path: '${screenShotFileName}.png'})`;
                     break;
                 case SCROLL_TO_VIEW:

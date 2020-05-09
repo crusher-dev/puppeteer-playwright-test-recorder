@@ -17,9 +17,8 @@ function handleNewEvent(payload: any, tabId: any){
 
 export function init() {
     Chrome.tabs.onUpdated.addListener(function(tabId: any, changeInfo: any, tab: any) {
-        if(!!getState().sessions[tabId]){
+        if(getState().sessions[tabId]){
             Chrome.tabs.query({ active: true, currentWindow: true }, async (tabs: any) => {
-                // @ts-ignore
                 await loadScript('inject', tabs[0].id);
             });
         } else {
@@ -28,7 +27,7 @@ export function init() {
 
     Chrome.tabs.onActivated.addListener(function(activeInfo: any) {
         const {tabId} = activeInfo;
-        if(!!getState().sessions[tabId]) {
+        if(getState().sessions[tabId]) {
             changeExtensionIcon("icons/ongoing_recording.png");
         } else {
             changeExtensionIcon("icons/start_recording.png");
@@ -46,8 +45,7 @@ export function init() {
                 return sendResponse("Started new session");
                 break;
             case DELETE_RECORDING_SESSION:
-                // @ts-ignore
-                getActiveTabId().then(tabId => {
+                getActiveTabId().then((tabId: number) => {
                     dispatch({type: DELETE_RECORDING_SESSION, tabId: tabId});
                     changeExtensionIcon("icons/start_recording.png");
                     console.log(getState());
@@ -59,9 +57,7 @@ export function init() {
                 return sendResponse(handleNewEvent(payload, sender.tab.id));
                 break;
             case CHECK_SESSION_STATUS:
-                getActiveTabId().then(tabId => {
-
-                    // @ts-ignore
+                getActiveTabId().then((tabId: number) => {
                     sendResponse({isSessionGoingOn: !!getState().sessions[tabId]});
                 });
 
@@ -80,4 +76,4 @@ export function init() {
         }
     },
   );
-};
+}

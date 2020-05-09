@@ -1,2 +1,3 @@
 // @ts-ignore
-export const Chrome = chrome;
+export const Chrome: any = chrome;
+export const Window: any = window;

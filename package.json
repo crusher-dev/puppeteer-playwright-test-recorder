@@ -4,6 +4,7 @@
   "scripts": {
     "dev": "node scripts/dev",
     "build": "node scripts/build.js",
+    "lint": "npx eslint --fix --ext .ts,.tsx,.js,.jsx src",
     "webpack": "webpack --config webpack/webpack.dev.js"
   },
   "dependencies": {
@@ -45,7 +46,7 @@
     "@babel/plugin-transform-react-jsx": "^7.9.4",
     "@babel/preset-typescript": "latest",
     "@typescript-eslint/eslint-plugin": "^2.31.0",
-    "@typescript-eslint/parser": "^2.30.0",
+    "@typescript-eslint/parser": "^2.31.0",
     "eslint": "^6.8.0",
     "eslint-config-airbnb-base": "^14.1.0",
     "eslint-plugin-import": "^2.20.2",

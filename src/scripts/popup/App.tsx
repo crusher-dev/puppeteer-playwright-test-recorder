@@ -1,7 +1,7 @@
-import { h, Component } from 'preact';
+import { Component } from 'preact';
 import React from 'preact/compat';
 import {Chrome} from "../../utils/types";
-import {changeExtensionIcon, loadScript} from "../../utils/helpers";
+import {loadScript} from "../../utils/helpers";
 import {getEventsList, sendMessageToBackground, sendMessageToPage} from "../../utils/messageUtil";
 import {STOP_RECORDING, DELETE_RECORDING_SESSION, GET_CODE} from "../../constants";
 import CodeGenerator from "../code-generator";
@@ -15,7 +15,6 @@ class App extends Component<any, any> {
 
     async injectRecorder(){
         const {tabId} = this.props;
-        // @ts-ignore
         await loadScript('inject', tabId);
         window.close();
     }
@@ -28,7 +27,7 @@ class App extends Component<any, any> {
     }
 
     async componentDidMount() {
-        const {tabId, isSessionGoingOn} = this.props;
+        const {isSessionGoingOn} = this.props;
 
         if (isSessionGoingOn) {
             await this.getEventsList();
@@ -64,9 +63,8 @@ class App extends Component<any, any> {
     }
 
     getPlayWrightCode(){
-        const {events} = this.state;
         this.stopRecorder();
-        const _generator = new CodeGenerator({});
+        const _generator = new CodeGenerator();
         const code = _generator.generate(this.state.events);
         sendMessageToPage({type: GET_CODE, code: code});
     }
@@ -99,7 +97,6 @@ class App extends Component<any, any> {
 
     render() {
         const {isSessionGoingOn} = this.props;
-        const {events} = this.state;
 
         return (
             <div id="container">

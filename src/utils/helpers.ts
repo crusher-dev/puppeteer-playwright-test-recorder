@@ -1,13 +1,10 @@
 import { Chrome } from './types';
 
-export function loadScript(name: string, tabId: any, cb: any) {
+export function loadScript(name: string, tabId: any) {
   return new Promise((resolve, reject) => {
     if (process.env.NODE_ENV === 'production') {
       Chrome.tabs.executeScript(tabId, { file: `/js/${name}.js`, runAt: 'document_end' }, function () {
         resolve(true);
-        if(cb) {
-          cb();
-        }
       });
     } else {
       // dev: async fetch bundle
@@ -16,16 +13,13 @@ export function loadScript(name: string, tabId: any, cb: any) {
           .then((fetchRes) => {
             Chrome.tabs.executeScript(tabId, { code: fetchRes, runAt: 'document_end' }, function(){
               resolve(true);
-              if(cb) {
-                cb();
-              }
             });
           });
     }
   });
 }
 
-export function getHTMLContentOfTemplate(template: string, cb:any) {
+export function getHTMLContentOfTemplate(template: string, cb: any) {
   fetch(Chrome.runtime.getURL(`${template}.html`))
     .then((res) => res.text())
     .then((res) => { if(cb) { cb(res);} });
@@ -45,7 +39,7 @@ export function sendPostDataWithForm(url: string, options: any = {}){
   form.action = url;
   form.target = "_blank";
   const optionKeys = Object.keys(options);
-  for(let optionKey of optionKeys){
+  for(const optionKey of optionKeys){
     const hiddenField = document.createElement('input');
     hiddenField.type = 'hidden';
     hiddenField.name = optionKey;
