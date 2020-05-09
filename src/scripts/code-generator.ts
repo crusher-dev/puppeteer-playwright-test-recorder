@@ -2,7 +2,7 @@
 import domEvents from './dom-events-to-record'
 import pptrActions from './pptr-actions'
 import Block from './Block'
-import {CLICK, HOVER, NAVIGATE_URL, SCREENSHOT, SCROLL_TO_VIEW} from "../constants/DOMEventsToRecord";
+import {CLICK, HOVER, NAVIGATE_URL, PAGE_SCREENSHOT, SCREENSHOT, SCROLL_TO_VIEW} from "../constants/DOMEventsToRecord";
 
 const importPlayWright = `const playwright = require('playwright');\n`
 
@@ -44,7 +44,11 @@ export default class CodeGenerator {
                     break;
                 case SCREENSHOT:
                     const screenShotFileName = selector.replace(/[^\w\s]/gi, '').replace(/ /g,"_") + `_${i}`;
-                    code += `const h_${i} =  await page.$('${selector}');\nh_${i}.screenshot({path: '${screenShotFileName}'});\n`
+                    code += `const h_${i} =  await page.$('${selector}');\nh_${i}.screenshot({path: '${screenShotFileName}.png'});\n`
+                    break;
+                case PAGE_SCREENSHOT:
+                    const screenShotFileName = value.replace(/[^\w\s]/gi, '').replace(/ /g,"_") + `_${i}`;
+                    code += `await page.screenshot({path: '${screenShotFileName}.png'})`;
                     break;
                 case SCROLL_TO_VIEW:
                     code += `const stv_${i} =  await page.$('${selector}');\nstv_${i}.scrollIntoViewIfNeeded();\n`

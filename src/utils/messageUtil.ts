@@ -19,7 +19,7 @@ export function sendMessageToPage(payload: any, callback: any = null) {
   });
 }
 
-export function getEventsList(tabId: any){
+export function getEventsList(tabId: any = undefined){
   return new Promise((resolve, reject) => {
     sendMessageToBackground({type: GET_EVENTS, payload: {tabId: tabId}}, (events: any)=>{
       if(!events){

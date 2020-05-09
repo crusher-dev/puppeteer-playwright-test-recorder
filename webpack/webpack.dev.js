@@ -8,6 +8,7 @@ const port = 3000;
 module.exports = {
   mode: 'development', // The plugin is activated only if mode is set to development
   watch: true,
+  externals: ["fs", "request", "yamlparser"],
   entry: {
     background: [customPath, path.resolve(__dirname, '../src/background.ts')],
     inject: [customPath, path.resolve(__dirname, '../src/inject.ts')],

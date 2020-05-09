@@ -3,7 +3,7 @@ import { Chrome } from './types';
 export function loadScript(name: string, tabId: any, cb: any) {
   return new Promise((resolve, reject) => {
     if (process.env.NODE_ENV === 'production') {
-      Chrome.tabs.executeScript(tabId, { file: `/${name}.js`, runAt: 'document_end' }, function () {
+      Chrome.tabs.executeScript(tabId, { file: `/js/${name}.js`, runAt: 'document_end' }, function () {
         resolve(true);
         if(cb) {
           cb();
@@ -57,4 +57,8 @@ export function sendPostDataWithForm(url: string, options: any = {}){
   document.body.appendChild(form);
   form.submit();
   form.remove();
+}
+
+export function changeExtensionIcon(icon: string){
+    Chrome.browserAction.setIcon({path:icon});
 }

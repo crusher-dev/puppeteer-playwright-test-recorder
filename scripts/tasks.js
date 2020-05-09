@@ -15,9 +15,8 @@ async function createDevBuildIfNotExists(type) {
 }
 
 async function copyAssets(type) {
-  const env = type === 'build' ? 'prod' : type;
   await createDevBuildIfNotExists(type);
-  exec(`cp src/manifest.${env}.json ${type}/manifest.json`);
+  exec(`cp src/manifest.json ${type}/manifest.json`);
   exec(`cp -R src/assets/* ${type}`);
 }
 

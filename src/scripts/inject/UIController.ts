@@ -2,14 +2,13 @@ import RecordingOverlay from "./ui/recordingOverlay";
 import {
     START_RECORDING_SESSION,
     STOP_RECORDING,
-    DELETE_RECORDING_SESSION,
-    CHECK_SESSION_STATUS,
     GET_CODE
 } from "../../constants";
 import {Chrome} from "../../utils/types";
-import {sendMessageToBackground} from "../../utils/messageUtil";
+import {getEventsList, sendMessageToBackground, sendMessageToPage} from "../../utils/messageUtil";
 import {stopSession} from "../../utils/dom";
 import {sendPostDataWithForm} from "../../utils/helpers";
+import CodeGenerator from "../code-generator";
 
 export default class UIControllerExtends{
     state: any;
@@ -24,7 +23,7 @@ export default class UIControllerExtends{
             sessionGoingOn
         };
 
-        this.recordingOverlay = new RecordingOverlay();
+        this.recordingOverlay = new RecordingOverlay(this, {});
     }
 
     boot(){
@@ -37,7 +36,6 @@ export default class UIControllerExtends{
     }
 
 
-
     handleIncomingMessages(request: any, sender: any, sendResponse: any){
         const {type} = request;
         switch(type){
@@ -45,8 +43,8 @@ export default class UIControllerExtends{
                 this.stopRecording();
                 break;
             case GET_CODE:
-                const {events} = request;
-                sendPostDataWithForm("https://testing-preview.now.sh/", {actions: events})
+                const {code} = request;
+                sendPostDataWithForm("https://testing-preview.now.sh/", {actions: code})
                 break;
             default:
                 break;
@@ -59,7 +57,6 @@ export default class UIControllerExtends{
         const {sessionGoingOn} = this.state;
         sendMessageToBackground({type: START_RECORDING_SESSION}, function (res:any) {
             console.log("Sent" + res)
-
         });
         if(sessionGoingOn){
             console.warn("Can't start new recording session until current session has finished");
@@ -69,10 +66,22 @@ export default class UIControllerExtends{
         this.recordingOverlay.boot();
     }
 
+    getCodeForEvents(){
+        getEventsList().then((events)=>{
+            const _generator = new CodeGenerator({});
+            const code = _generator.generate(events);
+            sendPostDataWithForm("https://testing-preview.now.sh/", {actions: code})
+            window.close();
+        });
+    }
+
     stopRecording(){
         console.debug("Stopping recording actions");
         stopSession();
         this.recordingOverlay.shutDown();
-        document.querySelector("#overlay_css").remove();
+
+        const _overlayCss = document.querySelector("#overlay_css");
+        if(_overlayCss){_overlayCss.remove();}
+        window.location.reload();
     }
 }

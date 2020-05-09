@@ -1,9 +1,9 @@
 import { h, Component } from 'preact';
 import React from 'preact/compat';
 import {Chrome} from "../../utils/types";
-import {loadScript} from "../../utils/helpers";
+import {changeExtensionIcon, loadScript} from "../../utils/helpers";
 import {getEventsList, sendMessageToBackground, sendMessageToPage} from "../../utils/messageUtil";
-import {GET_EVENTS, STOP_RECORDING, DELETE_RECORDING_SESSION, GET_CODE} from "../../constants";
+import {STOP_RECORDING, DELETE_RECORDING_SESSION, GET_CODE} from "../../constants";
 import CodeGenerator from "../code-generator";
 
 class App extends Component<any, any> {
@@ -66,12 +66,9 @@ class App extends Component<any, any> {
     getPlayWrightCode(){
         const {events} = this.state;
         this.stopRecorder();
-        // const _generator = new CodeGenerator({});
-        // const code = _generator.generate(this.state.events);
-        // alert("Here's your code, " + code);
-        sendMessageToPage({type: GET_CODE, events}, function(){
-            window.close();
-        });
+        const _generator = new CodeGenerator({});
+        const code = _generator.generate(this.state.events);
+        sendMessageToPage({type: GET_CODE, code: code});
     }
 
     renderSteps(){

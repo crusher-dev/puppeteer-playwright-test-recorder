@@ -1,0 +1,33 @@
+{
+  "name": "Universal Test Recorder",
+  "description": "Record your tests for playwright",
+  "version": "2.0",
+  "permissions": [
+    "activeTab",
+    "tabs",
+    "*://*/*"
+  ],
+  "background": {
+    "page": "background.html"
+  },
+  "browser_action": {
+    "default_icon": "icons/start_recording.png",
+    "default_title": "Start recording your test",
+    "default_popup": "popup.html"
+  },
+  "web_accessible_resources": [
+    "inject.html",
+    "overlay.html",
+    "styles/overlay.css",
+    "icons/start_recording.png",
+    "icons/ongoing_recording.png",
+    "icons/bus.svg",
+    "icons/chrome.svg",
+    "icons/edge.svg",
+    "icons/firefox.svg",
+    "icons/safari.svg",
+    "icons/overlay.css"
+  ],
+  "manifest_version": 2,
+  "content_security_policy": "default-src 'self'; script-src 'self' http://localhost:3000 https://localhost:3000 'unsafe-eval'; connect-src http://localhost:3000 https://localhost:3000; style-src * 'unsafe-inline' 'self' blob:; img-src 'self' data:;"
+}

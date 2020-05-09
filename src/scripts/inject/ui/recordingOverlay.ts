@@ -1,24 +1,47 @@
-import {CLICK, HOVER, NAVIGATE_URL, SCREENSHOT, SCROLL_TO_VIEW} from "../../../constants/DOMEventsToRecord";
+import {
+    CLICK,
+    HOVER,
+    NAVIGATE_URL,
+    PAGE_SCREENSHOT,
+    SCREENSHOT,
+    SCROLL_TO_VIEW
+} from "../../../constants/DOMEventsToRecord";
 import {sendMessageToBackground} from "../../../utils/messageUtil";
-import {EVENT_CAPTURED, START_RECORDING_SESSION, STOP_RECORDING} from "../../../constants";
-import {Chrome} from "../../../utils/types";
+import {DELETE_RECORDING_SESSION, EVENT_CAPTURED, START_RECORDING_SESSION, STOP_RECORDING} from "../../../constants";
 import {removeAllBlankLinks} from "../../../utils/dom";
-import {getActiveTabId} from "../../../utils/helpers";
-const EventEmitter = require("events");
+import UIController from "../UIController";
 const {createPopper}  = require("@popperjs/core");
 const unique: any = require('unique-selector').default;
 
-export default class RecordingOverlay extends EventEmitter{
+export default class RecordingOverlay{
     defaultState: any = {targetElement: null, sessionGoingOn: false, showingEventsBox: false};
 
-    constructor(options = {} as any) {
-        super();
+    private state: any;
+
+    private controller: any;
+    private _overlayAddEventsContainer: any;
+    private _addActionElement: any;
+    private _addAction: any;
+    private _closeActionIcon: any;
+    private _addActionIcon: any;
+    private _overlayEventsGrid: any;
+    private _pageActionsContainer: any;
+    private _stopRecorderButton: any;
+    private _addActionTether: any;
+    private _eventsListTether: any;
+    private _takeScreenShotButton: any;
+
+    constructor(controller: UIController, options = {} as any) {
         this.state ={
             ...this.defaultState
         };
+        this.controller = controller;
+
         this.handleMouseOver = this.handleMouseOver.bind(this);
         this.handleAddIconClick = this.handleAddIconClick.bind(this);
         this.handleEventsGridClick = this.handleEventsGridClick.bind(this);
+        this.takePageScreenShot = this.takePageScreenShot.bind(this);
+        this.handleStopRecordingButtonClick = this.handleStopRecordingButtonClick.bind(this);
     }
 
     toggleEventsBox(){
@@ -47,12 +70,6 @@ export default class RecordingOverlay extends EventEmitter{
                 ],
             });
         this._addActionElement.style.display = 'block';
-    }
-
-    hideAddActionElement(){
-        if(this._addActionElement) {
-            this._addActionElement.style.display = 'none';
-        }
     }
 
     showEventsList(){
@@ -95,21 +112,14 @@ export default class RecordingOverlay extends EventEmitter{
     }
 
     initNodes(){
-        if (!this._addActionElement) {
-            this._addActionElement = document.querySelector('#overlay_add_action');
-        }
-        if (!this._addActionIcon) {
-            this._addActionIcon = document.querySelector('#overlay_add_icon');
-        }
-        if (!this._closeActionIcon) {
-            this._closeActionIcon = document.querySelector('#overlay_add_events_container .overlay_close_icon');
-        }
-        if(!this._overlayAddEventsContainer){
-            this._overlayAddEventsContainer = document.querySelector("#overlay_add_events_container");
-        }
-        if(!this._overlayEventsGrid){
-            this._overlayEventsGrid = document.querySelector(".overlay_grid");
-        }
+        this._addActionElement = document.querySelector('#overlay_add_action');
+        this._addActionIcon = document.querySelector('#overlay_add_icon');
+        this._closeActionIcon = document.querySelector('#overlay_add_events_container .overlay_close_icon');
+        this._overlayAddEventsContainer = document.querySelector("#overlay_add_events_container");
+        this._overlayEventsGrid = document.querySelector(".overlay_grid");
+        this._pageActionsContainer = document.querySelector("#page_actions");
+        this._stopRecorderButton = document.querySelector("#page_actions #stop_recorder_button");
+        this._takeScreenShotButton = document.querySelector("#page_actions #screenshot_button");
     }
 
     updateEventTarget(target: HTMLElement){
@@ -150,21 +160,22 @@ export default class RecordingOverlay extends EventEmitter{
         }
     }
 
-    hoverOnElement(element: any){
+    hoverOnElement(el: any){
         try{
-            const el = document.querySelector(unique(element));
             const event = new Event('MS');
             event.initEvent("mouseover",true,true);
             el.dispatchEvent(event);
         } catch(err){
-            console.error(element, err);
+            console.error(el, err);
             return;
         }
     }
 
     handleSelectedActionFromEventsList(event: any){
        const action = event.target.getAttribute("data-action");
-       switch(action){
+        // @ts-ignore
+        console.log("TST", action);
+        switch(action){
            case CLICK:
                removeAllBlankLinks();
                 this.clickOnElement(this.state.targetElement);
@@ -192,7 +203,8 @@ export default class RecordingOverlay extends EventEmitter{
     }
 
     handleMouseOver(event: MouseEvent){
-    if(this._addActionElement.contains(event.target)) {
+    // @ts-ignore
+        if(this._addActionElement.contains(event.target) || event.target.hasAttribute("data-recorder")) {
     return event.preventDefault();
 }
 const {targetElement} = this.state;
@@ -215,6 +227,12 @@ handleEventsGridClick(event: Event){
     this.toggleEventsBox();
 }
 
+    handleStopRecordingButtonClick(event: any){
+        this.controller.getCodeForEvents();
+        sendMessageToBackground({type: DELETE_RECORDING_SESSION});
+        this.controller.stopRecording();
+    }
+
     registerNodeListeners(){
         document.body.addEventListener("mousemove", this.handleMouseOver, true);
 
@@ -222,12 +240,22 @@ handleEventsGridClick(event: Event){
 
          this._overlayEventsGrid.addEventListener("click", this.handleEventsGridClick, true);
 
+         this._takeScreenShotButton.addEventListener("click", this.takePageScreenShot);
+         this._stopRecorderButton.addEventListener("click", this.handleStopRecordingButtonClick);
+    }
+
+    takePageScreenShot(){
+        sendMessageToBackground({type: EVENT_CAPTURED, payload: {event_type: PAGE_SCREENSHOT, selector: window.location.href, value: document.title}}, function (res: any) {
+            console.log(res);
+        });
     }
 
     removeNodeListeners(){
         document.body.removeEventListener("mousemove", this.handleMouseOver, true);
         this._addActionIcon.removeEventListener("click", this.handleAddIconClick);
         this._overlayEventsGrid.removeEventListener("click", this.handleEventsGridClick, true);
+        this._takeScreenShotButton.removeEventListener("click", this.takePageScreenShot);
+        this._stopRecorderButton.removeEventListener("click", this.handleStopRecordingButtonClick);
     }
 
     boot(){
@@ -247,6 +275,15 @@ handleEventsGridClick(event: Event){
         console.info("Info Overlay booted up");
     }
 
+    removeNodes(){
+        if(this._addActionElement){
+            this._addActionElement.remove();
+        }
+        if(this._pageActionsContainer){
+            this._pageActionsContainer.remove();
+        }
+    }
+
     shutDown(){
         const {targetElement} = this.state;
 
@@ -255,8 +292,8 @@ handleEventsGridClick(event: Event){
         if(targetElement) {
             this.removeHighLightFromNode(targetElement);
         }
-        this.hideAddActionElement();
-        this._addActionElement.remove();
+        this.removeNodes();
+
         this.state = {
             ...this.state,
             sessionGoingOn: false

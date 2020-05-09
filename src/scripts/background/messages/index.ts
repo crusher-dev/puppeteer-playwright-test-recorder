@@ -5,12 +5,10 @@ import {
     GET_EVENTS,
     SAVE_EVENT,
     START_RECORDING_SESSION,
-    STOP_RECORDING,
     DELETE_RECORDING_SESSION
 } from '../../../constants';
 import { dispatch, getState } from '../store';
-import {sendMessageToPage} from "../../../utils/messageUtil";
-import {getActiveTabId, loadScript} from "../../../utils/helpers";
+import {changeExtensionIcon, getActiveTabId, loadScript} from "../../../utils/helpers";
 
 function handleNewEvent(payload: any, tabId: any){
     const {event_type, selector, value}  = payload;
@@ -24,6 +22,17 @@ export function init() {
                 // @ts-ignore
                 await loadScript('inject', tabs[0].id);
             });
+        } else {
+        }
+    });
+
+    Chrome.tabs.onActivated.addListener(function(activeInfo: any) {
+        const {tabId} = activeInfo;
+        if(!!getState().sessions[tabId]) {
+            changeExtensionIcon("icons/ongoing_recording.png");
+        } else {
+            changeExtensionIcon("icons/start_recording.png");
+
         }
     });
 
@@ -33,14 +42,18 @@ export function init() {
         switch(type){
             case START_RECORDING_SESSION:
                 dispatch({type: START_RECORDING_SESSION, tabId: sender.tab.id});
+                changeExtensionIcon("icons/ongoing_recording.png");
                 return sendResponse("Started new session");
                 break;
             case DELETE_RECORDING_SESSION:
                 // @ts-ignore
-                const {tabId} = payload;
-                dispatch({type: DELETE_RECORDING_SESSION, tabId: tabId});
-                console.log(getState());
-                return sendResponse("Stopped previous session");
+                getActiveTabId().then(tabId => {
+                    dispatch({type: DELETE_RECORDING_SESSION, tabId: tabId});
+                    changeExtensionIcon("icons/start_recording.png");
+                    console.log(getState());
+                    sendResponse("Stopped previous session");
+                });
+                return true;
                 break;
             case EVENT_CAPTURED:
                 return sendResponse(handleNewEvent(payload, sender.tab.id));
@@ -56,12 +69,11 @@ export function init() {
 
                 break;
             case GET_EVENTS:
-                try{
-                    const events = getState().events && getState().events[payload.tabId];
+                getActiveTabId().then(tabId => {
+                    const events = getState().events && getState().events[payload.tabId ? payload.tabId : tabId];
                     return sendResponse(events ? events : []);
-                } catch(err){
-                    return sendResponse(err.message);
-                }
+                });
+                return true;
 
             default:
                 break;
