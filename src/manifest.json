@@ -1,5 +1,5 @@
 {
-  "name": "Universal Test Recorder",
+  "name": "Crusher",
   "description": "Record your tests for playwright",
   "version": "2.0",
   "permissions": [
@@ -11,7 +11,7 @@
     "page": "background.html"
   },
   "browser_action": {
-    "default_icon": "icons/start_recording.png",
+    "default_icon": "icons/extension_icon.png",
     "default_title": "Start recording your test",
     "default_popup": "popup.html"
   },
@@ -19,6 +19,7 @@
     "inject.html",
     "overlay.html",
     "styles/overlay.css",
+    "icons/extension_icon.png",
     "icons/start_recording.png",
     "icons/ongoing_recording.png",
     "icons/bus.svg",

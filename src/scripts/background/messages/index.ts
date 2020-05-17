@@ -31,7 +31,7 @@ export function init() {
         if(!!getState().sessions[tabId]) {
             changeExtensionIcon("icons/ongoing_recording.png");
         } else {
-            changeExtensionIcon("icons/start_recording.png");
+            changeExtensionIcon("icons/extension_icon.png");
 
         }
     });
@@ -49,7 +49,7 @@ export function init() {
                 // @ts-ignore
                 getActiveTabId().then(tabId => {
                     dispatch({type: DELETE_RECORDING_SESSION, tabId: tabId});
-                    changeExtensionIcon("icons/start_recording.png");
+                    changeExtensionIcon("icons/extension_icon.png");
                     console.log(getState());
                     sendResponse("Stopped previous session");
                 });

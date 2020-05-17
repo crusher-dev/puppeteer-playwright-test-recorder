@@ -103,7 +103,7 @@ class App extends Component<any, any> {
 
         return (
             <div id="container">
-                <div id="header">Universal Test Recorder</div>
+                <div id="header">Crusher Test Recorder</div>
                 <div class="content" style={{padding: isSessionGoingOn ? 0 : 18}}>
                     {!isSessionGoingOn && this.renderSteps()}
                     {isSessionGoingOn && this.renderEventsList()}
