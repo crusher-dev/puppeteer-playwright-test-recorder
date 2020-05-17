@@ -42,7 +42,7 @@ export function createSnackBar(message: string, actionText: string, action?: any
             if (previous === this) {
                 previous.dismiss();
             }
-        }.bind(snackbar), 200000000);
+        }.bind(snackbar), 2000);
 
         snackbar.addEventListener('transitionend', function(event: TransitionEvent) {
             if (event.propertyName === 'opacity' && this.style.opacity == 0) {

@@ -15,7 +15,7 @@ const {createPopper}  = require("@popperjs/core");
 const unique: any = require('unique-selector').default;
 
 export default class RecordingOverlay{
-    defaultState: any = {targetElement: null, sessionGoingOn: false, showingEventsBox: false};
+    defaultState: any = {targetElement: null, sessionGoingOn: false, showingEventsBox: false, pinned: false};
 
     private state: any;
 
@@ -86,6 +86,7 @@ export default class RecordingOverlay{
     showEventsList(){
         console.debug("Showing events list", this._overlayAddEventsContainer);
         this._overlayAddEventsContainer.style.display = 'block';
+        this.state.pinned = true;
 
         // Increase the height of actions container to give more space for not falling out of selection.
         this._addActionElement.style.height = this._overlayAddEventsContainer.getBoundingClientRect().height + "px";
@@ -105,6 +106,7 @@ export default class RecordingOverlay{
         this._arrowOnAddIcon.removeAttribute('data-hide');
         this._overlayAddEventsContainer.style.display = 'none';
         this._addActionElement.style.height = "auto";
+        this.state.pinned = false;
 
         this.destoryEventsListTether();
     }
@@ -220,7 +222,7 @@ export default class RecordingOverlay{
 
     handleMouseOver(event: MouseEvent){
     // @ts-ignore
-        if(this._addActionElement.contains(event.target) || event.target.hasAttribute("data-recorder")) {
+        if(this._addActionElement.contains(event.target) || event.target.hasAttribute("data-recorder") || this.state.pinned) {
     return event.preventDefault();
 }
 const {targetElement} = this.state;
@@ -251,7 +253,7 @@ handleEventsGridClick(event: Event){
 
     registerNodeListeners(){
         document.body.addEventListener("mousemove", this.handleMouseOver, true);
-        
+
 
         this._addActionIcon.addEventListener("click", this.handleAddIconClick);
 
