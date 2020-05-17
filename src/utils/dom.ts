@@ -3,7 +3,7 @@ export function loadContentInBody(content: string) {
   document.body.insertAdjacentHTML( 'beforeend', content );
 };
 
-export function removeAllBlankLinks(){
+export function removeAllTargetBlankFromLinks(){
   let links = document.links, i, length;
 
   for (i = 0, length = links.length; i < length; i++) {

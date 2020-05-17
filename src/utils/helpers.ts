@@ -62,3 +62,7 @@ export function sendPostDataWithForm(url: string, options: any = {}){
 export function changeExtensionIcon(icon: string){
     Chrome.browserAction.setIcon({path:icon});
 }
+
+export function getSentenceCaseString(str: string){
+  return str[0].toUpperCase()+str.slice(1).toLowerCase();
+}

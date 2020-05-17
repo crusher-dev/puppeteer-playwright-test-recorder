@@ -2,7 +2,15 @@
 import domEvents from './dom-events-to-record'
 import pptrActions from './pptr-actions'
 import Block from './Block'
-import {CLICK, HOVER, NAVIGATE_URL, PAGE_SCREENSHOT, SCREENSHOT, SCROLL_TO_VIEW} from "../constants/DOMEventsToRecord";
+import {
+    CLICK,
+    HOVER,
+    INPUT,
+    NAVIGATE_URL,
+    PAGE_SCREENSHOT,
+    SCREENSHOT,
+    SCROLL_TO_VIEW
+} from "../constants/DOMEventsToRecord";
 
 const importPlayWright = `const playwright = require('playwright');\n`
 
@@ -12,8 +20,8 @@ const page = await context.newPage();`
 const footer = `await browser.close()`
 
 const wrappedHeader = `(async () => {
-  const browser = await playwright["chrome"].launch();
-  const page = await browser.newPage()\n`
+  const browser = await playwright["chromium"].launch();
+  const page = await browser.newPage();\n`
 
 const wrappedFooter = `  await browser.close()
 })()`
@@ -48,10 +56,13 @@ export default class CodeGenerator {
                     break;
                 case PAGE_SCREENSHOT:
                     const screenShotFileName = value.replace(/[^\w\s]/gi, '').replace(/ /g,"_") + `_${i}`;
-                    code += `await page.screenshot({path: '${screenShotFileName}.png'})`;
+                    code += `await page.screenshot({path: '${screenShotFileName}.png'});`;
                     break;
                 case SCROLL_TO_VIEW:
                     code += `const stv_${i} =  await page.$('${selector}');\nstv_${i}.scrollIntoViewIfNeeded();\n`
+                    break;
+                case INPUT:
+                    code += `await page.type('${selector}', '${value}');\n`;
                     break;
                 default:
                     console.error("Not supported event");

@@ -47,8 +47,8 @@ class App extends Component<any, any> {
             return (
                 <li>
                     <div class="event_item">
-                        <div class="event_action">{event_type}</div>
-                        <div class="event_action_or_value">{selector ? selector : value}</div>
+                        <div class="event_action">{event_type}  {selector && value ? `("${selector}")` : null}</div>
+                        <div class="event_action_or_value">{selector && value ? value : selector}</div>
                     </div>
                 </li>
                 )

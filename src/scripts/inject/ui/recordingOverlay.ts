@@ -1,6 +1,6 @@
 import {
     CLICK,
-    HOVER,
+    HOVER, INPUT,
     NAVIGATE_URL,
     PAGE_SCREENSHOT,
     SCREENSHOT,
@@ -8,9 +8,10 @@ import {
 } from "../../../constants/DOMEventsToRecord";
 import {sendMessageToBackground} from "../../../utils/messageUtil";
 import {DELETE_RECORDING_SESSION, EVENT_CAPTURED, START_RECORDING_SESSION, STOP_RECORDING} from "../../../constants";
-import {removeAllBlankLinks} from "../../../utils/dom";
+import {removeAllTargetBlankFromLinks} from "../../../utils/dom";
 import UIController from "../UIController";
 import {createSnackBar} from "../toast";
+import EventsController from "../EventsController";
 const {createPopper}  = require("@popperjs/core");
 const unique: any = require('unique-selector').default;
 
@@ -18,6 +19,7 @@ export default class RecordingOverlay{
     defaultState: any = {targetElement: null, sessionGoingOn: false, showingEventsBox: false, pinned: false};
 
     private state: any;
+    private eventsController: EventsController;
 
     private controller: any;
     private _overlayAddEventsContainer: any;
@@ -45,6 +47,9 @@ export default class RecordingOverlay{
         this.handleEventsGridClick = this.handleEventsGridClick.bind(this);
         this.takePageScreenShot = this.takePageScreenShot.bind(this);
         this.handleStopRecordingButtonClick = this.handleStopRecordingButtonClick.bind(this);
+        this.handleDocumentClick = this.handleDocumentClick.bind(this);
+        this.handleInputBlur = this.handleInputBlur.bind(this);
+        this.eventsController = new EventsController(this);
     }
 
     toggleEventsBox(){
@@ -161,89 +166,51 @@ export default class RecordingOverlay{
         }
     }
 
-    clickOnElement(element: any){
-        try{
-            if(element.tagName === "A"){
-                return element.click();
-            }
-            const event = new Event('click');
-            event.initEvent("click",true,true);
-            element.dispatchEvent(event);
-        } catch(err){
-            console.error(element, err);
-            return;
-        }
-    }
-
-    hoverOnElement(el: any){
-        try{
-            const event = new Event('MS');
-            event.initEvent("mouseover",true,true);
-            el.dispatchEvent(event);
-        } catch(err){
-            console.error(el, err);
-            return;
-        }
-    }
-
     handleSelectedActionFromEventsList(event: any){
        const action = event.target.getAttribute("data-action");
-        // @ts-ignore
-        console.log("TST", action);
         switch(action){
            case CLICK:
-               removeAllBlankLinks();
-                this.clickOnElement(this.state.targetElement);
-                sendMessageToBackground({type: EVENT_CAPTURED, payload: {event_type: CLICK, selector: unique(this.state.targetElement)}}, function (res: any) {
-                    createSnackBar("Click event has been recorded", "Dismiss");
-                });
+                removeAllTargetBlankFromLinks();
+                this.eventsController.simulateClickOnElement(this.state.targetElement);
+                this.eventsController.saveCapturedEventInBackground(CLICK, this.state.targetElement);
                 break;
            case HOVER:
-               this.hoverOnElement(this.state.targetElement);
-               sendMessageToBackground({type: EVENT_CAPTURED, payload: {event_type: HOVER, selector: unique(this.state.targetElement)}}, function (res: any) {
-                   createSnackBar("Hover event has been recorded", "Dismiss");
-               });
+               this.eventsController.simulateHoverOnElement(this.state.targetElement);
+               this.eventsController.saveCapturedEventInBackground(HOVER, this.state.targetElement);
                break;
            case SCREENSHOT:
-               sendMessageToBackground({type: EVENT_CAPTURED, payload: {event_type: SCREENSHOT, selector: unique(this.state.targetElement)}}, function (res: any) {
-                   createSnackBar("Screenshot action has been recorded", "Dismiss");
-                   this.toggleEventsBox();
-               });
+               this.eventsController.saveCapturedEventInBackground(SCREENSHOT, this.state.targetElement);
                break;
            case SCROLL_TO_VIEW:
-               sendMessageToBackground({type: EVENT_CAPTURED, payload: {event_type: SCROLL_TO_VIEW, selector: unique(this.state.targetElement)}}, function (res: any) {
-                   createSnackBar("Scroll To View action has been recorded", "Dismiss");
-                   this.toggleEventsBox();
-               });
+               this.eventsController.saveCapturedEventInBackground(SCROLL_TO_VIEW, this.state.targetElement);
                break;
        }
        this.toggleEventsBox();
     }
 
     handleMouseOver(event: MouseEvent){
-    // @ts-ignore
+        // @ts-ignore
         if(this._addActionElement.contains(event.target) || event.target.hasAttribute("data-recorder") || this.state.pinned) {
-    return event.preventDefault();
-}
-const {targetElement} = this.state;
+            return event.preventDefault();
+        }
+        const {targetElement} = this.state;
 
-if(targetElement !== event.target){
-    // Remove Highlight from last element hovered
-    this.removeHighLightFromNode(targetElement);
-    this.hideEventsList();
-    this.updateEventTarget(event.target as HTMLElement);
-}
+        if(targetElement !== event.target){
+            // Remove Highlight from last element hovered
+            this.removeHighLightFromNode(targetElement);
+            this.hideEventsList();
+            this.updateEventTarget(event.target as HTMLElement);
+        }
+    }
 
-}
+    handleAddIconClick(){
+        this.toggleEventsBox();
+    }
 
-handleAddIconClick(){
-    this.toggleEventsBox();
-}
-
-handleEventsGridClick(event: Event){
-    this.handleSelectedActionFromEventsList(event);
-    this.toggleEventsBox();
-}
+    handleEventsGridClick(event: Event){
+        this.handleSelectedActionFromEventsList(event);
+        this.toggleEventsBox();
+    }
 
     handleStopRecordingButtonClick(event: any){
         this.controller.getCodeForEvents();
@@ -251,9 +218,29 @@ handleEventsGridClick(event: Event){
         this.controller.stopRecording();
     }
 
+    handleDocumentClick(event: any){
+        const isRecorder = event.target.getAttribute('data-recorder');
+        if(!isRecorder){
+            this.state.pinned = false;
+            this.eventsController.saveCapturedEventInBackground(CLICK, event.target);
+        }
+    }
+
+    handleInputBlur(event: any){
+        const isRecorder = event.target.getAttribute('data-recorder');
+        if(!isRecorder){
+            const targetElement = event.target;
+            if((targetElement.tagName === "INPUT" || targetElement.tagName === "TEXTAREA") && targetElement.value){
+                this.eventsController.saveCapturedEventInBackground(INPUT, event.target, targetElement.value);
+            }
+        }
+    }
+
     registerNodeListeners(){
         document.body.addEventListener("mousemove", this.handleMouseOver, true);
+        document.body.addEventListener("blur", this.handleInputBlur, true);
 
+        document.addEventListener( "click", this.handleDocumentClick, true);
 
         this._addActionIcon.addEventListener("click", this.handleAddIconClick);
 
