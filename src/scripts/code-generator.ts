@@ -48,7 +48,7 @@ export default class CodeGenerator {
                     code += `await page.click('${selector}');\n`;
                     break;
                 case HOVER:
-                    code += `await page.hover('${selector});\n`;
+                    code += `await page.hover('${selector}');\n`;
                     break;
                 case SCREENSHOT:
                     const screenShotFileName = selector.replace(/[^\w\s]/gi, '').replace(/ /g,"_") + `_${i}`;

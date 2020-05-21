@@ -53,7 +53,7 @@ export default class UIControllerExtends{
     }
 
     startRecording(){
-        console.debug("Staring recording actions");
+        console.debug("Starting recording actions");
         const {sessionGoingOn} = this.state;
         sendMessageToBackground({type: START_RECORDING_SESSION}, function (res:any) {
             console.log("Sent" + res)

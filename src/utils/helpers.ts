@@ -25,6 +25,14 @@ export function loadScript(name: string, tabId: any, cb: any) {
   });
 }
 
+export function loadAssetScript(path: string, tabId: any){
+  return new Promise((resolve, reject)=> {
+    Chrome.tabschrome.tabs.executeScript(null, { file: "codemirror.js" }, function() {
+        resolve(true);
+    });
+});
+}
+
 export function getHTMLContentOfTemplate(template: string, cb:any) {
   fetch(Chrome.runtime.getURL(`${template}.html`))
     .then((res) => res.text())

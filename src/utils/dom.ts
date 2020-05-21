@@ -39,3 +39,13 @@ export function loadCSSIfNotAlreadyLoadedForSomeReason (href: any) {
 
   document.getElementsByTagName("head")[0].appendChild(link);
 }
+
+export function setAttributeForAllChildNodes(parent: any, attributeKey: string, attributeValue: string){
+  return [...parent.children].map((children: any)=>{
+    children.setAttribute(attributeKey, attributeValue);
+  });
+}
+
+export function hideAllChildNodes(parent: any){
+    return setAttributeForAllChildNodes(parent, "data-gone", "true");
+}

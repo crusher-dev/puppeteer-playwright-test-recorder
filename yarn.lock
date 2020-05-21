@@ -912,6 +912,13 @@
     lodash "^4.17.13"
     to-fast-properties "^2.0.0"
 
+"@medv/finder@^1.1.3":
+  version "1.1.3"
+  resolved "https://registry.yarnpkg.com/@medv/finder/-/finder-1.1.3.tgz#01d90511b3cf1420276c5fa7a5cc4ac5fd7e1527"
+  integrity sha512-hq6O7/4YpnBdfOzTFRF/0cNIg3IuJcF55LSOWq67lG/JQVtTwEu5ydv6L3fleoiwEOpQxF/zZq+NupVqgDVy6Q==
+  dependencies:
+    cssesc "^2.0.0"
+
 "@popperjs/core@^2.4.0":
   version "2.4.0"
   resolved "https://registry.yarnpkg.com/@popperjs/core/-/core-2.4.0.tgz#0e1bdf8d021e7ea58affade33d9d607e11365915"
@@ -2415,6 +2422,11 @@ crypto-random-string@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/crypto-random-string/-/crypto-random-string-2.0.0.tgz#ef2a7a966ec11083388369baa02ebead229b30d5"
   integrity sha512-v1plID3y9r/lPhviJ1wrXpLeyUIGAZ2SHNYTEapm7/8A9nLPoyvVp3RK/EPFqn5kEznyWgYZNsRtYYIWbuG8KA==
+
+cssesc@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/cssesc/-/cssesc-2.0.0.tgz#3b13bd1bb1cb36e1bcb5a4dcd27f54c5dcb35703"
+  integrity sha512-MsCAG1z9lPdoO/IUMLSBWBSVxVtJ1395VGIQ+Fc2gNdkQ1hNDnQdw3YhA71WJCBW1vdwA0cAnk/DnW6bqoEUYg==
 
 currently-unhandled@^0.4.1:
   version "0.4.1"
@@ -6674,11 +6686,6 @@ unique-filename@^1.1.1:
   integrity sha512-Vmp0jIp2ln35UTXuryvjzkjGdRyf9b2lTXuSYUiPmzRcl3FDtYqAwOnTJkAngD9SWhnoJzDbTKwaOrZ+STtxNQ==
   dependencies:
     unique-slug "^2.0.0"
-
-unique-selector@^0.4.1:
-  version "0.4.1"
-  resolved "https://registry.yarnpkg.com/unique-selector/-/unique-selector-0.4.1.tgz#f14e0f0e3b8fb3667c8245463c3ffe237442b0ac"
-  integrity sha512-7dLxUE1Wu89fpruo7DAH2k+7UcGSZBnEiwjvlPX5p0LuoJkVIgoaR/5YRFjwmQnVq7ZK0ankCdLRx4mRqd6oOQ==
 
 unique-slug@^2.0.0:
   version "2.0.2"

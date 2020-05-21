@@ -8,7 +8,7 @@ import {
     DELETE_RECORDING_SESSION
 } from '../../../constants';
 import { dispatch, getState } from '../store';
-import {changeExtensionIcon, getActiveTabId, loadScript} from "../../../utils/helpers";
+import {changeExtensionIcon, getActiveTabId, loadAssetScript, loadScript} from "../../../utils/helpers";
 
 function handleNewEvent(payload: any, tabId: any){
     const {event_type, selector, value}  = payload;

@@ -1,5 +1,5 @@
 import {
-    CLICK,
+    CLICK, EXTRACT_INFO,
     HOVER, INPUT,
     NAVIGATE_URL,
     PAGE_SCREENSHOT,
@@ -8,21 +8,24 @@ import {
 } from "../../../constants/DOMEventsToRecord";
 import {sendMessageToBackground} from "../../../utils/messageUtil";
 import {DELETE_RECORDING_SESSION, EVENT_CAPTURED, START_RECORDING_SESSION, STOP_RECORDING} from "../../../constants";
-import {removeAllTargetBlankFromLinks} from "../../../utils/dom";
+import {hideAllChildNodes, removeAllTargetBlankFromLinks, setAttributeForAllChildNodes} from "../../../utils/dom";
 import UIController from "../UIController";
 import {createSnackBar} from "../toast";
 import EventsController from "../EventsController";
+import FormWizard from "./formWizard";
 const {createPopper}  = require("@popperjs/core");
-const unique: any = require('unique-selector').default;
 
 export default class RecordingOverlay{
     defaultState: any = {targetElement: null, sessionGoingOn: false, showingEventsBox: false, pinned: false};
 
     private state: any;
     private eventsController: EventsController;
+    private formWizard: FormWizard;
 
     private controller: any;
     private _overlayAddEventsContainer: any;
+    private _modalContentContainer: any;
+
     private _addActionElement: any;
     private _addAction: any;
     private _closeActionIcon: any;
@@ -33,8 +36,10 @@ export default class RecordingOverlay{
     private _addActionTether: any;
     private _eventsListTether: any;
     private _takeScreenShotButton: any;
+    private _addActionModal: any;
 
     private _arrowOnAddIcon: any;
+    private _modalHeading: any;
 
     constructor(controller: UIController, options = {} as any) {
         this.state ={
@@ -50,6 +55,12 @@ export default class RecordingOverlay{
         this.handleDocumentClick = this.handleDocumentClick.bind(this);
         this.handleInputBlur = this.handleInputBlur.bind(this);
         this.eventsController = new EventsController(this);
+        this.formWizard = new FormWizard(this, this.eventsController);
+        this.toggleEventsBox = this.toggleEventsBox.bind(this);
+    }
+
+    getState(){
+        return this.state;
     }
 
     toggleEventsBox(){
@@ -57,7 +68,7 @@ export default class RecordingOverlay{
             this._arrowOnAddIcon.setAttribute('data-hide', '');
             this.showEventsList()
         } else {
-            this.hideEventsList()
+            this.hideEventsList();
         }
     }
 
@@ -97,7 +108,7 @@ export default class RecordingOverlay{
         this._addActionElement.style.height = this._overlayAddEventsContainer.getBoundingClientRect().height + "px";
 
         this.destoryEventsListTether();
-        this._eventsListTether =  createPopper(this._addActionIcon, this._overlayAddEventsContainer, {
+        this._eventsListTether =  createPopper(this._addActionModal, this._overlayAddEventsContainer, {
             placement: 'right-start',
             modifiers: [
                 {
@@ -113,6 +124,9 @@ export default class RecordingOverlay{
         this._addActionElement.style.height = "auto";
         this.state.pinned = false;
 
+        hideAllChildNodes(this._modalContentContainer);
+        this._modalHeading.innerHTML = "Select action";
+        this._overlayEventsGrid.removeAttribute("data-gone");
         this.destoryEventsListTether();
     }
 
@@ -131,15 +145,18 @@ export default class RecordingOverlay{
     }
 
     initNodes(){
+        this._modalHeading = document.querySelector(".overlay_heading_container .overlay_heading");
         this._addActionElement = document.querySelector('#overlay_add_action');
-        this._addActionIcon = document.querySelector('#overlay_add_icon');
+        this._addActionIcon = document.querySelector('#overlay_add');
+        this._addActionModal = document.querySelector('#overlay_add_icon');
         this._closeActionIcon = document.querySelector('#overlay_add_events_container .overlay_close_icon');
         this._overlayAddEventsContainer = document.querySelector("#overlay_add_events_container");
-        this._overlayEventsGrid = document.querySelector(".overlay_grid");
+        this._overlayEventsGrid = document.querySelector("#events_grid");
         this._pageActionsContainer = document.querySelector("#page_actions");
         this._stopRecorderButton = document.querySelector("#page_actions #stop_recorder_button");
         this._takeScreenShotButton = document.querySelector("#page_actions #screenshot_button");
         this._arrowOnAddIcon = document.querySelector('#popper_arrow');
+        this._modalContentContainer = document.querySelector(".overlay_modal_content");
     }
 
     updateEventTarget(target: HTMLElement){
@@ -171,9 +188,9 @@ export default class RecordingOverlay{
         switch(action){
            case CLICK:
                 removeAllTargetBlankFromLinks();
-                this.eventsController.simulateClickOnElement(this.state.targetElement);
                 this.eventsController.saveCapturedEventInBackground(CLICK, this.state.targetElement);
-                break;
+                this.eventsController.simulateClickOnElement(this.state.targetElement);
+               break;
            case HOVER:
                this.eventsController.simulateHoverOnElement(this.state.targetElement);
                this.eventsController.saveCapturedEventInBackground(HOVER, this.state.targetElement);
@@ -182,8 +199,13 @@ export default class RecordingOverlay{
                this.eventsController.saveCapturedEventInBackground(SCREENSHOT, this.state.targetElement);
                break;
            case SCROLL_TO_VIEW:
-               this.eventsController.saveCapturedEventInBackground(SCROLL_TO_VIEW, this.state.targetElement);
+                this.eventsController.saveCapturedEventInBackground(SCROLL_TO_VIEW, this.state.targetElement);
                break;
+            case EXTRACT_INFO:
+                return this.formWizard.boot(action);
+                break;
+            default:
+                break;
        }
        this.toggleEventsBox();
     }
@@ -209,7 +231,6 @@ export default class RecordingOverlay{
 
     handleEventsGridClick(event: Event){
         this.handleSelectedActionFromEventsList(event);
-        this.toggleEventsBox();
     }
 
     handleStopRecordingButtonClick(event: any){
@@ -222,7 +243,10 @@ export default class RecordingOverlay{
         const isRecorder = event.target.getAttribute('data-recorder');
         if(!isRecorder){
             this.state.pinned = false;
-            this.eventsController.saveCapturedEventInBackground(CLICK, event.target);
+            const {target} = event;
+            if(!event.simulatedEvent){
+                this.eventsController.saveCapturedEventInBackground(CLICK, event.target);
+            }
         }
     }
 
@@ -245,7 +269,7 @@ export default class RecordingOverlay{
         this._addActionIcon.addEventListener("click", this.handleAddIconClick);
 
          this._overlayEventsGrid.addEventListener("click", this.handleEventsGridClick, true);
-
+         this._closeActionIcon.addEventListener("click", this.toggleEventsBox, true);
          this._takeScreenShotButton.addEventListener("click", this.takePageScreenShot);
          this._stopRecorderButton.addEventListener("click", this.handleStopRecordingButtonClick);
     }
@@ -272,12 +296,9 @@ export default class RecordingOverlay{
         }, function (res: any) {
             console.log(res);
         });
-            sendMessageToBackground({
-                type: EVENT_CAPTURED,
-                payload: {event_type: NAVIGATE_URL, selector: unique(document), value: window.location.href}
-            }, function (res: any) {
-                console.log(res);
-            });
+
+        this.eventsController.saveCapturedEventInBackground(NAVIGATE_URL, document.body, window.location.href);
+
         console.info("Info Overlay booted up");
     }
 
