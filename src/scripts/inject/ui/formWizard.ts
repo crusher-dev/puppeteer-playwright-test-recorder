@@ -1,6 +1,6 @@
 import RecordingOverlay from "./recordingOverlay";
 import {setAttributeForAllChildNodes} from "../../../utils/dom";
-import {EXTRACT_INFO} from "../../../constants/DOMEventsToRecord";
+import {ASSERT_TEXT, EXTRACT_INFO} from "../../../constants/DOMEventsToRecord";
 import EventsController from "../EventsController";
 // import CodeMirror from "codemirror";
 import {DEFAULT_VALIDATION_SCRIPT} from "../../../constants";
@@ -17,6 +17,10 @@ export default class FormWizard{
     _extractedInfoPreview: any;
     _extractVariableName: any;
     _submitExtractForm: any;
+    _assertEventForm: any;
+    _assertComparisionText: any;
+    _assertValidation: any;
+    _submitAssertForm: any;
 
 
     private state: any = {
@@ -28,17 +32,23 @@ export default class FormWizard{
         this.eventsController = eventsController;
         this.evaluateValidationScript = this.evaluateValidationScript.bind(this);
         this.handleSaveExtractForm = this.handleSaveExtractForm.bind(this);
+        this.evaluteAssertText = this.evaluteAssertText.bind(this);
+        this.handleSaveAssertForm = this.handleSaveAssertForm.bind(this);
     }
 
     initNodes(){
         this._modalHeading = document.querySelector(".overlay_heading_container .overlay_heading");
         this._modalContentContainer = document.querySelector(".overlay_modal_content");
         this._extract_event_form = document.querySelector("#extract_event_form");
+        this._assertEventForm = document.querySelector("#assert_event_form");
         this._validationScriptTextArea = document.querySelector("#validation_script");
+        this._assertComparisionText = document.querySelector("#assert_comparision_text");
+        this._assertValidation = document.querySelector("#assert_validation");
         this._validationScript = document.querySelector("#extract_event_form #validation_script");
         this._extractedInfoPreview = document.querySelector("#extract_event_form #extracted_info_preview");
         this._extractVariableName = document.querySelector("#extract_variable_name");
         this._submitExtractForm = document.querySelector("#submit_extract_form");
+        this._submitAssertForm = document.querySelector("#submit_assert_form");
     }
 
     evaluateValidationScript(){
@@ -76,15 +86,40 @@ export default class FormWizard{
         }
     }
 
+    handleSaveAssertForm(){
+        const comparisionText = this._assertComparisionText.value;
+        const {targetElement} = this.recordingOverlay.getState();
+        this.eventsController.saveCapturedEventInBackground(ASSERT_TEXT, targetElement, comparisionText);
+        this.recordingOverlay.toggleEventsBox();
+
+    }
+
     initEventListener(){
         this._validationScript.addEventListener("keyup", this.evaluateValidationScript);
         this._submitExtractForm.addEventListener("click", this.handleSaveExtractForm);
+
+        this._assertComparisionText.addEventListener("keyup", this.evaluteAssertText);
+        this._submitAssertForm.addEventListener("click", this.handleSaveAssertForm);
+    }
+
+    evaluteAssertText(){
+        const {targetElement} = this.recordingOverlay.getState();
+        if(targetElement && targetElement.innerText === this._assertComparisionText.value){
+            this._assertValidation.value = "TRUE";
+        } else {
+            this._assertValidation.value = "FALSE";
+        }
     }
 
     resetExtractFields(){
         this._extractVariableName.value = "";
         this._validationScript.value = DEFAULT_VALIDATION_SCRIPT;
         this._extractedInfoPreview.value = "";
+    }
+
+    initAssertFields(){
+        const {targetElement} = this.recordingOverlay.getState();
+        this._assertComparisionText.value = targetElement.innerText;
     }
 
     renderForm(){
@@ -94,6 +129,12 @@ export default class FormWizard{
                 this._modalHeading.innerHTML = "Extract Info Form";
                 this._extract_event_form.removeAttribute("data-gone");
                 this.evaluateValidationScript();
+                break;
+            case ASSERT_TEXT:
+                this.initAssertFields();
+                this._modalHeading.innerHTML = "Assert Text";
+                this._assertEventForm.removeAttribute("data-gone");
+                this.evaluteAssertText();
                 break;
         }
     }
@@ -110,7 +151,6 @@ export default class FormWizard{
         setAttributeForAllChildNodes(this._modalContentContainer, "data-gone", "true");
 
         this.renderForm();
-
     }
 
 }

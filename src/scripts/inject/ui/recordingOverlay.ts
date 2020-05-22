@@ -1,4 +1,5 @@
 import {
+    ASSERT_TEXT,
     CLICK, EXTRACT_INFO,
     HOVER, INPUT,
     NAVIGATE_URL,
@@ -203,7 +204,8 @@ export default class RecordingOverlay{
                break;
             case EXTRACT_INFO:
                 return this.formWizard.boot(action);
-                break;
+            case ASSERT_TEXT:
+                return this.formWizard.boot(action);
             default:
                 break;
        }
