@@ -12,6 +12,7 @@ html, body{
     padding: 14px 20px;
     font-weight: bold;
     color: #F7F7F7;
+    font-size: 16px;
 }
 .content{
     display: flex;
@@ -27,6 +28,7 @@ html, body{
 }
 .small_heading{
     font-weight: bold;
+    font-size: 16px;
     color: #343131;
 }
 #steps{
@@ -39,6 +41,8 @@ html, body{
 }
 .numbered-list{
     margin: 0;
+    font-size: 14px;
+    line-height: 25px;
     padding-left: 0em;
 }
 #footer{
@@ -58,7 +62,7 @@ html, body{
     font-size: 12px;
     font-weight: bold;
     text-align: center;
-    padding: 6px 20px;
+    padding: 13px 30px;
     cursor: pointer;
 }
 /* To modify ol default numbering to 1.) */
@@ -99,7 +103,7 @@ li:before { content: counter(item) ") "; counter-increment: item }
 
 .event_action{
     color: #000000;
-    font-size: 14px;
+    font-size: 12px;
     font-weight: bold;
 }
 

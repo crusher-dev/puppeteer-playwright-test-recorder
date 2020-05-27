@@ -25,7 +25,7 @@ export function createSnackBar(message: string, actionText: string, action?: any
         let textSpan: any = document.createElement("span");
     textSpan.innerText = message;
     textSpan.setAttribute("data-recorder", "true");
-    textSpan.style = "margin-right: auto; margin-left: 18px; font-family: Panton; font-weight: 600; font-size: 14px;";
+    textSpan.style = "margin-right: auto; margin-left: 18px; font-family: Arial, Helvetica, sans-serif; font-weight: 600; font-size: 14px;";
         snackbar.appendChild(textSpan);
     if (actionText) {
         if (!action) {
