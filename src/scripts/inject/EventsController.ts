@@ -45,7 +45,6 @@ export default class EventsController {
 
     saveCapturedEventInBackground(event_type: string, capturedTarget: any, value: any = "", callback?: any){
         const optimizedMinLength = (capturedTarget.id) ? 2 : 10 // if the target has an id, use that instead of multiple other selectors
-        console.debug(capturedTarget, "Hello");
         const selector = capturedTarget ? finder(capturedTarget, {seedMinLength: 5, optimizedMinLength: optimizedMinLength}) : null;
 
         sendMessageToBackground({type: EVENT_CAPTURED, payload: {event_type: event_type, selector, value: value ? value : null}},  (res: any) => {
