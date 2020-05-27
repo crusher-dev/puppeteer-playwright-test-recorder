@@ -81,7 +81,6 @@ class App extends Component<any, any> {
                     <li>Basic actions are supported by defauly. For extensive actions, click on plus sign over element.</li>
                     <li>On completion, save and use the code on our service or export.</li>
                 </ol>
-                P.S. - Authentication, network, playback support coming soon.
             </>
         )
     }

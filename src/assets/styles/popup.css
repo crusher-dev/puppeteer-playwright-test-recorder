@@ -12,7 +12,7 @@ html, body{
     padding: 14px 20px;
     font-weight: bold;
     color: #F7F7F7;
-    font-size: 16px;
+    font-size: 14px;
 }
 .content{
     display: flex;
@@ -34,10 +34,10 @@ html, body{
 #steps{
     margin-top: 16px;
     color: #343131;
-    margin-bottom: 32px;
+    margin-bottom: 8px;
 }
 #steps li:not(:last-child) {
-    margin-bottom: 10px;
+    margin-bottom: 6px;
 }
 .numbered-list{
     margin: 0;
@@ -62,13 +62,13 @@ html, body{
     font-size: 12px;
     font-weight: bold;
     text-align: center;
-    padding: 13px 30px;
+    padding: 10px 26px;
     cursor: pointer;
 }
 /* To modify ol default numbering to 1.) */
 ol { counter-reset: item }
 li { display: flex }
-li:before { content: counter(item) ") "; counter-increment: item }
+li:before { content: counter(item) ") "; counter-increment: item; margin-right: 3px; }
 
 #events_list{
     padding-left: 0;
