@@ -1,7 +1,5 @@
 // @ts-nocheck
-import domEvents from './dom-events-to-record'
-import pptrActions from './pptr-actions'
-import Block from './Block'
+
 import {
     ASSERT_TEXT,
     CLICK, EXTRACT_INFO,
@@ -43,7 +41,7 @@ const extractInfoUsingScriptFunction = `async function extractInfoUsingScript(pa
 export default class CodeGenerator {
     helperFunctionsToInclude: any;
 
-    constructor(options) {
+    constructor(options: any) {
         this.helperFunctionsToInclude = {};
     }
 
@@ -63,10 +61,11 @@ export default class CodeGenerator {
         return codeToAdd;
     }
 
-    _handleEvents(events){
-        let code = "\n";
-        for(let i = 0; i < events.length; i++){
-            const {event_type, selector, value} = events[i];
+    _handleEvents(events: any){
+        let screenShotFileName: string;
+        let code = '\n';
+        for (let i = 0; i < events.length; i++) {
+            const { event_type, selector, value } = events[i];
             switch (event_type) {
                 case NAVIGATE_URL:
                     code += `  await page.goto('${value}');\n`;
@@ -78,11 +77,11 @@ export default class CodeGenerator {
                     code += `  await page.hover('${selector}');\n`;
                     break;
                 case SCREENSHOT:
-                    const screenShotFileName = selector.replace(/[^\w\s]/gi, '').replace(/ /g,"_") + `_${i}`;
+                    screenShotFileName = selector.replace(/[^\w\s]/gi, '').replace(/ /g, '_') + `_${i}`;
                     code += `  const h_${i} =  await page.$('${selector}');\n   h_${i}.screenshot({path: '${screenShotFileName}.png'});\n`
                     break;
                 case PAGE_SCREENSHOT:
-                    const screenShotFileName = value.replace(/[^\w\s]/gi, '').replace(/ /g,"_") + `_${i}`;
+                    screenShotFileName = value.replace(/[^\w\s]/gi, '').replace(/ /g,"_") + `_${i}`;
                     code += `  await page.screenshot({path: '${screenShotFileName}.png'});`;
                     break;
                 case SCROLL_TO_VIEW:
@@ -99,7 +98,7 @@ export default class CodeGenerator {
                     break;
                 case ASSERT_TEXT:
                     this.helperFunctionsToInclude[ASSERT_TEXT] = true;
-                    ode += ` `
+                    code += ` `;
                 default:
                     console.error("Not supported event");
             }
