@@ -316,10 +316,13 @@ div[data-recorder="true"]{
     z-index: 9999999;
     right: 50% !important;
     transform: translateX(50%);
+    width: 100%;
+    bottom: -10px !important;
 }
 
 @media (min-width: 640px) {
     .paper-snackbar {
+        width: auto;
         /*
         Desktop:
           Single-line snackbar height: 48 dp tall
