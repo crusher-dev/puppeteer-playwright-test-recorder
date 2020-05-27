@@ -1,6 +1,6 @@
 {
-  "name": "Crusher",
-  "description": "Record your tests for playwright",
+  "name": "Crusher - Puppeteer/Playwright Test Recorder",
+  "description": "Record extensive tests for playwright, Puppeteer and other frameworks.",
   "version": "2.0",
   "permissions": [
     "activeTab",

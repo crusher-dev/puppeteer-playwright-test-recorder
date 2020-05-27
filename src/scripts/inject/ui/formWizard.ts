@@ -141,10 +141,8 @@ export default class FormWizard{
 
     boot(actionType: string){
         console.debug("Form wizard booted up");
-
         this.initNodes();
         this.initEventListener();
-
 
         this.actionType = actionType;
         // Hide all forms and show the event form

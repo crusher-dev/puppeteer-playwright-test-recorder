@@ -78,10 +78,10 @@ class App extends Component<any, any> {
                 <span class="small_heading">Steps to use</span>
                 <ol id="steps" class="numbered-list">
                     <li>Press start Recording.</li>
-                    <li>Click on right dot to select interactions.</li>
-                    <li>When complete save the interaction.</li>
-                    <li>On Complete, replay it or export it.</li>
+                    <li>Basic actions are supported by defauly. For extensive actions, click on plus sign over element.</li>
+                    <li>On completion, save and use the code on our service or export.</li>
                 </ol>
+                P.S. - Authentication, network, playback support coming soon.
             </>
         )
     }

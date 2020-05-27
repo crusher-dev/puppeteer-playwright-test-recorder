@@ -3,7 +3,7 @@
     display: flex;
     justify-content: center;
     color: #fff;
-    font-family: 'Panton';
+    font-family: 'Arial, Helvetica, sans-serif';
 }
 .overalay-container{
     max-width: 95%;
@@ -113,12 +113,12 @@
 
 /* Capture actions */
 /* Capture actions */
-@import url(//db.onlinewebfonts.com/c/24398819ac2f8f57d97b6d2c131686fe?family=Panton-Bold);
+@import url(//db.onlinewebfonts.com/c/24398819ac2f8f57d97b6d2c131686fe?family=Arial, Helvetica, sans-serif-Bold);
 div[data-recorder="true"]{
     box-sizing: border-box;
 }
 .overlay_heading_container{
-    font-family: Panton;
+    font-family: Arial, Helvetica, sans-serif;
     font-weight: bold;
     display: flex;
     margin-bottom: 12px;
@@ -197,7 +197,7 @@ div[data-recorder="true"]{
     padding: 12px 10px 12px 0px;
     color: #383838;
     font-size: 16px;
-    font-family: Panton;
+    font-family: Arial, Helvetica, sans-serif;
     font-weight: 600;
 }
 
@@ -292,7 +292,7 @@ div[data-recorder="true"]{
     transition-duration: 0.5s;
     -webkit-transition-timing-function: ease;
     transition-timing-function: ease;
-    font-family: Panton;
+    font-family: Arial, Helvetica, sans-serif;
     font-size: 14px;
     min-height: 14px;
     background-color: #323232;
@@ -348,7 +348,7 @@ div[data-recorder="true"]{
     min-width: -webkit-min-content;
     min-width: -moz-min-content;
     min-width: min-content;
-    font-family: Panton;
+    font-family: Arial, Helvetica, sans-serif;
 }
 
 
@@ -495,19 +495,19 @@ input.modal_input{
     height: 26px;
     padding: 6px;
     padding-left: 12px;
-    font-family: Panton;
+    font-family: Arial, Helvetica, sans-serif;
     font-weight: 600;
     font-size: 12px;
 }
 #validation_script{
-    font-family: Panton;
+    font-family: Arial, Helvetica, sans-serif;
     font-weight: 600;
     margin-top: 18px;
     font-size: 14px;
 }
 .label{
     color: #383838;
-    font-family: Panton;
+    font-family: Arial, Helvetica, sans-serif;
     font-size: 13px;
     font-weight: bold;
 }
@@ -527,7 +527,7 @@ input.modal_input{
     font-size: 16px;
     color: #fff;
     font-weight: bold;
-    font-family: Panton;
+    font-family: Arial, Helvetica, sans-serif;
     margin-top: 18px;
 }
 .form_textarea{
