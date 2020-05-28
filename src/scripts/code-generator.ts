@@ -97,7 +97,7 @@ export default class CodeGenerator {
                     code += `  let ${variable_name} = await extractInfoUsingScript(page, '${selector}', ` + '`' + validation_script + '`' + `)\n`;
                     break;
                 case ASSERT_TEXT:
-                    this.helperFunctionsT oInclude[ASSERT_TEXT] = true;
+                    this.helperFunctionsToInclude[ASSERT_TEXT] = true;
                     code += ` `;
                 default:
                     console.error("Not supported event");

@@ -11,15 +11,15 @@ import {
 	SCROLL_TO_VIEW
 } from "../constants/DOMEventsToRecord";
 
-const importPlayWright = `const playwright = require('playwright');\n\n`
+const importPlayWright = `const puppeteer = require('puppeteer');\n\n`
 
-const header = `const browser = await playwright["chrome"].launch();
+const header = `const browser = await puppeteer.launch();
 const page = await context.newPage();\n`
 
 const footer = `await browser.close();\n`
 
 const wrappedHeader = `(async () => {
-  const browser = await playwright["chromium"].launch();
+  const browser = await puppeteer.launch();
   const page = await browser.newPage();\n`
 
 const wrappedFooter = `  await browser.close()
