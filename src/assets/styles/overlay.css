@@ -37,8 +37,8 @@
     width: 81px;
     height: 33px;
 
-    background: #5AD7FF;
-    border: 2px solid #1EAFDD;
+    background: #EC2E6A;
+    border: 2px solid #EC2E6A;
     box-sizing: border-box;
     border-radius: 4px;
     display: flex;
@@ -101,7 +101,7 @@
 #add_actions_overlay{
     border-radius: 55px;
     border-width: 2px;
-    background-color: red;
+    background-color: #EC2E6A;
     color: white;
     padding: 6px 10px;
     font-size: 16px;
@@ -122,8 +122,8 @@ div[data-recorder="true"]{
     font-weight: 500;
     display: flex;
     margin-bottom: 12px;
-    background: #2394E6;
-    border: 1px solid #1C89D8;
+    background: #FF3C79;
+    border: 1px solid #EC2E6A;
     padding: 14px 17px;
     align-items: center;
 }
@@ -142,7 +142,7 @@ div[data-recorder="true"]{
     padding: 1px 12px;
 }
 #overlay_add_icon{
-    border: 2px solid #0D88E1;
+    border: 2px solid #EC2E6A;
     color: #F1326B;
     text-align: center;
     font-weight: 800;
@@ -151,14 +151,14 @@ div[data-recorder="true"]{
     position: relative;
     left: 50%;
     transform: translateX(-50%);
-    background: #1F9EFB;
+    background: #FF3C79;
     cursor: pointer;
     user-select: none;
     color: #fff;
 }
 
 #overlay_add_events_container{
-    background: #1F9EFB;
+    background: #FF3C79;
     margin-top: 14px;
     position: absolute;
     color: #fff;
@@ -166,7 +166,7 @@ div[data-recorder="true"]{
     font-size: 16px;
     background: #fff;
     display: none;
-    border: 2px solid #095e9c;
+    border: 2px solid #EC2E6A;
     left: -108% !important;
     text-align: left;
     padding-bottom: 10px;
@@ -252,8 +252,8 @@ div[data-recorder="true"]{
 
 #overlay_add_action #popper_arrow::before {
     content: '';
-    background: #0D88E1;
-    border: 1px solid #0D88E1;
+    background: #FF3C79;
+    border: 1px solid #FF3C79;
     right: 22%;
     bottom: 30%;
     transform: rotate(45deg);
@@ -261,8 +261,8 @@ div[data-recorder="true"]{
 
 #overlay_add_action[data-popper-placement="left-start"] #popper_arrow::before {
     content: '';
-    background: #0D88E1;
-    border: 1px solid #0D88E1;
+    background: #FF3C79;
+    border: 1px solid #FF3C79;
     right: -22%;
     bottom: 30%;
     transform: translateX(580%) rotate(45deg);
@@ -278,7 +278,7 @@ div[data-recorder="true"]{
 }
 
 #event_form{
-    background: red;
+    background: #EC2E6A;
     height: 40px;
 }
 
@@ -524,8 +524,8 @@ input.modal_input{
 }
 .form_submit_btn{
     align-self: flex-end;
-    border: 1px solid #0c5d9c;
-    background: #2493e6;
+    border: 1px solid #EC2E6A;
+    background: #FF3C79;
     border-radius: 4px;
     padding: 6px 35px;
     font-size: 16px;
@@ -550,5 +550,5 @@ input, textarea{
 }
 
 .paper-snackbar{
-    background-color: #219dfb !important;
+    background-color: #EC2E6A !important;
 }

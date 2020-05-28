@@ -74,7 +74,7 @@ class App extends Component<any, any> {
     renderSteps(){
         return (
             <>
-                <div id="icon" class="center-aligned" style={{background: `url(${Chrome.runtime.getURL("icons/bus.svg")})`, width: 98, height: 79}}></div>
+                <div id="icon" class="center-aligned" style={{background: `url(${Chrome.runtime.getURL("icons/crusher.svg")})`, width: 98, height: 79}}></div>
                 <span class="small_heading">Steps to use</span>
                 <ol id="steps" class="numbered-list">
                     <li>Press start Recording.</li>

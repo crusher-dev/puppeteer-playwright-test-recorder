@@ -171,7 +171,7 @@ export default class RecordingOverlay{
 
     highlightNode(target: HTMLElement){
         target.style.outlineStyle = 'solid';
-        target.style.outlineColor = '#0D88E1';
+        target.style.outlineColor = '#EC2E6A';
         target.style.outlineWidth = '1px';
     }
 
