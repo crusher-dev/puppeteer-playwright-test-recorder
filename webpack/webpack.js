@@ -10,7 +10,9 @@ module.exports = {
     entry: {
         background: [customPath, path.resolve(__dirname, '../src/background.ts')],
         inject: [customPath, path.resolve(__dirname, '../src/inject.ts')],
-        popup: [customPath, path.resolve(__dirname, '../src/scripts/popup/index.tsx')]
+        popup: [customPath, path.resolve(__dirname, '../src/scripts/popup/index.tsx')],
+        puppeteerCodeGenerator: [customPath, path.resolve(__dirname, '../src/scripts/code-generator.ts')],
+        playwrightCodeGenerator: [customPath, path.resolve(__dirname, '../src/scripts/puppter-code-generator.ts')]
     },
     plugins: [
         new webpack.DefinePlugin({
