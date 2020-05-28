@@ -155,7 +155,7 @@ export default class RecordingOverlay{
         this._overlayEventsGrid = document.querySelector("#events_grid");
         this._pageActionsContainer = document.querySelector("#page_actions");
         this._stopRecorderButton = document.querySelector("#page_actions #stop_recorder_button");
-        this._takeScreenShotButton = document.querySelector("#page_actions #screenshot_button");
+        this._takeScreenShotButton = document.querySelector("#page_actions #fullpage_screenshot");
         this._arrowOnAddIcon = document.querySelector('#popper_arrow');
         this._modalContentContainer = document.querySelector(".overlay_modal_content");
     }
@@ -277,9 +277,7 @@ export default class RecordingOverlay{
     }
 
     takePageScreenShot(){
-        sendMessageToBackground({type: EVENT_CAPTURED, payload: {event_type: PAGE_SCREENSHOT, selector: window.location.href, value: document.title}}, function (res: any) {
-            console.log(res);
-        });
+        this.eventsController.saveCapturedEventInBackground(PAGE_SCREENSHOT, document.body, document.title);
     }
 
     removeNodeListeners(){

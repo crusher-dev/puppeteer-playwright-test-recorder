@@ -31,7 +31,7 @@ const extractInfoUsingScriptFunction = `async function extractInfoUsingScript(pa
     const escapedInnerHTML = (await elHandle.innerHTML())` + '.toString().replace(/\\`/g, "\\\\`").trim()' + `;
     const escapedInnerText = (await elHandle.innerText())` + '.replace(/\\`/g, "\\\\`").trim();' + `;
     
-    `+ "const scriptToEvaluate = \`(\` + validationScript + \`)(\` + '\`' + escapedInnerHTML + '\`' + \`, \` + '\`' + \`${escapedInnerText}\` + '\`' + \`)\`" + `;
+    `+ "const scriptToEvaluate = \`(\` + validationScript + \`)(\` + '\`' + escapedInnerHTML + '\`' + \`, \` + '\`' + \`${escapedInnerText}\` + '\`' + \`, elHandle)\`" + `;
     const output = eval(scriptToEvaluate);
     
     return output;
@@ -82,10 +82,10 @@ export default class CodeGenerator {
                     break;
                 case PAGE_SCREENSHOT:
                     screenShotFileName = value.replace(/[^\w\s]/gi, '').replace(/ /g,"_") + `_${i}`;
-                    code += `  await page.screenshot({path: '${screenShotFileName}.png'});`;
+                    code += `  await page.screenshot({path: '${screenShotFileName}.png'});\n`;
                     break;
                 case SCROLL_TO_VIEW:
-                    code += `  const stv_${i} =  await page.$('${selector}');\nstv_${i}.scrollIntoViewIfNeeded();\n`
+                    code += `  const stv_${i} =  await page.$('${selector}');\n  stv_${i}.scrollIntoViewIfNeeded();\n`
                     break;
                 case INPUT:
                     code += `  await page.type('${selector}', '${value}');\n`;
@@ -97,7 +97,7 @@ export default class CodeGenerator {
                     code += `  let ${variable_name} = await extractInfoUsingScript(page, '${selector}', ` + '`' + validation_script + '`' + `)\n`;
                     break;
                 case ASSERT_TEXT:
-                    this.helperFunctionsToInclude[ASSERT_TEXT] = true;
+                    this.helperFunctionsT oInclude[ASSERT_TEXT] = true;
                     code += ` `;
                 default:
                     console.error("Not supported event");

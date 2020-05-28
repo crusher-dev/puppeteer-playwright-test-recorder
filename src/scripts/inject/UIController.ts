@@ -44,7 +44,7 @@ export default class UIControllerExtends{
                 break;
             case GET_CODE:
                 const {code} = request;
-                sendPostDataWithForm("https://testing-preview.now.sh/", {actions: code})
+                sendPostDataWithForm("http://localhost:7000/app/editor", {actions: code})
                 break;
             default:
                 break;
@@ -70,7 +70,7 @@ export default class UIControllerExtends{
         getEventsList().then((events)=>{
             const _generator = new CodeGenerator({});
             const code = _generator.generate(events);
-            sendPostDataWithForm("https://testing-preview.now.sh/", {actions: code})
+            sendPostDataWithForm("http://localhost:7000/app/editor", {actions: code})
             window.close();
         });
     }

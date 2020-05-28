@@ -12,6 +12,6 @@ export const GET_CODE = "GET_CODE";
 
 
 // Scripts
-export const DEFAULT_VALIDATION_SCRIPT = `function(html, text) {
+export const DEFAULT_VALIDATION_SCRIPT = `function(html, text, element) {
     return text.toLowerCase();
 }`
