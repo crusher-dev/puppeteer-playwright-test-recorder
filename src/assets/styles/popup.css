@@ -23,8 +23,12 @@ html, body{
     align-self: center;
 }
 #icon {
-    margin-top: 32px;
-    margin-bottom: 32px;
+    width: 75% !important;
+    height: 79px !important;
+    background-size: contain !important;
+    background-repeat: no-repeat !important;
+    margin-top: 16px;
+    margin-bottom: 0px;
 }
 .small_heading{
     font-weight: bold;
@@ -55,9 +59,9 @@ html, body{
     margin-left: auto;
 }
 .button{
-    background: #1F9EFB;
+    background: #FF3C79;
     border-radius: 4px;
-    border: 1px solid #0D88E1;
+    border: 1px solid #EC2E6A;
     color: #FFFFFF;
     font-size: 12px;
     font-weight: bold;
