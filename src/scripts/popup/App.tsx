@@ -66,9 +66,7 @@ class App extends Component<any, any> {
     getPlayWrightCode(){
         const {events} = this.state;
         this.stopRecorder();
-        const _generator = new CodeGenerator({});
-        const code = _generator.generate(this.state.events);
-        sendMessageToPage({type: GET_CODE, code: code});
+        sendMessageToPage({type: GET_CODE, events});
     }
 
     renderSteps(){

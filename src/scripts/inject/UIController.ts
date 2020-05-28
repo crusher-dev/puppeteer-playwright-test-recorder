@@ -43,8 +43,8 @@ export default class UIControllerExtends{
                 this.stopRecording();
                 break;
             case GET_CODE:
-                const {code} = request;
-                sendPostDataWithForm("http://localhost:7000/app/editor", {actions: code})
+                const {events} = request;
+                sendPostDataWithForm("http://localhost:7000/app/editor", {actions: events})
                 break;
             default:
                 break;
@@ -69,8 +69,7 @@ export default class UIControllerExtends{
     getCodeForEvents(){
         getEventsList().then((events)=>{
             const _generator = new CodeGenerator({});
-            const code = _generator.generate(events);
-            sendPostDataWithForm("http://localhost:7000/app/editor", {actions: code})
+            sendPostDataWithForm("http://localhost:7000/app/editor", {actions: events})
             window.close();
         });
     }
