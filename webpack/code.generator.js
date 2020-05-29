@@ -11,6 +11,8 @@ module.exports = {
     output: {
         filename: '[name].js',
         path: path.resolve(__dirname, '../build/js/'),
+        libraryTarget: 'commonjs2',
+        globalObject: 'this' // SSR ReferenceError: window is not defined
     },
     resolve: {
         extensions: ['.ts', '.tsx', '.js', '.jsx'],
