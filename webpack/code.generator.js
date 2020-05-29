@@ -5,8 +5,8 @@ const nodeExternals = require('webpack-node-externals');
 
 module.exports = {
     entry: {
-        puppeteerCodeGenerator:  path.resolve(__dirname, '../src/scripts/code-generator.ts'),
-        playwrightCodeGenerator: path.resolve(__dirname, '../src/scripts/puppter-code-generator.ts')
+        playwrightCodeGenerator:  path.resolve(__dirname, '../src/scripts/code-generator.ts'),
+        puppeteerCodeGenerator: path.resolve(__dirname, '../src/scripts/puppter-code-generator.ts')
     },
     output: {
         filename: '[name].js',
