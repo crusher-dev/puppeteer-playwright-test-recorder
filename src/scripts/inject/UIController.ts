@@ -44,7 +44,7 @@ export default class UIControllerExtends{
                 break;
             case GET_CODE:
                 const {events} = request;
-                sendPostDataWithForm("http://localhost:7000/app/editor", {actions: events})
+                sendPostDataWithForm("http://localhost:7000/app/editor", {actions: JSON.stringify(events)})
                 break;
             default:
                 break;
@@ -69,7 +69,7 @@ export default class UIControllerExtends{
     getCodeForEvents(){
         getEventsList().then((events)=>{
             const _generator = new CodeGenerator({});
-            sendPostDataWithForm("http://localhost:7000/app/editor", {actions: events})
+            sendPostDataWithForm("http://localhost:7000/app/editor", {actions: JSON.stringify(events)})
             window.close();
         });
     }
