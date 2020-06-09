@@ -82,7 +82,7 @@ export default class PuppeteerCodeGenerator {
 					break;
 				case PAGE_SCREENSHOT:
 					screenShotFileName = value.replace(/[^\w\s]/gi, '').replace(/ /g, '_') + `_${i}`;
-					code += `  await page.screenshot({path: '${screenShotFileName}.png'});`;
+					code += `  await page.screenshot({path: '/tmp/images/${screenShotFileName}.png'});`;
 					break;
 				case SCROLL_TO_VIEW:
 					code += `  const stv_${i} =  await page.$('${selector}');\nstv_${i}.scrollIntoViewIfNeeded();\n`

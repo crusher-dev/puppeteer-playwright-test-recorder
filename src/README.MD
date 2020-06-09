@@ -33,7 +33,7 @@ Puppetter & Playwright Universal Recorder
 
 ## Overview
 - __Easy to use:__ Few clicks required to create and run tests.
-- __Support 2 frameworks:__ General event capturing system, which then later parsed on to a testing script for library.
+- __Support 2 frameworks:__ General event capturing system, which then later parsed on to a testing script.ts for library.
 - __Mouse and keyboard events:__ Support various events. More support coming soon. 
 - __API Extraction for Scraping:__ Create API from pupetter while scraping the page.
 - __Assertion:__ Uses Chai.js to put assertion on elements

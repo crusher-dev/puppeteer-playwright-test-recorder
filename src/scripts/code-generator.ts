@@ -82,7 +82,7 @@ export default class CodeGenerator {
                     break;
                 case PAGE_SCREENSHOT:
                     screenShotFileName = value.replace(/[^\w\s]/gi, '').replace(/ /g,"_") + `_${i}`;
-                    code += `  await page.screenshot({path: '${screenShotFileName}.png'});\n`;
+                    code += `  await page.screenshot({path: '/tmp/images/${screenShotFileName}.png'});\n`;
                     break;
                 case SCROLL_TO_VIEW:
                     code += `  const stv_${i} =  await page.$('${selector}');\n  stv_${i}.scrollIntoViewIfNeeded();\n`

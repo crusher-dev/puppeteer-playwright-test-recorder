@@ -23,7 +23,7 @@ export function getEventsList(tabId: any = undefined){
   return new Promise((resolve, reject) => {
     sendMessageToBackground({type: GET_EVENTS, payload: {tabId: tabId}}, (events: any)=>{
       if(!events){
-        reject("Something went wrong!! Failed to get events from background script.");
+        reject("Something went wrong!! Failed to get events from background script.ts.");
       }
       resolve(events);
     });
