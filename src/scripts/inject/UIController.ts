@@ -44,6 +44,7 @@ export default class UIControllerExtends{
                 break;
             case GET_CODE:
                 const {events} = request;
+                console.log(events);
                 sendPostDataWithForm("http://localhost:7000/app/editor", {actions: JSON.stringify(events)})
                 break;
             default:
@@ -69,6 +70,7 @@ export default class UIControllerExtends{
     getCodeForEvents(){
         getEventsList().then((events)=>{
             const _generator = new CodeGenerator({});
+            console.log(events);
             sendPostDataWithForm("http://localhost:7000/app/editor", {actions: JSON.stringify(events)})
             window.close();
         });
@@ -81,6 +83,6 @@ export default class UIControllerExtends{
 
         const _overlayCss = document.querySelector("#overlay_css");
         if(_overlayCss){_overlayCss.remove();}
-        window.location.reload();
+        // window.location.reload();
     }
 }
