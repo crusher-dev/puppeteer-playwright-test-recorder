@@ -73,11 +73,12 @@ class App extends Component<any, any> {
         return (
             <>
                 <div id="icon" class="center-aligned" style={{background: `url(${Chrome.runtime.getURL("icons/crusher.svg")})`, width: 98, height: 79}}></div>
-                <span class="small_heading">Steps to use</span>
+                <span class="small_heading">How to create test?</span>
                 <ol id="steps" class="numbered-list">
                     <li>Press start Recording.</li>
-                    <li>Basic actions are supported by default. For extensive actions, click on plus sign over element.</li>
-                    <li>On completion, save and use the code on our service or export.</li>
+                    <li>Basic actions are supported by default. For extensive actions, click on plus sign.</li>
+                    <li> * For mobile - Decrease window size</li>
+                    <li>On completion, press stop sign.</li>
                 </ol>
             </>
         )

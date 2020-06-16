@@ -24,6 +24,27 @@
                     div#submit_extract_form.form_submit_btn(data-recorder="true") Save
                 #assert_event_form.form_container(data-recorder='true', data-gone='true')
                     div.form_label.label(data-recorder="true") Should Equal to
+                    div.form_label
+                        select#options(name='options')
+                            option(value='equal') Equal
+                            option(value='notEqual') Not Equal
+                            option(value='isAtMost') isAtMost
+                            option(value='isNull') isNull
+                            option(value='isNotNull') isNotNull
+                            option(value='isNan') isNan
+                            option(value='isNotNaN') isNotNaN
+                            option(value='isArray') isArray
+                            option(value='isFinite') isFinite
+                            option(value='include') include
+                            option(value='include') include
+                            option(value='match') match
+                            option(value='notMatch') notMatch
+                            option(value='lengthOf') lengthOf
+                            option(value='oneOf') oneOf
+                            option(value='isEmpty') isEmpty
+                            option(value='isNotEmpty') isNotEmpty
+                            option(value='isOk') isOk
+                            option(value='array') array
                     input#assert_comparision_text.modal_input(placeholder="", data-recorder="true")
                     div.form_label.label(data-recorder="true") Validation
                     input#assert_validation.modal_input(placeholder="Validation", disabled="true", data-recorder="true")
