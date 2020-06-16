@@ -8,7 +8,8 @@ import {Chrome} from "../../utils/types";
 import {getEventsList, sendMessageToBackground, sendMessageToPage} from "../../utils/messageUtil";
 import {stopSession} from "../../utils/dom";
 import {sendPostDataWithForm} from "../../utils/helpers";
-import CodeGenerator from "../code-generator";
+// @ts-ignore
+import CodeGenerator from "code-generator";
 
 export default class UIControllerExtends{
     state: any;
@@ -45,7 +46,7 @@ export default class UIControllerExtends{
             case GET_CODE:
                 const {events} = request;
                 console.log(events);
-                sendPostDataWithForm("http://localhost:7000/app/editor", {actions: JSON.stringify(events)})
+                sendPostDataWithForm("http://localhost:7000/app/editor", {events: JSON.stringify(events)})
                 break;
             default:
                 break;
@@ -71,7 +72,7 @@ export default class UIControllerExtends{
         getEventsList().then((events)=>{
             const _generator = new CodeGenerator({});
             console.log(events);
-            sendPostDataWithForm("http://localhost:7000/app/editor", {actions: JSON.stringify(events)})
+            sendPostDataWithForm("http://localhost:7000/app/editor", {events: JSON.stringify(events)})
             window.close();
         });
     }

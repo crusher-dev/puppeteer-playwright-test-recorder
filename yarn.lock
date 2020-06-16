@@ -2228,6 +2228,10 @@ clone-response@^1.0.2:
   dependencies:
     mimic-response "^1.0.0"
 
+"code-generator@https://github.com/crusherdev/code-generator.git":
+  version "1.0.0"
+  resolved "https://github.com/crusherdev/code-generator.git#fd8c4845fb4af1a1a467799998691fcf9882a69e"
+
 code-point-at@^1.0.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/code-point-at/-/code-point-at-1.1.0.tgz#0d070b4d043a5bea33a2f1a40e2edb3d9a4ccf77"

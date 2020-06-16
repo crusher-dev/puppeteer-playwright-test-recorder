@@ -4,7 +4,6 @@ import {Chrome} from "../../utils/types";
 import {changeExtensionIcon, loadScript} from "../../utils/helpers";
 import {getEventsList, sendMessageToBackground, sendMessageToPage} from "../../utils/messageUtil";
 import {STOP_RECORDING, DELETE_RECORDING_SESSION, GET_CODE} from "../../constants";
-import CodeGenerator from "../code-generator";
 
 class App extends Component<any, any> {
     constructor(props: any) {
