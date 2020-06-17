@@ -9,3 +9,5 @@ export const SCREENSHOT = "SCREENSHOT";
 export const BLACKOUT = "BLACKOUT";
 export const WAIT = "WAIT";
 export const PAGE_SCREENSHOT = "PAGE_SCREENSHOT";
+export const SET_VIEWPORT = 'SET_VIEWPORT';
+export const SET_COOKIES = 'SET_VIEWPORT';

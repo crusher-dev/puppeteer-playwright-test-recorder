@@ -99,6 +99,7 @@ export default class CodeGenerator {
                 case ASSERT_TEXT:
                     this.helperFunctionsToInclude[ASSERT_TEXT] = true;
                     code += ` `;
+                    break;
                 default:
                     console.error("Not supported event");
             }

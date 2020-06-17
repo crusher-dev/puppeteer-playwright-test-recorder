@@ -5,6 +5,7 @@
   "permissions": [
     "activeTab",
     "tabs",
+    "cookies",
     "*://*/*"
   ],
   "background": {

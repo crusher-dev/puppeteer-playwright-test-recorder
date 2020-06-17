@@ -1,4 +1,4 @@
-import {SAVE_EVENT, START_RECORDING_SESSION, STOP_RECORDING, DELETE_RECORDING_SESSION} from '../../constants';
+import {SAVE_EVENT, START_RECORDING_SESSION, DELETE_RECORDING_SESSION} from '../../constants';
 
 let state: any = {
   events: {},
@@ -16,7 +16,6 @@ export function dispatch(action: any) {
         ...state,
         sessions: {...state.sessions, [tabId]: true}
       }
-      break;
     case DELETE_RECORDING_SESSION:
       // @ts-ignore
       const {tabId} = action;
@@ -25,7 +24,6 @@ export function dispatch(action: any) {
         events: {...state.events, [tabId]: []},
         sessions: {...state.sessions, [tabId]: false}
       }
-      break;
     case SAVE_EVENT:
       // @ts-ignore
       const {event_type, selector, value, tabId} = action;
@@ -39,9 +37,6 @@ export function dispatch(action: any) {
           ]
         }
       };
-      break;
-    default:
-      break;
   }
 }
 

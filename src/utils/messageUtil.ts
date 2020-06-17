@@ -1,8 +1,8 @@
 import { Chrome } from './types';
 import {CHECK_SESSION_STATUS, GET_EVENTS} from "../constants";
 
-export function sendMessageToBackground(payload: any, callback: any = null) {
-  Chrome.runtime.sendMessage(payload, (response: any) => {
+export function sendMessageToBackground(body: any, callback: any = null) {
+  Chrome.runtime.sendMessage(body, (response: any) => {
     if (callback) {
       callback(response);
     }

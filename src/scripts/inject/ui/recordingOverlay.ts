@@ -5,7 +5,7 @@ import {
     NAVIGATE_URL,
     PAGE_SCREENSHOT,
     SCREENSHOT,
-    SCROLL_TO_VIEW
+    SCROLL_TO_VIEW, SET_VIEWPORT
 } from "../../../constants/DOMEventsToRecord";
 import {sendMessageToBackground} from "../../../utils/messageUtil";
 import {DELETE_RECORDING_SESSION, EVENT_CAPTURED, START_RECORDING_SESSION, STOP_RECORDING} from "../../../constants";
@@ -295,6 +295,11 @@ export default class RecordingOverlay{
             type: START_RECORDING_SESSION,
         }, function (res: any) {
             console.log(res);
+        });
+
+        this.eventsController.saveCapturedEventInBackground(SET_VIEWPORT, "document", {
+            width: window.outerWidth,
+            height: window.outerHeight
         });
 
         this.eventsController.saveCapturedEventInBackground(NAVIGATE_URL, document.body, window.location.href);
