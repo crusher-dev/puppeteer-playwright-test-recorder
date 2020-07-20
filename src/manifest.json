@@ -30,5 +30,5 @@
     "icons/overlay.css"
   ],
   "manifest_version": 2,
-  "content_security_policy": "default-src 'self'; script-src 'self' http://localhost:3000 https://localhost:3000 'unsafe-eval'; connect-src http://localhost:3000 https://localhost:3000; style-src * 'unsafe-inline' 'self' blob:; img-src 'self' data:;"
+  "content_security_policy": "default-src 'self'; script-src 'self' http://localhost:2400 https://localhost:2400 'unsafe-eval'; connect-src http://localhost:2400 https://localhost:2400; style-src * 'unsafe-inline' 'self' blob:; img-src 'self' data:;"
 }

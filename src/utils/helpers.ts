@@ -11,7 +11,7 @@ export function loadScript(name: string, tabId: any, cb: any) {
       });
     } else {
       // dev: async fetch bundle
-      fetch(`http://localhost:3000/js/${name}.js`)
+      fetch(`http://localhost:2400/js/${name}.js`)
           .then((res) => res.text())
           .then((fetchRes) => {
             Chrome.tabs.executeScript(tabId, { code: fetchRes, runAt: 'document_end' }, function(){

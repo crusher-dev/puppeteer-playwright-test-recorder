@@ -46,7 +46,7 @@ export default class UIControllerExtends{
             case GET_CODE:
                 const {events} = request;
                 console.log(events);
-                sendPostDataWithForm("http://localhost:7000/app/editor", {events: JSON.stringify(events)})
+                sendPostDataWithForm("https://app.crusher.dev/app/editor", {events: JSON.stringify(events)})
                 break;
             default:
                 break;
@@ -72,7 +72,7 @@ export default class UIControllerExtends{
         getEventsList().then((events)=>{
             const _generator = new CodeGenerator({});
             console.log(events);
-            sendPostDataWithForm("http://localhost:7000/app/editor", {events: JSON.stringify(events)})
+            sendPostDataWithForm("https://app.crusher.dev/app/editor", {events: JSON.stringify(events)})
             window.close();
         });
     }

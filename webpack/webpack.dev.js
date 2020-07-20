@@ -4,7 +4,7 @@ const ExtensionReloader = require('webpack-extension-reloader');
 
 const customPath = path.join(__dirname, './customPublicPath');
 const host = 'localhost';
-const port = 3000;
+const port = 2400;
 module.exports = {
   mode: 'development', // The plugin is activated only if mode is set to development
   watch: true,
