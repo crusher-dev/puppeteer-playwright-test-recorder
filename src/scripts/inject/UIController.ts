@@ -84,6 +84,6 @@ export default class UIControllerExtends{
 
         const _overlayCss = document.querySelector("#overlay_css");
         if(_overlayCss){_overlayCss.remove();}
-        // window.location.reload();
+        window.location.reload();
     }
 }
