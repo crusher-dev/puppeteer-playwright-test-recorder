@@ -12,7 +12,8 @@ module.exports = {
   entry: {
     background: [customPath, path.resolve(__dirname, '../src/background.ts')],
     inject: [customPath, path.resolve(__dirname, '../src/inject.ts')],
-    popup: [customPath, path.resolve(__dirname, '../src/scripts/popup/index.tsx')]
+    popup: [customPath, path.resolve(__dirname, '../src/scripts/popup/index.tsx')],
+    create_test: [customPath, path.resolve(__dirname, '../src/scripts/create_test/index.tsx')]
   },
   devMiddleware: {
     publicPath: `http://${host}:${port}/js`,
@@ -46,7 +47,7 @@ module.exports = {
       exclude: /node_modules/,
       loader: 'babel-loader',
       options: {
-        presets: ['@babel/preset-env', "@babel/preset-react"],
+        presets: ['@babel/preset-env', "@babel/preset-react", "@emotion/babel-preset-css-prop"],
         plugins: [
           ["@babel/plugin-transform-react-jsx", { "pragma":"h" }]
         ]

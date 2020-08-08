@@ -1,7 +1,7 @@
 import { h, Component } from 'preact';
 import React from 'preact/compat';
 import {Chrome} from "../../utils/types";
-import {changeExtensionIcon, loadScript} from "../../utils/helpers";
+import {loadScript} from "../../utils/helpers";
 import {getEventsList, sendMessageToBackground, sendMessageToPage} from "../../utils/messageUtil";
 import {STOP_RECORDING, DELETE_RECORDING_SESSION, GET_CODE} from "../../constants";
 
@@ -84,7 +84,10 @@ class App extends Component<any, any> {
     }
 
     async handleStartRecordingClick(){
-        await this.injectRecorder();
+        // await this.injectRecorder();
+
+        Chrome.tabs.create({ url: Chrome.extension.getURL('create_test.html') });
+
         window.close();
     }
 
@@ -109,8 +112,7 @@ class App extends Component<any, any> {
                     {!isSessionGoingOn && (<button class="right-aligned button" onClick={this.handleStartRecordingClick}>Start Recording</button>)}
                     {isSessionGoingOn && (<button class="right-aligned button" onClick={this.handleExportTestsClick}>Export Tests</button>)}
                 </div>
-                <link rel="stylesheet" href={Chrome.runtime.getURL("/styles/popup.css")}/>
-            </div>
+             </div>
         );
     }
 }

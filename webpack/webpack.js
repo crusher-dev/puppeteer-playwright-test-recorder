@@ -10,7 +10,8 @@ module.exports = {
     entry: {
         background: [customPath, path.resolve(__dirname, '../src/background.ts')],
         inject: [customPath, path.resolve(__dirname, '../src/inject.ts')],
-        popup: [customPath, path.resolve(__dirname, '../src/scripts/popup/index.tsx')]
+        popup: [customPath, path.resolve(__dirname, '../src/scripts/popup/index.tsx')],
+        create_test: [customPath, path.resolve(__dirname, '../src/scripts/create_test/index.tsx')]
     },
     plugins: [
         new webpack.DefinePlugin({
