@@ -18,16 +18,10 @@
   "web_accessible_resources": [
     "inject.html",
     "overlay.html",
-    "styles/overlay.css",
-    "icons/extension_icon.png",
-    "icons/start_recording.png",
-    "icons/ongoing_recording.png",
-    "icons/crusher.svg",
-    "icons/chrome.svg",
-    "icons/edge.svg",
-    "icons/firefox.svg",
-    "icons/safari.svg",
-    "icons/overlay.css"
+    "create_test.html",
+    "styles/*",
+    "icons/*",
+    "fonts/*"
   ],
   "manifest_version": 2,
   "content_security_policy": "default-src 'self'; script-src 'self' http://localhost:2400 https://localhost:2400 'unsafe-eval'; connect-src http://localhost:2400 https://localhost:2400; style-src * 'unsafe-inline' 'self' blob:; img-src 'self' data:;"

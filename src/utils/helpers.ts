@@ -1,5 +1,5 @@
 import { Chrome } from './types';
-
+const url = require('url');
 export function loadScript(name: string, tabId: any, cb: any) {
   return new Promise((resolve, reject) => {
     if (process.env.NODE_ENV === 'production') {
@@ -73,4 +73,17 @@ export function changeExtensionIcon(icon: string){
 
 export function getSentenceCaseString(str: string){
   return str[0].toUpperCase()+str.slice(1).toLowerCase();
+}
+
+export function resolveToFrontendUrl(path: string){
+  return url.resolve("https://backend.crusher-test.com", path);
+}
+
+export function createNewTab(path: string){
+  return new Promise((resolve, reject)=>{
+    Chrome.browserAction.onClicked.addListener(function(activeTab: any){
+      Chrome.tabs.create({ url: path });
+      resolve(true);
+    });
+  });
 }

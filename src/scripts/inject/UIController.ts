@@ -7,7 +7,7 @@ import {
 import {Chrome} from "../../utils/types";
 import {getEventsList, sendMessageToBackground, sendMessageToPage} from "../../utils/messageUtil";
 import {stopSession} from "../../utils/dom";
-import {sendPostDataWithForm} from "../../utils/helpers";
+import {resolveToFrontendUrl, sendPostDataWithForm} from "../../utils/helpers";
 // @ts-ignore
 import CodeGenerator from "code-generator";
 
@@ -46,7 +46,7 @@ export default class UIControllerExtends{
             case GET_CODE:
                 const {events} = request;
                 console.log(events);
-                sendPostDataWithForm("https://backend.crusher-test.com/test/editor", {events: JSON.stringify(events)})
+                sendPostDataWithForm(resolveToFrontendUrl("/test/goToEditor"), {events: JSON.stringify(events)})
                 break;
             default:
                 break;
@@ -70,9 +70,8 @@ export default class UIControllerExtends{
 
     getCodeForEvents(){
         getEventsList().then((events)=>{
-            const _generator = new CodeGenerator({});
             console.log(events);
-            sendPostDataWithForm("https://backend.crusher-test.com/test/goToEditor", {events: JSON.stringify(events)})
+            sendPostDataWithForm(resolveToFrontendUrl("/test/goToEditor"), {events: JSON.stringify(events)})
             window.close();
         });
     }
