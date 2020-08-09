@@ -1,0 +1,17 @@
+{
+  "presets": [
+    [
+      "@babel/preset-typescript",
+      {
+        "targets": {
+          "esmodules": false
+        }
+      }
+    ]
+  ],
+  "plugins": [
+    ["transform-react-jsx", {
+      "pragma": "h"
+    }]
+  ]
+}
