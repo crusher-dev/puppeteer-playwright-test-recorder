@@ -1,20 +1,19 @@
 import {h, Component, ComponentProps} from 'preact';
 import React from 'preact/compat';
-import {Chrome} from "../../interfaces/GlobalInterface";
 import {useRef, useState} from "preact/hooks";
 
 function Step(props: ComponentProps<any>){
     return (
         <li style={styles.step}>
             <div style={styles.stepImage}>
-                <img src={Chrome.runtime.getURL("icons/mouse.svg")}/>
+                <img src={chrome.runtime.getURL("icons/mouse.svg")}/>
             </div>
             <div style={{...styles.stepTextContainer}}>
                 <div style={styles.stepAction}>Click</div>
                 <div style={styles.stepSelector}>{"p > a"}</div>
             </div>
             <div style={styles.centerItemsVerticalFlex}>
-                <img style={styles.stepGoImage} src={Chrome.runtime.getURL("icons/arrow.svg")}/>
+                <img style={styles.stepGoImage} src={chrome.runtime.getURL("icons/arrow.svg")}/>
             </div>
         </li>
     );
@@ -47,12 +46,12 @@ function RenderDesktopBrowser(props: any){
             <div style={styles.browserToolbar}>
                 <div style={styles.browserSmallShadow}></div>
                 <div style={styles.browserMainToolbar}>
-                    <div style={{display: "flex", alignItems: "center"}}><img src={Chrome.runtime.getURL("/icons/navigation-back.svg")}/></div>
-                    <div style={{marginLeft: "0.7rem", display: "flex", alignItems: "center"}}><img src={Chrome.runtime.getURL("/icons/navigation-forward.svg")}/></div>
-                    <div style={{marginLeft: "0.9rem", display: "flex", alignItems: "center"}}><img style={{width: "1.1rem"}} src={Chrome.runtime.getURL("/icons/navigation-refresh.svg")}/></div>
+                    <div style={{display: "flex", alignItems: "center"}}><img src={chrome.runtime.getURL("/icons/navigation-back.svg")}/></div>
+                    <div style={{marginLeft: "0.7rem", display: "flex", alignItems: "center"}}><img src={chrome.runtime.getURL("/icons/navigation-forward.svg")}/></div>
+                    <div style={{marginLeft: "0.9rem", display: "flex", alignItems: "center"}}><img style={{width: "1.1rem"}} src={chrome.runtime.getURL("/icons/navigation-refresh.svg")}/></div>
                     <div style={styles.addressBar}>
                         <div style={{width: "1.75rem", display: "flex", justifyContent: "center", alignItems: "center"}}>
-                            <img style={{width: "0.8rem"}} src={Chrome.runtime.getURL("/icons/ssl.svg")}/>
+                            <img style={{width: "0.8rem"}} src={chrome.runtime.getURL("/icons/ssl.svg")}/>
                         </div>
                         <div ref={addressInput} style={styles.addressBarInput} onKeyDown={handleKeyDown} contentEditable={true}>{addressValue}</div>
                         <div style={styles.recordingStatus}>
@@ -64,7 +63,7 @@ function RenderDesktopBrowser(props: any){
             <div style={styles.previewBrowser}>
                 <iframe scrolling="auto" id="screen-iframe-5984a019-7f2b-4f58-ad11-e58cc3cfa634" className="jss307"
                         sandbox="allow-scripts allow-forms allow-same-origin" title="Large Screen - 1280x800"
-                        src={Chrome.runtime.getURL("iframe.html")}
+                        src={chrome.runtime.getURL("iframe.html")}
                         style="width: 1280px; height: 800px;"></iframe>
             </div>
         </div>
@@ -97,7 +96,7 @@ function App(props: ComponentProps<any>) {
                     }
                 `}
             </style>
-            <link rel="stylesheet" href={Chrome.runtime.getURL("/styles/fonts.css")}/>
+            <link rel="stylesheet" href={chrome.runtime.getURL("/styles/fonts.css")}/>
         </div>
     );
 }

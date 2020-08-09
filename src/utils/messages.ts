@@ -1,8 +1,5 @@
-import {Chrome} from "../interfaces/GlobalInterface";
-
-
 export function sendMessageToBackground(payload: any, callback: any = null) {
-    Chrome.runtime.sendMessage(payload, (response: any) => {
+    chrome.runtime.sendMessage(payload, (response: any) => {
         if (callback) {
             callback(response);
         }
@@ -10,8 +7,8 @@ export function sendMessageToBackground(payload: any, callback: any = null) {
 }
 
 export function sendMessageToPage(payload: any, callback: any = null) {
-    Chrome.tabs.query({ active: true, currentWindow: true }, (tabs: any) => {
-        Chrome.tabs.sendMessage(tabs[0].id, payload, (response: any) => {
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs: any) => {
+        chrome.tabs.sendMessage(tabs[0].id, payload, (response: any) => {
             if (callback) {
                 callback(response);
             }

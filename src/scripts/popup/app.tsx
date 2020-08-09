@@ -1,6 +1,5 @@
 import { Component } from 'preact';
 import React from 'preact/compat';
-import {Chrome} from "../../interfaces/GlobalInterface";
 import {loadScript} from "../../utils/helpers";
 
 class App extends Component<any, any> {
@@ -24,7 +23,7 @@ class App extends Component<any, any> {
     renderSteps(){
         return (
             <>
-                <div id="icon" class="center-aligned" style={{background: `url(${Chrome.runtime.getURL("icons/crusher.svg")})`, width: 98, height: 79}}></div>
+                <div id="icon" class="center-aligned" style={{background: `url(${chrome.runtime.getURL("icons/crusher.svg")})`, width: 98, height: 79}}></div>
                 <span class="small_heading">How to create test?</span>
                 <ol id="steps" class="numbered-list">
                     <li>Press start Recording.</li>
@@ -37,7 +36,7 @@ class App extends Component<any, any> {
     }
 
     async handleStartRecordingClick(){
-        Chrome.tabs.create({ url: Chrome.extension.getURL('create_test.html') });
+        chrome.tabs.create({ url: chrome.extension.getURL('create_test.html') });
 
         window.close();
     }
@@ -54,7 +53,7 @@ class App extends Component<any, any> {
                 <div id="footer">
                     <button class="right-aligned button" onClick={this.handleStartRecordingClick}>Start Recording</button>
                 </div>
-                <link rel="stylesheet" href={Chrome.runtime.getURL("/styles/popup.css")}/>
+                <link rel="stylesheet" href={chrome.runtime.getURL("/styles/popup.css")}/>
             </div>
         );
     }

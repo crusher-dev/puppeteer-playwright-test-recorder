@@ -1,10 +1,9 @@
-import { Chrome } from '../interfaces/GlobalInterface';
 const url = require('url');
 
 export function loadScript(name: string, tabId: any, cb: any) {
     return new Promise((resolve, reject) => {
         if (process.env.NODE_ENV === 'production') {
-            Chrome.tabs.executeScript(tabId, { file: `/js/${name}.js`, runAt: 'document_end' }, function () {
+            chrome.tabs.executeScript(tabId, { file: `/js/${name}.js`, runAt: 'document_end' }, function () {
                 resolve(true);
                 if(cb) {
                     cb();
@@ -15,7 +14,7 @@ export function loadScript(name: string, tabId: any, cb: any) {
             fetch(`http://localhost:2400/js/${name}.js`)
                 .then((res) => res.text())
                 .then((fetchRes) => {
-                    Chrome.tabs.executeScript(tabId, { code: fetchRes, runAt: 'document_end' }, function(){
+                    chrome.tabs.executeScript(tabId, { code: fetchRes, runAt: 'document_end' }, function(){
                         resolve(true);
                         if(cb) {
                             cb();
@@ -28,21 +27,21 @@ export function loadScript(name: string, tabId: any, cb: any) {
 
 export function loadAssetScript(path: string, tabId: any){
     return new Promise((resolve, reject)=> {
-        Chrome.tabschrome.tabs.executeScript(null, { file: "codemirror.js" }, function() {
+        chrome.tabs.executeScript(null, { file: "codemirror.js" }, function() {
             resolve(true);
         });
     });
 }
 
 export function getHTMLContentOfTemplate(template: string, cb:any) {
-    fetch(Chrome.runtime.getURL(`${template}.html`))
+    fetch(chrome.runtime.getURL(`${template}.html`))
         .then((res) => res.text())
         .then((res) => { if(cb) { cb(res);} });
 }
 
 export function getActiveTabId() {
     return new Promise((resolve, reject) => {
-        Chrome.tabs.query({active: true, currentWindow: true}, (tabs: any) => {
+        chrome.tabs.query({active: true, currentWindow: true}, (tabs: any) => {
             resolve(tabs[0].id);
         });
     });
@@ -69,7 +68,7 @@ export function sendPostDataWithForm(url: string, options: any = {}){
 }
 
 export function changeExtensionIcon(icon: string){
-    Chrome.browserAction.setIcon({path:icon});
+    chrome.browserAction.setIcon({path:icon});
 }
 
 export function getSentenceCaseString(str: string){
@@ -82,8 +81,8 @@ export function resolveToFrontendUrl(path: string){
 
 export function createNewTab(path: string){
     return new Promise((resolve, reject)=>{
-        Chrome.browserAction.onClicked.addListener(function(activeTab: any){
-            Chrome.tabs.create({ url: path });
+        chrome.browserAction.onClicked.addListener(function(activeTab: any){
+            chrome.tabs.create({ url: path });
             resolve(true);
         });
     });
