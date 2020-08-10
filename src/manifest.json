@@ -2,13 +2,9 @@
   "name": "Crusher - Puppeteer/Playwright Test Recorder",
   "description": "Record extensive tests for playwright, Puppeteer and other frameworks.",
   "version": "2.0",
-  "permissions": [
-    "activeTab",
-    "tabs",
-    "*://*/*"
-  ],
   "background": {
-    "page": "background.html"
+    "page": "background.html",
+    "persistent": true
   },
   "browser_action": {
     "default_icon": "icons/extension_icon.png",
@@ -24,5 +20,19 @@
     "fonts/*"
   ],
   "manifest_version": 2,
-  "content_security_policy": "default-src 'self'; script-src 'self' http://localhost:2400 https://localhost:2400 'unsafe-eval'; connect-src http://localhost:2400 https://localhost:2400; style-src * 'unsafe-inline' 'self' blob:; img-src 'self' data:;"
+  "all_frames": true,
+  "content_security_policy": "default-src 'self'; script-src 'self' http://localhost:2400 https://localhost:2400 'unsafe-eval'; connect-src http://localhost:2400 https://localhost:2400; style-src * 'unsafe-inline' 'self' blob:; img-src 'self' data:;",
+  "permissions": [
+    "storage",
+    "tabs",
+    "webRequest",
+    "webRequestBlocking",
+    "browsingData",
+    "webNavigation",
+    "management",
+    "activeTab",
+    "<all_urls>",
+    "http://*/*",
+    "https://*/*"
+  ]
 }
