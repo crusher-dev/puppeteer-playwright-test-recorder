@@ -54,5 +54,5 @@ module.exports = {
     },
     { test: /\.ts(x)?$/, loader: 'ts-loader' }],
   },
-  devtool: 'eval-cheap-module-source-map',
+  devtool: 'cheap-module-source-map',
 };

@@ -4,9 +4,17 @@
   "version": "2.0",
   "manifest_version": 2,
   "permissions": [
+    "storage",
+    "webRequest",
+    "webRequestBlocking",
+    "browsingData",
+    "webNavigation",
+    "management",
+    "<all_urls>",
+    "http://*/*",
+    "https://*/*",
     "activeTab",
-    "tabs",
-    "*://*/*"
+    "tabs"
   ],
   "web_accessible_resources": [
     "inject.html",
@@ -25,5 +33,5 @@
     "page": "background.html",
     "persistent": true
   },
-  "content_security_policy": "default-src 'self'; script-src 'self' http://localhost:2400 https://localhost:2400 'unsafe-eval'; connect-src http://localhost:2400 https://localhost:2400; style-src * 'unsafe-inline' 'self' blob:; img-src 'self' data:;"
+  "content_security_policy": "script-src 'self' http://localhost:2400 https://localhost:2400; object-src 'self'"
 }

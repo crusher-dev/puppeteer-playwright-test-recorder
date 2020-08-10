@@ -3,7 +3,7 @@ import { isExtension } from '../../utils/url'
 export default {
     tabs: {},
 
-    set(tabId: string, details: any) {
+    set(tabId: number, details: any) {
         this.tabs[tabId] = details
     },
 
@@ -11,15 +11,15 @@ export default {
         return this.tabs
     },
 
-    get(tabId: string) {
+    get(tabId: number) {
         return this.tabs[tabId]
     },
 
-    has(tabId: string) {
+    has(tabId: number) {
         return this.tabs.hasOwnProperty(tabId) && this.tabs[tabId] !== null
     },
 
-    isExtension(tabId: string) {
+    isExtension(tabId: number) {
         const tab = this.get(tabId)
         if (!tab) {
             return false
@@ -27,7 +27,7 @@ export default {
         return isExtension(this.get(tabId).url)
     },
 
-    remove(tabId: string) {
+    remove(tabId: number) {
         this.tabs[tabId] = null
     },
 }

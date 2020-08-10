@@ -12,3 +12,12 @@ export const origins = (url: string) => {
     const hostname = parse(url).hostname
     return [`https://${hostname}`, `http://${hostname}`]
 }
+
+export const addHttpToURLIfNotThere = (uri: string) => {
+    const httpRgx = new RegExp(/^https?\:\/\/[\w\._-]+?\.[\w_-]+/i);
+    if(!uri.match(httpRgx)){
+        return `http://${uri}`;
+    } else {
+        return uri;
+    }
+}

@@ -1,6 +1,7 @@
 import {h, Component, ComponentProps} from 'preact';
 import React from 'preact/compat';
 import {useRef, useState} from "preact/hooks";
+import {addHttpToURLIfNotThere} from "../../utils/url";
 
 function Step(props: ComponentProps<any>){
     return (
@@ -37,7 +38,7 @@ function RenderDesktopBrowser(props: any){
 
     function handleKeyDown(event: KeyboardEvent){
         if(event.keyCode === 13){
-            setAddressValue(addressInput.current.innerText);
+            setAddressValue(addHttpToURLIfNotThere(addressInput.current.innerText.trim()));
         }
     }
 
@@ -61,10 +62,10 @@ function RenderDesktopBrowser(props: any){
                 </div>
             </div>
             <div style={styles.previewBrowser}>
-                <iframe scrolling="auto" id="screen-iframe-5984a019-7f2b-4f58-ad11-e58cc3cfa634" className="jss307"
+                <iframe style={styles.browserFrame} scrolling="auto" id="screen-iframe-5984a019-7f2b-4f58-ad11-e58cc3cfa634"
                         sandbox="allow-scripts allow-forms allow-same-origin" title="Large Screen - 1280x800"
-                        src={chrome.runtime.getURL("iframe.html")}
-                        style="width: 1280px; height: 800px;"></iframe>
+                        src={addressValue}
+                        ></iframe>
             </div>
         </div>
     )
@@ -107,7 +108,7 @@ const styles = {
         height: "100%"
     },
     mainContainer: {
-        width: "70%"
+        width: "75%"
     },
     sidebar: {
         flex: 1,
@@ -163,7 +164,8 @@ const styles = {
     },
     browser: {
         background: "rgb(40, 40, 40)",
-        height: "100vh"
+        height: "100vh",
+        overflow:"hidden"
     },
     browserToolbar: {
         display: "flex",
@@ -209,7 +211,20 @@ const styles = {
     },
     previewBrowser:{
         flex: 1,
-        height: "100%"
+        height: "100%",
+        display: "flex",
+        justifyContent: "center",
+        paddingTop: '3rem',
+        overflowY: "scroll",
+        background: "rgb(40, 40, 40)"
+    },
+    browserFrame: {
+        border: "none",
+        display: "block",
+        borderRadius: 2,
+        width: 1280,
+        height: 800,
+        backgroundColor: "#fff"
     }
 }
 

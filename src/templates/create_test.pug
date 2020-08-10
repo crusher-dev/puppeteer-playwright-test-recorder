@@ -1,6 +1,4 @@
 html
-    head
-        meta(http-equiv='Content-Security-Policy', content="font-src 'self' data: https://fonts.gstatic.com; default-src 'self' 'unsafe-eval' 'unsafe-inline' http://localhost:2400 https://fonts.gstatic.com;")
     body
         #root
         script(src=env == 'prod' ? './js/create_test.js': 'http://localhost:2400/js/create_test.js')
