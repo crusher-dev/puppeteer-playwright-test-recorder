@@ -11,7 +11,6 @@ module.exports = {
   externals: ["fs", "request", "yamlparser"],
   entry: {
     background: [customPath, path.resolve(__dirname, '../src/background.ts')],
-    inject: [customPath, path.resolve(__dirname, '../src/inject.ts')],
     popup: [customPath, path.resolve(__dirname, '../src/scripts/popup/index.tsx')],
     create_test: [customPath, path.resolve(__dirname, '../src/scripts/create_test/index.tsx')]
   },
@@ -55,5 +54,5 @@ module.exports = {
     },
     { test: /\.ts(x)?$/, loader: 'ts-loader' }],
   },
-  devtool: 'eval-cheap-module-source-map',
+  devtool: 'cheap-module-source-map',
 };

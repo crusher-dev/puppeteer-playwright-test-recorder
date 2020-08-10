@@ -2,7 +2,7 @@ const { exec } = require('child_process');
 
 async function bundleTemplates(type) {
   const env = type === 'build' ? 'prod' : type;
-  exec(`pug -O "{ env: '${env}' }" -o ${type} src/templates/`);
+  exec(`pug -O "{ env: '${env}' }" -o ${type} ./src/templates/`);
   console.log('Templates bundled to dev');
 }
 
@@ -16,8 +16,7 @@ async function createDevBuildIfNotExists(type) {
 
 async function copyAssets(type) {
   await createDevBuildIfNotExists(type);
-  exec(`cp src/manifest.json ${type}/manifest.json`);
-  exec(`cp -R src/assets/* ${type}`);
+  exec(`cp -R public/* ${type}`);
 }
 
 async function watchFolders() {

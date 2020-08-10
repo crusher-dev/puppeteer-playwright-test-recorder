@@ -1,24 +1,25 @@
 import {h, Component, ComponentProps} from 'preact';
 import React from 'preact/compat';
-import {Chrome} from "../../utils/types";
 import {useRef, useState} from "preact/hooks";
+import {addHttpToURLIfNotThere} from "../../utils/url";
 
 function Step(props: ComponentProps<any>){
     return (
         <li style={styles.step}>
             <div style={styles.stepImage}>
-                <img src={Chrome.runtime.getURL("icons/mouse.svg")}/>
+                <img src={chrome.runtime.getURL("icons/mouse.svg")}/>
             </div>
             <div style={{...styles.stepTextContainer}}>
                 <div style={styles.stepAction}>Click</div>
                 <div style={styles.stepSelector}>{"p > a"}</div>
             </div>
             <div style={styles.centerItemsVerticalFlex}>
-                <img style={styles.stepGoImage} src={Chrome.runtime.getURL("icons/arrow.svg")}/>
+                <img style={styles.stepGoImage} src={chrome.runtime.getURL("icons/arrow.svg")}/>
             </div>
         </li>
     );
 }
+
 function RenderSteps(props: ComponentProps<any>) {
     return (
         <ul style={styles.stepsContainer} className="margin-list-item">
@@ -33,11 +34,11 @@ function RenderSteps(props: ComponentProps<any>) {
 function RenderDesktopBrowser(props: any){
     const {changeURLCallback} = props;
     const addressInput = useRef(null);
-    const [addressValue, setAddressValue] = useState("http://google.com");
+    const [addressValue, setAddressValue] = useState("http://google.com/?__userAgent__=Samsung%20Phone");
 
     function handleKeyDown(event: KeyboardEvent){
         if(event.keyCode === 13){
-            setAddressValue(addressInput.current.innerText);
+            setAddressValue(addHttpToURLIfNotThere(addressInput.current.innerText.trim()));
         }
     }
 
@@ -46,12 +47,12 @@ function RenderDesktopBrowser(props: any){
             <div style={styles.browserToolbar}>
                 <div style={styles.browserSmallShadow}></div>
                 <div style={styles.browserMainToolbar}>
-                    <div style={{display: "flex", alignItems: "center"}}><img src={Chrome.runtime.getURL("/icons/navigation-back.svg")}/></div>
-                    <div style={{marginLeft: "0.7rem", display: "flex", alignItems: "center"}}><img src={Chrome.runtime.getURL("/icons/navigation-forward.svg")}/></div>
-                    <div style={{marginLeft: "0.9rem", display: "flex", alignItems: "center"}}><img style={{width: "1.1rem"}} src={Chrome.runtime.getURL("/icons/navigation-refresh.svg")}/></div>
+                    <div style={{display: "flex", alignItems: "center"}}><img src={chrome.runtime.getURL("/icons/navigation-back.svg")}/></div>
+                    <div style={{marginLeft: "0.7rem", display: "flex", alignItems: "center"}}><img src={chrome.runtime.getURL("/icons/navigation-forward.svg")}/></div>
+                    <div style={{marginLeft: "0.9rem", display: "flex", alignItems: "center"}}><img style={{width: "1.1rem"}} src={chrome.runtime.getURL("/icons/navigation-refresh.svg")}/></div>
                     <div style={styles.addressBar}>
                         <div style={{width: "1.75rem", display: "flex", justifyContent: "center", alignItems: "center"}}>
-                            <img style={{width: "0.8rem"}} src={Chrome.runtime.getURL("/icons/ssl.svg")}/>
+                            <img style={{width: "0.8rem"}} src={chrome.runtime.getURL("/icons/ssl.svg")}/>
                         </div>
                         <div ref={addressInput} style={styles.addressBarInput} onKeyDown={handleKeyDown} contentEditable={true}>{addressValue}</div>
                         <div style={styles.recordingStatus}>
@@ -61,7 +62,10 @@ function RenderDesktopBrowser(props: any){
                 </div>
             </div>
             <div style={styles.previewBrowser}>
-                <iframe src={addressValue} width={"100%"} height={"100%"}/>
+                <iframe style={styles.browserFrame} scrolling="auto" id="screen-iframe-5984a019-7f2b-4f58-ad11-e58cc3cfa634"
+                        sandbox="allow-scripts allow-forms allow-same-origin" title="Large Screen - 1280x800"
+                        src={addressValue}
+                        ></iframe>
             </div>
         </div>
     )
@@ -93,7 +97,7 @@ function App(props: ComponentProps<any>) {
                     }
                 `}
             </style>
-            <link rel="stylesheet" href={Chrome.runtime.getURL("/styles/fonts.css")}/>
+            <link rel="stylesheet" href={chrome.runtime.getURL("/styles/fonts.css")}/>
         </div>
     );
 }
@@ -104,7 +108,7 @@ const styles = {
         height: "100%"
     },
     mainContainer: {
-        width: "70%"
+        width: "75%"
     },
     sidebar: {
         flex: 1,
@@ -140,7 +144,7 @@ const styles = {
         padding: "0.6rem 0"
     },
     stepImage: {
-      padding: "0rem 0.9rem"
+        padding: "0rem 0.9rem"
     },
     stepTextContainer: {
         flex: 1
@@ -160,7 +164,8 @@ const styles = {
     },
     browser: {
         background: "rgb(40, 40, 40)",
-        height: "100vh"
+        height: "100vh",
+        overflow:"hidden"
     },
     browserToolbar: {
         display: "flex",
@@ -206,7 +211,20 @@ const styles = {
     },
     previewBrowser:{
         flex: 1,
-        height: "100%"
+        height: "100%",
+        display: "flex",
+        justifyContent: "center",
+        paddingTop: '3rem',
+        overflowY: "scroll",
+        background: "rgb(40, 40, 40)"
+    },
+    browserFrame: {
+        border: "none",
+        display: "block",
+        borderRadius: 2,
+        width: 1280,
+        height: 800,
+        backgroundColor: "#fff"
     }
 }
 

@@ -15,3 +15,14 @@ export const GET_CODE = "GET_CODE";
 export const DEFAULT_VALIDATION_SCRIPT = `function(html, text, element) {
     return text.toLowerCase();
 }`
+
+
+export const EVENTS = {
+    CLICK: "CLICK",
+    INPUT: "INPUT",
+    KEYUP: "KEYUP",
+    KEYDOWN: "KEYDOWN",
+    HOVER: "HOVER",
+    PAGE_SCREENSHOT: "PAGE_SCREENSHOT",
+    ELEMENT_SCREENSHOT: "ELEMENT_SCREENSHOT",
+}

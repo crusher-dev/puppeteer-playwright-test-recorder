@@ -6,10 +6,10 @@ const nodeExternals = require('webpack-node-externals');
 const customPath = path.join(__dirname, './customPublicPath');
 const host = 'localhost';
 const port = 3000;
+
 module.exports = {
     entry: {
         background: [customPath, path.resolve(__dirname, '../src/background.ts')],
-        inject: [customPath, path.resolve(__dirname, '../src/inject.ts')],
         popup: [customPath, path.resolve(__dirname, '../src/scripts/popup/index.tsx')],
         create_test: [customPath, path.resolve(__dirname, '../src/scripts/create_test/index.tsx')]
     },
@@ -45,5 +45,5 @@ module.exports = {
         },
             { test: /\.ts(x)?$/, loader: 'ts-loader' }],
     },
-    devtool: 'eval-cheap-module-source-map',
+    devtool: 'cheap-module-source-map',
 };
