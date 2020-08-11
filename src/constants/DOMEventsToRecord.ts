@@ -1,0 +1,11 @@
+export const NAVIGATE_URL = 'NAVIGATE_URL';
+export const CLICK = "CLICK";
+export const INPUT = "INPUT";
+export const HOVER = "HOVER";
+export const SCROLL_TO_VIEW ="SCROLL_TO_VIEW";
+export const ASSERT_TEXT="ASSERT_TEXT";
+export const EXTRACT_INFO = "EXTRACT_INFO";
+export const SCREENSHOT = "SCREENSHOT";
+export const BLACKOUT = "BLACKOUT";
+export const WAIT = "WAIT";
+export const PAGE_SCREENSHOT = "PAGE_SCREENSHOT";

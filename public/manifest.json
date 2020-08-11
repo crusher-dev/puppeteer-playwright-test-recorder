@@ -24,6 +24,11 @@
     "icons/*",
     "fonts/*"
   ],
+  "content_scripts": [{
+    "matches": ["http://*/*", "https://*/*"],
+    "js": ["js/content_script.js"],
+    "all_frames": true
+  }],
   "browser_action": {
     "default_icon": "icons/extension_icon.png",
     "default_title": "Start recording your test",
@@ -33,5 +38,5 @@
     "page": "background.html",
     "persistent": true
   },
-  "content_security_policy": "script-src 'self' http://localhost:2400 https://localhost:2400; object-src 'self'"
+  "content_security_policy": "script-src 'self' http://localhost:2400 https://localhost:2400; object-src 'self'; form-action 'self' http: https:"
 }

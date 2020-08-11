@@ -1,6 +1,11 @@
 const path = require('path');
 const webpack = require('webpack');
 const ExtensionReloader = require('webpack-extension-reloader');
+const mkdirp = require('mkdirp');
+const fsSystem = require('fs');
+
+fsSystem.join = path.join.bind(path); // no need to bind
+fsSystem.mkdirp = mkdirp.bind(mkdirp);
 
 const customPath = path.join(__dirname, './customPublicPath');
 const host = 'localhost';
@@ -19,8 +24,8 @@ module.exports = {
     stats: {
       colors: true,
     },
-    noInfo: true,
     headers: { 'Access-Control-Allow-Origin': '*' },
+
   },
   plugins: [
     new webpack.DefinePlugin({

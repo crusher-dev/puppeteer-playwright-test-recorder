@@ -1,6 +1,7 @@
 const createWebpackServer = require('webpack-httpolyglot-server');
 const devConfig = require('../webpack/webpack.dev');
 const tasks = require('./tasks');
+const { exec } = require('child_process');
 
 async function initDevServer() {
   await tasks.clearDevBuilds();
@@ -27,6 +28,15 @@ async function initDevServer() {
   createWebpackServer(devConfig, {
     host: 'localhost',
     port: 2400,
+  });
+
+  exec('webpack --config webpack/webpack.content_script.js --watch --progress --profile --colors', (error, stdout, stderr) => {
+    if (error) {
+      console.error(`exec error: ${error}`);
+      return;
+    }
+    console.log(`stdout: ${stdout}`);
+    console.error(`stderr: ${stderr}`);
   });
 }
 
