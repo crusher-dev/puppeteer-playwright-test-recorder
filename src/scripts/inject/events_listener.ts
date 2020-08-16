@@ -1,11 +1,10 @@
-import getDomFromPath from '../../utils/domPath';
-import {EVENTS} from "../../constants";
 import RecordingOverlay from "./ui/recordingOverlay";
+import {ACTION_TYPES} from "../../constants/ActionTypes";
 import LocalFrameStorage from "../../utils/localFrameStorage";
+import {IS_RECORDING_USING_INSPECTOR, IS_RECORDING_WITHOUT_INSPECTOR, NOT_RECORDING} from "../../constants";
 
 if (top !== self) {
-    document.body.innerHTML += `
-<link rel="stylesheet" href="${chrome.runtime.getURL('styles/overlay.css')}"/>
+    document.body.innerHTML += `<link rel="stylesheet" href="${chrome.runtime.getURL('styles/overlay.css')}"/>
 <div id="overlay_add_action" data-recorder="true">
   <div id="popper_arrow" data-popper-arrow="true"></div>
   <div class="arrow_box" id="overlay_add_icon" data-recorder="true"><span id="overlay_add" data-recorder="true">+</span>
@@ -67,24 +66,62 @@ if (top !== self) {
     </div>
   </div>
 </div>
-<div id="page_actions" data-recorder="true">
-  <div class="action_icon" id="fullpage_screenshot" data-recorder="true">
-    <svg data-recorder="true" height="16" viewBox="0 -21 512 512" width="16" fill="#fff" xmlns="http://www.w3.org/2000/svg">
-      <path data-recorder="true" d="m346.667969 208h-16c-1.664063 0-3.265625-.789062-5.101563-3.15625l-19.242187-21.65625c-7.101563-7.957031-17.257813-12.519531-27.902344-12.519531h-44.84375c-10.644531 0-20.800781 4.5625-27.902344 12.519531l-20.074219 22.679688c-1.003906 1.320312-2.605468 2.132812-4.269531 2.132812h-16c-20.585937 0-37.332031 16.746094-37.332031 37.332031v101.335938c0 20.585937 16.746094 37.332031 37.332031 37.332031h181.335938c20.585937 0 37.332031-16.746094 37.332031-37.332031v-101.335938c0-20.585937-16.746094-37.332031-37.332031-37.332031zm-90.667969 138.667969c-29.398438 0-53.332031-23.9375-53.332031-53.335938 0-29.394531 23.933593-53.332031 53.332031-53.332031s53.332031 23.9375 53.332031 53.332031c0 29.398438-23.933593 53.335938-53.332031 53.335938zm0 0"></path>
-      <path data-recorder="true" d="m448 0h-384c-35.285156 0-64 28.714844-64 64v341.332031c0 35.285157 28.714844 64 64 64h384c35.285156 0 64-28.714843 64-64v-341.332031c0-35.285156-28.714844-64-64-64zm0 426.667969h-384c-11.753906 0-21.332031-9.558594-21.332031-21.335938v-298.664062h426.664062v298.664062c0 11.777344-9.578125 21.335938-21.332031 21.335938zm0 0"></path>
-    </svg>
-  </div>
-  <div class="action_icon" id="stop_recorder_button" data-recorder="true">
-    <svg data-recorder="true" width="11" height="11" viewBox="0 0 11 11" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path data-recorder="true" d="M9.9 0H1.1C0.4939 0 0 0.4939 0 1.1V9.9C0 10.5061 0.4939 11 1.1 11H9.9C10.5061 11 11 10.5061 11 9.9V1.1C11 0.4939 10.5061 0 9.9 0Z" fill="#FF586C"></path>
-    </svg>
-  </div>
-</div>
 `;
-
-
-
     const recordingOverlay = new RecordingOverlay({});
-    recordingOverlay.boot();
 
+    window.top.postMessage(
+        {
+            type: ACTION_TYPES.CHECK_RECORDING_STATUS,
+            //@ts-ignore
+            frameId: LocalFrameStorage.get(),
+            value: true
+        },
+        '*'
+    );
+
+    window.addEventListener('message', (message)=>{
+        const {type, value} = message.data;
+        console.log(message.data);
+        if(!!type === false){
+            return;
+        }
+
+        switch(type){
+            case ACTION_TYPES.INSPECT:
+                if(value)
+                    recordingOverlay.showEventsFormWizard();
+                else
+                    recordingOverlay.removeEventsFormWizard();
+                break;
+            case ACTION_TYPES.SCREENSHOT:
+                recordingOverlay.takePageScreenShot();
+                break;
+            case ACTION_TYPES.CAPTURE_CONSOLE:
+                recordingOverlay.saveConsoleLogsAtThisMoment();
+                break;
+            case ACTION_TYPES.GO_BACK:
+                window.history.back();
+                break;
+            case ACTION_TYPES.GO_FORWARD:
+                window.history.forward();
+                break;
+            case ACTION_TYPES.REFRESH_PAGE:
+                window.location.reload();
+                break;
+            case ACTION_TYPES.CHECK_RECORDING_STATUS:
+                if(value === IS_RECORDING_WITHOUT_INSPECTOR || value === NOT_RECORDING){
+                    recordingOverlay.startEventRecording(true);
+                } else if(value === IS_RECORDING_USING_INSPECTOR){
+                    recordingOverlay.startEventRecording();
+                    recordingOverlay.showEventsFormWizard();
+                }
+                break;
+        }
+    }, false);
+
+    document.addEventListener("keydown", function(event: KeyboardEvent){
+        if(event.keyCode === 68 && event.shiftKey){
+            recordingOverlay.showEventsFormWizard();
+        }
+    }, true);
 }

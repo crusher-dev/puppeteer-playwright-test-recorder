@@ -49,8 +49,6 @@ export default class EventsController {
         // @ts-ignore
         const selector = capturedTarget ? finder(capturedTarget, {seedMinLength: 5, optimizedMinLength: optimizedMinLength}) : null;
         createSnackBar(`${getSentenceCaseString(event_type)} action has been recorded`, "Dismiss");
-        console.log(event_type, selector, value);
-
         window.top.postMessage(
             {
                 eventType: event_type,
@@ -60,12 +58,6 @@ export default class EventsController {
                 path: selector,
             },
             '*'
-        )
-        // sendMessageToBackground({type: EVENT_CAPTURED, payload: {event_type: event_type, selector, value: value ? value : null}},  (res: any) => {
-        //     createSnackBar(`${getSentenceCaseString(event_type)} action has been recorded`, "Dismiss");
-        //     if(callback){
-        //         callback();
-        //     }
-        // });
+        );
     }
 }

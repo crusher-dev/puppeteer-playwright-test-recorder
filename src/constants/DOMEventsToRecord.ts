@@ -9,3 +9,4 @@ export const SCREENSHOT = "SCREENSHOT";
 export const BLACKOUT = "BLACKOUT";
 export const WAIT = "WAIT";
 export const PAGE_SCREENSHOT = "PAGE_SCREENSHOT";
+export const CAPTURE_CONSOLE = "CAPTURE_CONSOLE";
