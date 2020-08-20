@@ -4,10 +4,14 @@ import LocalFrameStorage from "../../utils/localFrameStorage";
 import {IS_RECORDING_USING_INSPECTOR, IS_RECORDING_WITHOUT_INSPECTOR, NOT_RECORDING} from "../../constants";
 
 if (top !== self) {
-    fetch(chrome.runtime.getURL("inject.pug") /*, options */)
+    fetch(chrome.runtime.getURL("inject.html") /*, options */)
         .then((response) => response.text())
         .then(html=> {
             document.body.innerHTML += html;
+            const linkRel = document.createElement("link");
+            linkRel.setAttribute("rel", "stylesheet");
+            linkRel.setAttribute("href", chrome.runtime.getURL("styles/overlay.css"));
+            document.body.appendChild(linkRel);
         });
 
     const recordingOverlay = new RecordingOverlay({});
@@ -50,6 +54,9 @@ if (top !== self) {
                 break;
             case ACTION_TYPES.REFRESH_PAGE:
                 window.location.reload();
+                break;
+            case ACTION_TYPES.TOOGLE_INSPECTOR:
+                alert("YES");
                 break;
             case ACTION_TYPES.CHECK_RECORDING_STATUS:
                 if(value === IS_RECORDING_WITHOUT_INSPECTOR || value === NOT_RECORDING){

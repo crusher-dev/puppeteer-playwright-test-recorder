@@ -231,8 +231,10 @@ export default class RecordingOverlay{
         }
     }
 
+
     handleAddIconClick(){
-        this.toggleEventsBox();
+        // @TODO: Post message to parent frame to show the form.
+        // this.toggleEventsBox();
     }
 
     handleEventsGridClick(event: Event){
@@ -312,15 +314,20 @@ export default class RecordingOverlay{
     showEventsFormWizard(){
         this.initNodes();
         this.registerNodeListenerForForm();
-        this.showInspector = true;
-        window.top.postMessage(
-            {
-                type: ACTION_TYPES.TOOGLE_INSPECTOR,
-                //@ts-ignore
-                frameId: LocalFrameStorage.get()
-            },
-            '*'
-        );
+        if(this.showInspector){
+            this.toggleEventsBox();
+            this.showInspector = false;
+        } else {
+            this.showInspector = true;
+            window.top.postMessage(
+                {
+                    type: ACTION_TYPES.TOOGLE_INSPECTOR,
+                    //@ts-ignore
+                    frameId: LocalFrameStorage.get()
+                },
+                '*'
+            );
+        }
         console.info("Info Overlay booted up");
     }
 
