@@ -48,7 +48,7 @@ export default class EventsController {
         const optimizedMinLength = (capturedTarget.id) ? 2 : 10 // if the target has an id, use that instead of multiple frames selectors
         // @ts-ignore
         const selector = capturedTarget ? finder(capturedTarget, {seedMinLength: 5, optimizedMinLength: optimizedMinLength}) : null;
-        createSnackBar(`${getSentenceCaseString(event_type)} action has been recorded`, "Dismiss");
+        // createSnackBar(`${getSentenceCaseString(event_type)} action has been recorded`, "Dismiss");
         window.top.postMessage(
             {
                 eventType: event_type,

@@ -21,7 +21,7 @@ async function copyAssets(type) {
 
 async function watchFolders() {
   // Watch Assets Folder
-  exec('npx nodemon --watch ./src/assets scripts/watch/copyAssets.js -e css png svg', (error, stdout, stderr) => {
+  exec('npx nodemon --watch ./public scripts/watch/copyAssets.js -e css png svg', (error, stdout, stderr) => {
     if (error) {
       console.error(`exec error: ${error}`);
       return;

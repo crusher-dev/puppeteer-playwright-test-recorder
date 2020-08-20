@@ -2,12 +2,17 @@ import {Component} from 'preact';
 import React from 'preact/compat';
 import {loadScript} from "../../utils/helpers";
 import Tab = chrome.tabs.Tab;
+import Select from 'react-select';
+import devices from "../../constants/devices";
 
 class App extends Component<any, any> {
     constructor(props: any) {
         super(props);
 
         this.handleStartRecordingClick = this.handleStartRecordingClick.bind(this);
+        this.state = {
+            selectedDevice: devices[7].id
+        }
     }
 
     async injectRecorder() {
@@ -40,15 +45,37 @@ class App extends Component<any, any> {
         )
     }
 
+
     async handleStartRecordingClick() {
-        chrome.tabs.get(this.props.tabId, (tab)=>{
-            chrome.tabs.create({url: chrome.extension.getURL('create_test.html') + `?url="${encodeURI(tab.url)}"`});
+        chrome.tabs.get(this.props.tabId, ((tab: any) => {
+            const {selectedDevice} = this.state;
+            chrome.tabs.create({url: chrome.extension.getURL('create_test.html') + `?url="${encodeURI(tab.url)}"&device=${selectedDevice}`});
 
             window.close();
-        });
+        }).bind(this));
 
     }
 
+    renderDeviceInput() {
+        const deviceOptions = devices.map((device) => {
+            return (<option value={device.id}>{device.name}</option>)
+        });
+        const {selectedDevice} = this.state;
+
+        function handleDeviceSelection(event: any){
+           const newDeviceId = event.target.value;
+           this.setState({selectedDevice: newDeviceId});
+        }
+
+        return (
+            <div style={styles.selectInputContainer} className="select">
+                <select id="slct" size={1} value={selectedDevice} onChange={handleDeviceSelection.bind(this)}>
+                    <option selected disabled>Select Device Type</option>
+                    {deviceOptions}
+                </select>
+            </div>
+        )
+    }
 
     render() {
 
@@ -59,9 +86,7 @@ class App extends Component<any, any> {
                     <img style={{cursor: "pointer"}} src={chrome.runtime.getURL("icons/settings.svg")}/>
                 </div>
                 <div style={styles.paddingContainer}>
-                    <div style={styles.selectDevice}>
-                        Select Device type
-                    </div>
+                    {this.renderDeviceInput()}
                     <div style={styles.button} onClick={this.handleStartRecordingClick}>
                         Start Recording
                     </div>
@@ -73,6 +98,7 @@ class App extends Component<any, any> {
                         Get help
                     </div>
                 </div>
+                <link rel="stylesheet" href={chrome.runtime.getURL("/styles/popup.css")}/>
                 <link rel="stylesheet" href={chrome.runtime.getURL("/styles/fonts.css")}/>
                 <style>
                     {
@@ -111,16 +137,15 @@ const styles = {
         fontWeight: 700,
         marginRight: "auto"
     },
-    selectDevice: {
-        background: "#0B0B1F",
+    selectInputContainer: {
         borderRadius: "0.2rem",
-        marginTop: "2rem",
-        padding: "1rem 1.25rem",
+        marginTop: "1rem",
+        width: "100%",
         fontWeight: 500,
         fontFamily: "DM Sans",
         color: "#fff",
         fontSize: "0.9rem",
-        cursor: "pointer"
+        borderWidth: 0,
     },
     button: {
         background: "#5B76F7",

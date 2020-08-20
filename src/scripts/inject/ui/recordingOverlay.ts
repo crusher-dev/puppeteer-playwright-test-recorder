@@ -7,9 +7,7 @@ import {
     SCREENSHOT,
     SCROLL_TO_VIEW
 } from "../../../constants/DOMEventsToRecord";
-import {DELETE_RECORDING_SESSION, EVENT_CAPTURED, START_RECORDING_SESSION, STOP_RECORDING} from "../../../constants";
 import {hideAllChildNodes, removeAllTargetBlankFromLinks, setAttributeForAllChildNodes} from "../../../utils/dom";
-import {createSnackBar} from "../toast";
 import EventsController from "../EventsController";
 import FormWizard from "./formWizard";
 import LocalFrameStorage from "../../../utils/localFrameStorage";
@@ -297,7 +295,7 @@ export default class RecordingOverlay{
     startEventRecording(isFirstTime = false){
         this.awake = true;
         if(isFirstTime){
-            this.eventsController.saveCapturedEventInBackground(NAVIGATE_URL, document.body, document.title);
+            this.eventsController.saveCapturedEventInBackground(NAVIGATE_URL, document.body, window.location.href);
         }
         window.top.postMessage(
             {

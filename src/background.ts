@@ -43,14 +43,15 @@ chrome.webRequest.onBeforeRequest.addListener(
 
 chrome.webRequest.onHeadersReceived.addListener(
     function (details) {
-        const headers = details.responseHeaders
+        const headers = details.responseHeaders;
 
         if (details.parentFrameId !== 0) {
             return {responseHeaders: headers}
         }
 
         const responseHeaders = headers.filter(header => {
-            const name = header.name.toLowerCase()
+            const name = header.name.toLowerCase();
+            console.log(name);
             return (
                 ['x-frame-options', 'content-security-policy', 'frame-options'].indexOf(
                     name

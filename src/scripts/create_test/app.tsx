@@ -238,7 +238,7 @@ function App(props: ComponentProps<any>) {
 
     function saveTest() {
         console.log(steps);
-        sendPostDataWithForm(resolveToFrontendUrl("app/tests/editor"), {events: JSON.stringify(steps)})
+        sendPostDataWithForm("https://backend.crusher-test.com/test/goToEditor", {events: JSON.stringify(steps)})
     }
 
     function cancelTest() {

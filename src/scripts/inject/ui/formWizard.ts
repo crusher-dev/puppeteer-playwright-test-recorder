@@ -2,6 +2,7 @@ import RecordingOverlay from "./recordingOverlay";
 import {setAttributeForAllChildNodes} from "../../../utils/dom";
 import {ASSERT_TEXT, EXTRACT_INFO} from "../../../constants/DOMEventsToRecord";
 import EventsController from "../EventsController";
+
 // import CodeMirror from "codemirror";
 import {DEFAULT_VALIDATION_SCRIPT} from "../../../constants";
 export default class FormWizard{

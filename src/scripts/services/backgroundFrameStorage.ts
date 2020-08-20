@@ -4,6 +4,7 @@ export default {
     makeFrameId(tabId: number, frameId: number) {
         return `${tabId}-${frameId}`
     },
+
     set(details: any) {
         this.frames[this.makeFrameId(details.tabId, details.frameId)] = details
     },
