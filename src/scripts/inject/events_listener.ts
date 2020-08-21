@@ -56,7 +56,7 @@ if (top !== self) {
                 window.location.reload();
                 break;
             case ACTION_TYPES.TOOGLE_INSPECTOR:
-                alert("YES");
+
                 break;
             case ACTION_TYPES.CHECK_RECORDING_STATUS:
                 if(value === IS_RECORDING_WITHOUT_INSPECTOR || value === NOT_RECORDING){
@@ -71,7 +71,7 @@ if (top !== self) {
 
     document.addEventListener("keydown", function(event: KeyboardEvent){
         if(event.keyCode === 68 && event.shiftKey){
-            recordingOverlay.showEventsFormWizard();
+            recordingOverlay.toggleEventsBox();
         }
     }, true);
 }

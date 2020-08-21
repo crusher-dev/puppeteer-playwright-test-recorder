@@ -61,11 +61,18 @@ export default class RecordingOverlay{
     }
 
     toggleEventsBox(){
-        if(this._overlayAddEventsContainer.style.display !== "block"){
-            this._arrowOnAddIcon.setAttribute('data-hide', '');
-            this.showEventsList()
+        if(!this.showInspector){
+            this.showEventsFormWizard();
+            this.showInspector = true;
+            this._addActionElement.style.display = 'block';
+            const {targetElement} = this.state;
+            if(targetElement){
+                this.highlightNode(targetElement);
+            }
         } else {
-            this.hideEventsList();
+            this.removeInspector();
+            this.showInspector = false;
+            this._addActionElement.style.display = 'none';
         }
     }
 
@@ -334,6 +341,14 @@ export default class RecordingOverlay{
     removeNodes(){
         if(this._addActionElement){
             this._addActionElement.remove();
+        }
+    }
+
+    removeInspector(){
+        const {targetElement} = this.state;
+
+        if(targetElement) {
+            this.removeHighLightFromNode(targetElement);
         }
     }
 
