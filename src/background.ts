@@ -3,6 +3,8 @@ import {isExtension} from './utils/url';
 import backgroundTabStorage from './scripts/services/backgroundTabStorage';
 import backgroundFrameStorage from "./scripts/services/backgroundFrameStorage";
 import * as queryString from "querystring";
+import devices from "./constants/devices";
+import userAgents from "./constants/userAgents";
 
 let lastOpenedUrl = null;
 
@@ -51,7 +53,6 @@ chrome.webRequest.onHeadersReceived.addListener(
 
         const responseHeaders = headers.filter(header => {
             const name = header.name.toLowerCase();
-            console.log(name);
             return (
                 ['x-frame-options', 'content-security-policy', 'frame-options'].indexOf(
                     name
@@ -86,20 +87,43 @@ chrome.webRequest.onHeadersReceived.addListener(
 
 chrome.webRequest.onBeforeSendHeaders.addListener(
     function (details) {
-
-        if (details.parentFrameId !== 0) {
-            return null;
-        }
-
         const frame = backgroundFrameStorage.get(details.tabId, details.frameId)
 
-        if (!frame) {
-            return {
-                requestHeaders: details.requestHeaders,
-            }
+        const userAgent = userAgents.find((agent)=>{
+            return agent.name === devices[6].userAgent
+        });
+
+        console.log({
+            name: 'User-Agent',
+            value: userAgent.value,
+        });
+
+
+        const responseHeaders = details.requestHeaders.filter(header => {
+            const name = header.name.toLowerCase()
+            return (
+                ['x-frame-options', 'content-security-policy', 'frame-options'].indexOf(
+                    name
+                ) === -1
+            )
+        })
+
+        const redirectUrl = responseHeaders.find(header => {
+            return header.name.toLowerCase() === 'location'
+        })
+
+        if (redirectUrl) {
+            chrome.browsingData.remove(
+                {},
+                {
+                    serviceWorkers: true,
+                }
+            )
         }
 
-        return {requestHeaders: details.requestHeaders}
+        return {
+            responseHeaders,
+        }
     },
     {urls: ['<all_urls>'], types: ['sub_frame']},
     ['blocking', 'requestHeaders']

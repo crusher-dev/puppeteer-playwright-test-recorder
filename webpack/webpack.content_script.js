@@ -8,7 +8,8 @@ const port = 3000;
 
 module.exports = {
     entry: {
-        content_script: [customPath, path.resolve(__dirname, '../src/scripts/inject/events_listener.ts')]
+        content_script: [customPath, path.resolve(__dirname, '../src/scripts/inject/events_listener.ts')],
+        change_navigator: [customPath, path.resolve(__dirname, '../src/scripts/inject/change_navigator.ts')]
     },
     plugins: [
         new webpack.DefinePlugin({

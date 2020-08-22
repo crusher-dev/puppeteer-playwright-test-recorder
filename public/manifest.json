@@ -24,7 +24,14 @@
     "icons/*",
     "fonts/*"
   ],
-  "content_scripts": [{
+  "content_scripts": [
+    {
+      "matches": ["http://*/*", "https://*/*"],
+      "js": ["js/change_navigator.js"],
+      "run_at": "document_start",
+      "all_frames": true
+    },
+    {
     "matches": ["http://*/*", "https://*/*"],
     "js": ["js/content_script.js"],
     "all_frames": true

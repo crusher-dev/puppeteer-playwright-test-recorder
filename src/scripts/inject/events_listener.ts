@@ -3,15 +3,22 @@ import {ACTION_TYPES} from "../../constants/ActionTypes";
 import LocalFrameStorage from "../../utils/localFrameStorage";
 import {IS_RECORDING_USING_INSPECTOR, IS_RECORDING_WITHOUT_INSPECTOR, NOT_RECORDING} from "../../constants";
 
+setInterval(function (){
+    console.log("My next data: ");
+    console.log(document.getElementById("__NEXT_DATA__"));
+},100)
+
 if (top !== self) {
     fetch(chrome.runtime.getURL("inject.html") /*, options */)
         .then((response) => response.text())
         .then(html=> {
-            document.body.innerHTML += html;
-            const linkRel = document.createElement("link");
-            linkRel.setAttribute("rel", "stylesheet");
-            linkRel.setAttribute("href", chrome.runtime.getURL("styles/overlay.css"));
-            document.body.appendChild(linkRel);
+            try {
+                document.body.innerHTML += html;
+                const linkRel = document.createElement("link");
+                linkRel.setAttribute("rel", "stylesheet");
+                linkRel.setAttribute("href", chrome.runtime.getURL("styles/overlay.css"));
+                document.body.appendChild(linkRel);
+            } catch(ex){}
         });
 
     const recordingOverlay = new RecordingOverlay({});
