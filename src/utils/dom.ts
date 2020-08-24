@@ -50,7 +50,6 @@ export function hideAllChildNodes(parent: any){
     return setAttributeForAllChildNodes(parent, "data-gone", "true");
 }
 
-
 export function sendPostDataWithForm(url: string, options: any = {}){
     const form = document.createElement('form');
     form.method = "post";

@@ -1,12 +1,12 @@
-import RecordingOverlay from "./ui/recordingOverlay";
+import EventRecording from "./ui/eventRecording";
 import {ACTION_TYPES} from "../../constants/ActionTypes";
-import LocalFrameStorage from "../../utils/localFrameStorage";
+import LocalFrameStorage from "../../utils/frameStorage";
 import {IS_RECORDING_USING_INSPECTOR, IS_RECORDING_WITHOUT_INSPECTOR, NOT_RECORDING} from "../../constants";
 
-setInterval(function (){
-    console.log("My next data: ");
-    console.log(document.getElementById("__NEXT_DATA__"));
-},100)
+// setInterval(function (){
+//     console.log("My next data: ");
+//     console.log(document.getElementById("__NEXT_DATA__"));
+// },100)
 
 if (top !== self) {
     fetch(chrome.runtime.getURL("inject.html") /*, options */)
@@ -21,7 +21,7 @@ if (top !== self) {
             } catch(ex){}
         });
 
-    const recordingOverlay = new RecordingOverlay({});
+    const recordingOverlay = new EventRecording({});
 
     window.top.postMessage(
         {
@@ -67,9 +67,9 @@ if (top !== self) {
                 break;
             case ACTION_TYPES.CHECK_RECORDING_STATUS:
                 if(value === IS_RECORDING_WITHOUT_INSPECTOR || value === NOT_RECORDING){
-                    recordingOverlay.startEventRecording(true);
+                    recordingOverlay.boot(true);
                 } else if(value === IS_RECORDING_USING_INSPECTOR){
-                    recordingOverlay.startEventRecording();
+                    recordingOverlay.boot();
                     recordingOverlay.showEventsFormWizard();
                 }
                 break;

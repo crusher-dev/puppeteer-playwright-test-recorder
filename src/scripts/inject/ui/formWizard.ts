@@ -1,4 +1,4 @@
-import RecordingOverlay from "./recordingOverlay";
+import EventRecording from "./eventRecording";
 import {setAttributeForAllChildNodes} from "../../../utils/dom";
 import {ASSERT_TEXT, EXTRACT_INFO} from "../../../constants/DOMEventsToRecord";
 import EventsController from "../EventsController";
@@ -6,7 +6,7 @@ import EventsController from "../EventsController";
 // import CodeMirror from "codemirror";
 import {DEFAULT_VALIDATION_SCRIPT} from "../../../constants";
 export default class FormWizard{
-    recordingOverlay: RecordingOverlay;
+    recordingOverlay: EventRecording;
     actionType: string;
     eventsController: EventsController;
 
@@ -28,7 +28,7 @@ export default class FormWizard{
         isInvalidScript: false
     };
 
-    constructor(recordingOverlay: RecordingOverlay, eventsController: EventsController) {
+    constructor(recordingOverlay: EventRecording, eventsController: EventsController) {
         this.recordingOverlay = recordingOverlay;
         this.eventsController = eventsController;
         this.evaluateValidationScript = this.evaluateValidationScript.bind(this);

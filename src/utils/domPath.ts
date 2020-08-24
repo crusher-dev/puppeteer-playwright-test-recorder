@@ -1,11 +1,11 @@
 
 function getDomPath(el: Element) {
-    var stack = []
+    const stack = []
     while (el.parentNode != null) {
-        var sibCount = 0
-        var sibIndex = 0
-        for (var i = 0; i < el.parentNode.childNodes.length; i++) {
-            var sib = el.parentNode.childNodes[i]
+        let sibCount = 0
+        let sibIndex = 0
+        for (let i = 0; i < el.parentNode.childNodes.length; i++) {
+            const sib = el.parentNode.childNodes[i]
             if (sib.nodeName == el.nodeName) {
                 if (sib === el) {
                     sibIndex = sibCount

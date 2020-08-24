@@ -1,9 +1,11 @@
-import { isOfCrusherExtension } from '../../utils/url'
+import { isOfCrusherExtension } from './url'
+import TabDetails = chrome.browserAction.TabDetails;
+import Tab = chrome.tabs.Tab;
 
 export default {
     tabs: {},
 
-    set(tabId: number, details: any) {
+    set(tabId: number, details: Tab) {
         this.tabs[tabId] = details
     },
 
