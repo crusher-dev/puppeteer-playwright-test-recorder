@@ -22,32 +22,13 @@
     <list default="true" id="f2a9b17e-2a56-4edf-99eb-19dcc4c335a8" name="Default Changelist" comment="">
       <change afterPath="$PROJECT_DIR$/../chrome-extension/src/utils/frameStorage.ts" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../chrome-extension/src/utils/url.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/icons/record.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/constants/DOMEventsToRecord.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/scripts/inject/EventsController.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/scripts/inject/toast.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/scripts/inject/ui/formWizard.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/scripts/inject/ui/recordingOverlay.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/utils/dom.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/utils/localFrameStorage.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/webpack/webpack.content_script.js" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../rv/src/reducers/events.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../chrome-extension/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/../chrome-extension/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../chrome-extension/src/scripts/inject/EventsController.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../chrome-extension/src/scripts/inject/EventsController.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../chrome-extension/src/templates/overlay.pug" beforeDir="false" afterPath="$PROJECT_DIR$/../chrome-extension/src/templates/overlay.pug" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../chrome-extension/src/utils/helpers.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../chrome-extension/src/utils/helpers.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/extension.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/extension.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../chrome-extension/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../chrome-extension/yarn.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/public/manifest.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/dev.js" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/dev.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/scripts/background/messages/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/scripts/background/messages/index.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/scripts/create_test/app.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/scripts/create_test/app.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/scripts/inject/events_listener.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/scripts/inject/events_listener.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/webpack/webpack.dev.js" beforeDir="false" afterPath="$PROJECT_DIR$/webpack/webpack.dev.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/yarn-error.log" beforeDir="false" afterPath="$PROJECT_DIR$/yarn-error.log" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../rv/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/../rv/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../rv/public/manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/../rv/public/manifest.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../rv/src/actions/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/../rv/src/actions/index.js" afterDir="false" />
@@ -78,9 +59,9 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../rv" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_package_manager_path" value="yarn" />
-    <property name="ts.external.directory.path" value="$PROJECT_DIR$/node_modules/typescript/lib" />
+    <property name="ts.external.directory.path" value="$PROJECT_DIR$/../chrome-extension/node_modules/typescript/lib" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
@@ -101,6 +82,7 @@
       <workItem from="1597024431151" duration="2717000" />
       <workItem from="1597066787914" duration="6223000" />
       <workItem from="1597098808076" duration="11688000" />
+      <workItem from="1598214581392" duration="1857000" />
     </task>
     <servers />
   </component>
