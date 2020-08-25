@@ -2,16 +2,16 @@ import {EVENT_CAPTURED, EVENTS} from "../../constants";
 import {CLICK} from "../../constants/DOMEventsToRecord";
 import {createSnackBar} from "./toast";
 import {getSentenceCaseString} from "../../utils/helpers";
-import RecordingOverlay from "./ui/recordingOverlay";
+import EventRecording from "./ui/eventRecording";
 import {finder} from '@medv/finder'
 import FormWizard from "./ui/formWizard";
 import getDomFromPath from "../../utils/domPath";
-import LocalFrameStorage from "../../utils/localFrameStorage";
+import FrameStorage from "../../utils/frameStorage";
 
 export default class EventsController {
-    recordingOverlay: RecordingOverlay;
+    recordingOverlay: EventRecording;
 
-    constructor(recordingOverlay: RecordingOverlay) {
+    constructor(recordingOverlay: EventRecording) {
         this.recordingOverlay = recordingOverlay;
     }
 
@@ -48,12 +48,11 @@ export default class EventsController {
         const optimizedMinLength = (capturedTarget.id) ? 2 : 10 // if the target has an id, use that instead of multiple frames selectors
         // @ts-ignore
         const selector = capturedTarget ? finder(capturedTarget, {seedMinLength: 5, optimizedMinLength: optimizedMinLength}) : null;
-        // createSnackBar(`${getSentenceCaseString(event_type)} action has been recorded`, "Dismiss");
         window.top.postMessage(
             {
                 eventType: event_type,
                 //@ts-ignore
-                frameId: LocalFrameStorage.get(),
+                frameId: FrameStorage.get(),
                 value: value,
                 path: selector,
             },

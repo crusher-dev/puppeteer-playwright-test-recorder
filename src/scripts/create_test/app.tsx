@@ -1,13 +1,12 @@
-import {h, Component, ComponentProps, Ref} from 'preact';
+import {ComponentProps} from 'preact';
 import React from 'preact/compat';
-import {useEffect, useRef, useState} from "preact/hooks";
+import { useRef, useState} from "preact/hooks";
 import {addHttpToURLIfNotThere, getQueryStringParams} from "../../utils/url";
 import {sendPostDataWithForm} from "../../../../chrome-extension/src/utils/helpers";
-import {resolveToFrontendUrl} from "../../utils/helpers";
-import {act} from "preact/test-utils";
 import {ACTION_TYPES} from "../../constants/ActionTypes";
 import {IS_RECORDING_USING_INSPECTOR, IS_RECORDING_WITHOUT_INSPECTOR, NOT_RECORDING} from "../../constants";
 import devices from "../../constants/devices";
+import userAgents from "../../constants/userAgents";
 
 function Step(props: any) {
     const {type, path, value} = props;
@@ -128,13 +127,13 @@ function RenderActions(props: any) {
 function RenderDesktopBrowser(props: any) {
     const selectedDeviceId = getQueryStringParams("device", window.location.href);
     const urlParams = getQueryStringParams("url", window.location.href);
-    const urlEncoded: any = urlParams;
-    const url = urlEncoded ? decodeURI(urlEncoded.replace(/^["']/, '').replace(/["']$/, '')) : "https://google.com";
+    const urlEncoded = new URL(urlParams);
+    const url = urlEncoded ? decodeURI(urlEncoded.toString().replace(/^["']/, '').replace(/["']$/, '')) : "https://google.com";
     const {changeURLCallback, forwardRef} = props;
     const addressInput = useRef(null);
     const [addressValue, setAddressValue] = useState(url);
 
-    const deviceInfoIndex = devices.findIndex((device)=>{
+    const deviceInfoIndex = devices.findIndex((device) => {
         return device.id === selectedDeviceId
     });
 
@@ -163,6 +162,24 @@ function RenderDesktopBrowser(props: any) {
         cn.postMessage({type: ACTION_TYPES.REFRESH_PAGE, value: true}, '*');
     }
 
+    function renderAddressbar(){
+        const urlEncoded = new URL(addressValue);
+        urlEncoded.searchParams.delete("__crusherAgent__");
+        return (
+            <div style={styles.addressBar}>
+                <div
+                    style={{width: "1.75rem", display: "flex", justifyContent: "center", alignItems: "center"}}>
+                    <img style={{width: "0.8rem"}} src={chrome.runtime.getURL("/icons/ssl.svg")}/>
+                </div>
+                <div ref={addressInput} style={styles.addressBarInput} onKeyDown={handleKeyDown}
+                     contentEditable={true}>{urlEncoded.toString()}</div>
+                <div style={styles.recordingStatus}>
+                    RECORDING
+                </div>
+            </div>
+        )
+    }
+
     return (
         <div style={styles.browser}>
             <div style={styles.browserToolbar}>
@@ -175,23 +192,13 @@ function RenderDesktopBrowser(props: any) {
                     <div style={{marginLeft: "0.9rem", display: "flex", alignItems: "center"}}><img
                         style={{width: "1.1rem"}} src={chrome.runtime.getURL("/icons/navigation-refresh.svg")}
                         onClick={refreshPage}/></div>
-                    <div style={styles.addressBar}>
-                        <div
-                            style={{width: "1.75rem", display: "flex", justifyContent: "center", alignItems: "center"}}>
-                            <img style={{width: "0.8rem"}} src={chrome.runtime.getURL("/icons/ssl.svg")}/>
-                        </div>
-                        <div ref={addressInput} style={styles.addressBarInput} onKeyDown={handleKeyDown}
-                             contentEditable={true}>{addressValue}</div>
-                        <div style={styles.recordingStatus}>
-                            RECORDING
-                        </div>
-                    </div>
+                    {renderAddressbar()}
                 </div>
             </div>
             <div style={styles.previewBrowser}>
                 {isMobile && (
-                    <div className="smartphone" style={{ width: selectedDevice.width, height: selectedDevice.height}}>
-                        <div className="content" style={{ width: "100%", height: "100%"}}>
+                    <div className="smartphone" style={{width: selectedDevice.width, height: selectedDevice.height}}>
+                        <div className="content" style={{width: "100%", height: "100%"}}>
                             <iframe ref={forwardRef}
                                     style={{...styles.browserFrame, width: "100%", height: "100%"}}
                                     scrolling="auto"
@@ -204,7 +211,9 @@ function RenderDesktopBrowser(props: any) {
                     </div>
                 )}
                 {!isMobile && (
-                    <iframe ref={forwardRef} style={{...styles.browserFrame, width: selectedDevice.width, height: selectedDevice.height}} scrolling="auto"
+                    <iframe ref={forwardRef}
+                            style={{...styles.browserFrame, width: selectedDevice.width, height: selectedDevice.height}}
+                            scrolling="auto"
                             id="screen-iframe-5984a019-7f2b-4f58-ad11-e58cc3cfa634"
                             sandbox="allow-scripts allow-modals allow-forms allow-same-origin"
                             title={selectedDevice.name}
@@ -244,6 +253,8 @@ function App(props: ComponentProps<any>) {
         if (eventType && path) {
             setSteps([...(getSteps()), {event_type: eventType, value, selector: path}]);
         } else if (type) {
+            const cn = (iframeRef).current.contentWindow;
+
             switch (type) {
                 case ACTION_TYPES.STARTED_RECORDING_EVENTS:
                     setIsRecording(true);
@@ -252,12 +263,18 @@ function App(props: ComponentProps<any>) {
                     setIsUsingElementInspector(!isUsingElementInspector);
                     break;
                 case ACTION_TYPES.CHECK_RECORDING_STATUS:
-                    const cn = (iframeRef).current.contentWindow;
                     cn.postMessage({
                         type: ACTION_TYPES.CHECK_RECORDING_STATUS,
                         value: isUsingElementInspector ? IS_RECORDING_USING_INSPECTOR : (isRecording ? IS_RECORDING_WITHOUT_INSPECTOR : NOT_RECORDING)
                     }, '*');
                     break;
+                case ACTION_TYPES.GET_USER_AGENT:
+                    const iframeURL = getQueryStringParams("url", window.location.href);
+                    const crusherAgent = getQueryStringParams("__crusherAgent__", iframeURL);
+                    const userAgent = userAgents.find((agent => {
+                        return agent.name === (crusherAgent ? crusherAgent : userAgents[6].value)
+                    }));
+                    cn.postMessage({ type: ACTION_TYPES.SET_USER_AGENT, value: userAgent}, '*');
             }
         }
     }
@@ -319,53 +336,54 @@ function App(props: ComponentProps<any>) {
                         margin-top: 0.75rem;
                     }
                     /* The device with borders */
-.smartphone {
-  position: relative;
-  width: 360px;
-  height: 640px;
-  margin: auto;
-  border: 16px black solid;
-  border-top-width: 60px;
-  border-bottom-width: 60px;
-  border-radius: 36px;
-}
+                    .smartphone {
+                        position: relative;
+                        width: 360px;
+                          height: 640px;
+                          margin: auto;
+                          border: 16px black solid;
+                          border-top-width: 60px;
+                          border-bottom-width: 60px;
+                          border-radius: 36px;
+                    }
+                    
+                    /* The horizontal line on the top of the device */
+                    .smartphone:before {
+                      content: '';
+                      display: block;
+                      width: 60px;
+                      height: 5px;
+                      position: absolute;
+                      top: -30px;
+                      left: 50%;
+                      transform: translate(-50%, -50%);
+                      background: #333;
+                      border-radius: 10px;
+                    }
 
-/* The horizontal line on the top of the device */
-.smartphone:before {
-  content: '';
-  display: block;
-  width: 60px;
-  height: 5px;
-  position: absolute;
-  top: -30px;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: #333;
-  border-radius: 10px;
-}
+                    /* The circle on the bottom of the device */
+                    .smartphone:after {
+                      content: '';
+                      display: block;
+                      width: 35px;
+                      height: 35px;
+                      position: absolute;
+                      left: 50%;
+                      bottom: -65px;
+                      transform: translate(-50%, -50%);
+                      background: #333;
+                      border-radius: 50%;
+                    }
 
-/* The circle on the bottom of the device */
-.smartphone:after {
-  content: '';
-  display: block;
-  width: 35px;
-  height: 35px;
-  position: absolute;
-  left: 50%;
-  bottom: -65px;
-  transform: translate(-50%, -50%);
-  background: #333;
-  border-radius: 50%;
-}
-
-/* The screen (or content) of the device */
-.smartphone .content {
-  width: 360px;
-  height: 640px;
-  background: white;
-}
+                    /* The screen (or content) of the device */
+                    .smartphone .content {
+                      width: 360px;
+                      height: 640px;
+                      background: white;
+                    }
                 `}
             </style>
+            <link rel="stylesheet" href={chrome.runtime.getURL("/styles/devices.min.css")}/>
             <link rel="stylesheet" href={chrome.runtime.getURL("/styles/fonts.css")}/>
         </div>
     );

@@ -4,6 +4,8 @@ import {loadScript} from "../../utils/helpers";
 import Tab = chrome.tabs.Tab;
 import Select from 'react-select';
 import devices from "../../constants/devices";
+import userAgents from "../../constants/userAgents";
+import * as url from "url";
 
 class App extends Component<any, any> {
     constructor(props: any) {
@@ -49,7 +51,12 @@ class App extends Component<any, any> {
     async handleStartRecordingClick() {
         chrome.tabs.get(this.props.tabId, ((tab: any) => {
             const {selectedDevice} = this.state;
-            chrome.tabs.create({url: chrome.extension.getURL('create_test.html') + `?url="${encodeURI(tab.url)}"&device=${selectedDevice}`});
+            const iframeURL = new URL(tab.url);
+            const crusherAgent = devices.find((device)=>{
+                return device.id === selectedDevice
+            });
+            iframeURL.searchParams.set("__crusherAgent__", encodeURI(crusherAgent.userAgent));
+            chrome.tabs.create({url: chrome.extension.getURL('create_test.html') + `?url=${iframeURL}&device=${selectedDevice}`});
 
             window.close();
         }).bind(this));

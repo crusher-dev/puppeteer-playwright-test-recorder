@@ -10,11 +10,11 @@ import {
 import {hideAllChildNodes, removeAllTargetBlankFromLinks, setAttributeForAllChildNodes} from "../../../utils/dom";
 import EventsController from "../EventsController";
 import FormWizard from "./formWizard";
-import LocalFrameStorage from "../../../utils/localFrameStorage";
+import LocalFrameStorage from "../../../utils/frameStorage";
 import {ACTION_TYPES} from "../../../constants/ActionTypes";
 const {createPopper}  = require("@popperjs/core");
 
-export default class RecordingOverlay{
+export default class EventRecording{
     defaultState: any = {targetElement: null, sessionGoingOn: false, showingEventsBox: false, pinned: false};
 
     private state: any;
@@ -301,10 +301,12 @@ export default class RecordingOverlay{
         this._overlayEventsGrid.removeEventListener("click", this.handleEventsGridClick, true);
     }
 
-    startEventRecording(isFirstTime = false){
+    boot(isFirstTime = false){
         this.awake = true;
         if(isFirstTime){
-            this.eventsController.saveCapturedEventInBackground(NAVIGATE_URL, document.body, window.location.href);
+            const currentURL = new URL(window.location.href);
+            currentURL.searchParams.delete("__crusherAgent__");
+            this.eventsController.saveCapturedEventInBackground(NAVIGATE_URL, document.body, currentURL.toString());
         }
         window.top.postMessage(
             {

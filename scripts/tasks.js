@@ -2,7 +2,14 @@ const { exec } = require('child_process');
 
 async function bundleTemplates(type) {
   const env = type === 'build' ? 'prod' : type;
-  exec(`pug -O "{ env: '${env}' }" -o ${type} ./src/templates/`);
+  exec(`pug -O "{ env: '${env}' }" -o ${type} ./src/templates/`, (error, stdout, stderr) => {
+    if (error) {
+      console.error(`exec error: ${error}`);
+      return;
+    }
+    console.log(`stdout: ${stdout}`);
+    console.error(`stderr: ${stderr}`);
+  });
   console.log('Templates bundled to dev');
 }
 
