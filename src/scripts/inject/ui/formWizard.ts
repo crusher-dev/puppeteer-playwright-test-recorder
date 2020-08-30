@@ -127,7 +127,7 @@ export default class FormWizard{
         switch(this.actionType){
             case EXTRACT_INFO:
                 this.resetExtractFields();
-                this._modalHeading.innerHTML = "Extract Info Form";
+                this._modalHeading.innerHTML = "Extract Info form";
                 this._extract_event_form.removeAttribute("data-gone");
                 this.evaluateValidationScript();
                 break;
@@ -141,7 +141,7 @@ export default class FormWizard{
     }
 
     boot(actionType: string){
-        console.debug("Form wizard booted up");
+        console.debug("form wizard booted up");
         this.initNodes();
         this.initEventListener();
 

@@ -25,7 +25,7 @@ if (top !== self) {
 
     window.top.postMessage(
         {
-            type: ACTION_TYPES.CHECK_RECORDING_STATUS,
+            type: ACTION_TYPES.GET_RECORDING_STATUS,
             //@ts-ignore
             frameId: LocalFrameStorage.get(),
             value: true
@@ -65,7 +65,11 @@ if (top !== self) {
             case ACTION_TYPES.TOOGLE_INSPECTOR:
 
                 break;
-            case ACTION_TYPES.CHECK_RECORDING_STATUS:
+            case ACTION_TYPES.RECORDING_STATUS_RESPONSE:
+                const {isFromParent} = message.data;
+                if(!isFromParent){
+                    break;
+                }
                 if(value === IS_RECORDING_WITHOUT_INSPECTOR || value === NOT_RECORDING){
                     recordingOverlay.boot(true);
                 } else if(value === IS_RECORDING_USING_INSPECTOR){

@@ -7,6 +7,7 @@ import {ACTION_TYPES} from "../../constants/ActionTypes";
 import {IS_RECORDING_USING_INSPECTOR, IS_RECORDING_WITHOUT_INSPECTOR, NOT_RECORDING} from "../../constants";
 import devices from "../../constants/devices";
 import userAgents from "../../constants/userAgents";
+import {NAVIGATE_URL} from "../../constants/DOMEventsToRecord";
 
 function Step(props: any) {
     const {type, path, value} = props;
@@ -251,7 +252,17 @@ function App(props: ComponentProps<any>) {
         const {type, eventType, value, path} = event.data;
         console.log(event.data);
         if (eventType && path) {
-            setSteps([...(getSteps()), {event_type: eventType, value, selector: path}]);
+            const lastStep = steps[steps.length - 1];
+            if(!lastStep) {
+                setSteps([...(getSteps()), {event_type: eventType, value, selector: path}]);
+            } else {
+                if(lastStep.eventType === NAVIGATE_URL && eventType === NAVIGATE_URL && lastStep.value === value){
+                   console.log("Same navigation again", lastStep.value);
+                } else {
+                    setSteps([...(getSteps()), {event_type: eventType, value, selector: path}]);
+                    console.log("Not same navigation again", lastStep.value, eventType, path);
+                }
+            }
         } else if (type) {
             const cn = (iframeRef).current.contentWindow;
 
@@ -262,10 +273,11 @@ function App(props: ComponentProps<any>) {
                 case ACTION_TYPES.TOOGLE_INSPECTOR:
                     setIsUsingElementInspector(!isUsingElementInspector);
                     break;
-                case ACTION_TYPES.CHECK_RECORDING_STATUS:
+                case ACTION_TYPES.GET_RECORDING_STATUS:
                     cn.postMessage({
-                        type: ACTION_TYPES.CHECK_RECORDING_STATUS,
-                        value: isUsingElementInspector ? IS_RECORDING_USING_INSPECTOR : (isRecording ? IS_RECORDING_WITHOUT_INSPECTOR : NOT_RECORDING)
+                        type: ACTION_TYPES.RECORDING_STATUS_RESPONSE,
+                        value: isUsingElementInspector ? IS_RECORDING_USING_INSPECTOR : (isRecording ? IS_RECORDING_WITHOUT_INSPECTOR : NOT_RECORDING),
+                        isFromParent: true
                     }, '*');
                     break;
                 case ACTION_TYPES.GET_USER_AGENT:

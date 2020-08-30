@@ -20,16 +20,9 @@ var actualCode =  '(' + function(userAgent : string, appVersion: string, platfor
             writable: false
         });
     }
-    // Pretend to be Windows XP
     Object.defineProperties(modifiedNavigator, {
         userAgent: {
             value: userAgent,
-            configurable: false,
-            enumerable: true,
-            writable: false
-        },
-        appVersion: {
-            value: navigator.appVersion.replace(/\([^)]+\)/, appVersion),
             configurable: false,
             enumerable: true,
             writable: false
