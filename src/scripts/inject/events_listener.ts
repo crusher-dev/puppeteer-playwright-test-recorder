@@ -13,12 +13,17 @@ if (top !== self) {
         .then((response) => response.text())
         .then(html=> {
             try {
-                document.body.innerHTML += html;
+                const htmlWrapper = document.createElement("div");
+                htmlWrapper.innerHTML = html;
+                document.body.appendChild(htmlWrapper);
                 const linkRel = document.createElement("link");
                 linkRel.setAttribute("rel", "stylesheet");
                 linkRel.setAttribute("href", chrome.runtime.getURL("styles/overlay.css"));
-                document.body.appendChild(linkRel);
-            } catch(ex){}
+                document.head.appendChild(linkRel);
+            } catch(ex){
+                console.log("Exception");
+                console.error("This is the exception", ex);
+            }
         });
 
     const recordingOverlay = new EventRecording({});

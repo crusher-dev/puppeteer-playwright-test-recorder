@@ -64,7 +64,7 @@ export default class EventRecording{
         if(!this.showInspector){
             this.showEventsFormWizard();
             this.showInspector = true;
-            this._addActionElement.style.display = 'block';
+            // this._addActionElement.style.display = 'block';
             const {targetElement} = this.state;
             if(targetElement){
                 this.highlightNode(targetElement);
@@ -72,7 +72,7 @@ export default class EventRecording{
         } else {
             this.removeInspector();
             this.showInspector = false;
-            this._addActionElement.style.display = 'none';
+            // this._addActionElement.style.display = 'none';
         }
     }
 
@@ -101,7 +101,7 @@ export default class EventRecording{
                     }
                 ],
             });
-            this._addActionElement.style.display = 'block';
+            // this._addActionElement.style.display = 'block';
         }
     }
 
@@ -111,17 +111,17 @@ export default class EventRecording{
         this.state.pinned = true;
 
         // Increase the height of actions container to give more space for not falling out of selection.
-        this._addActionElement.style.height = this._overlayAddEventsContainer.getBoundingClientRect().height + "px";
+        // this._addActionElement.style.height = this._overlayAddEventsContainer.getBoundingClientRect().height + "px";
 
         this.destoryEventsListTether();
-        this._eventsListTether =  createPopper(this._addActionModal, this._overlayAddEventsContainer, {
-            placement: 'right-start',
-            modifiers: [
-                {
-                    name: 'flip',
-                    enabled: true,
-                },
-            ]});
+        // this._eventsListTether =  createPopper(this._addActionModal, this._overlayAddEventsContainer, {
+        //     placement: 'right-start',
+        //     modifiers: [
+        //         {
+        //             name: 'flip',
+        //             enabled: true,
+        //         },
+        //     ]});
     }
 
     hideEventsList(){

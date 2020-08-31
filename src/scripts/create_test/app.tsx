@@ -204,7 +204,6 @@ function RenderDesktopBrowser(props: any) {
                                     style={{...styles.browserFrame, width: "100%", height: "100%"}}
                                     scrolling="auto"
                                     id="screen-iframe-5984a019-7f2b-4f58-ad11-e58cc3cfa634"
-                                    sandbox="allow-scripts allow-modals allow-forms allow-same-origin"
                                     title={selectedDevice.name}
                                     src={addressValue}
                             ></iframe>
@@ -216,7 +215,6 @@ function RenderDesktopBrowser(props: any) {
                             style={{...styles.browserFrame, width: selectedDevice.width, height: selectedDevice.height}}
                             scrolling="auto"
                             id="screen-iframe-5984a019-7f2b-4f58-ad11-e58cc3cfa634"
-                            sandbox="allow-scripts allow-modals allow-forms allow-same-origin"
                             title={selectedDevice.name}
                             src={addressValue}
                     ></iframe>
