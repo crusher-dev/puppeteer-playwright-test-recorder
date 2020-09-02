@@ -2622,6 +2622,11 @@ crypto-random-string@^2.0.0:
   resolved "https://registry.yarnpkg.com/crypto-random-string/-/crypto-random-string-2.0.0.tgz#ef2a7a966ec11083388369baa02ebead229b30d5"
   integrity sha512-v1plID3y9r/lPhviJ1wrXpLeyUIGAZ2SHNYTEapm7/8A9nLPoyvVp3RK/EPFqn5kEznyWgYZNsRtYYIWbuG8KA==
 
+css-selector-tools@^1.0.9:
+  version "1.0.9"
+  resolved "https://registry.yarnpkg.com/css-selector-tools/-/css-selector-tools-1.0.9.tgz#4f7b14b61bc98a96d850c539f27090b7989e6047"
+  integrity sha512-8G8OzuuYD76whNA/sfUP5Yck7pvUmLyvzUnVadDK+2P5wsSOpuAg9M3JsL31189U0gVeNNpPEkEHkuXSnmN23Q==
+
 csstype@^2.5.7:
   version "2.6.13"
   resolved "https://registry.yarnpkg.com/csstype/-/csstype-2.6.13.tgz#a6893015b90e84dd6e85d0e3b442a1e84f2dbe0f"

@@ -1,5 +1,5 @@
 import {
-    ASSERT_TEXT, CAPTURE_CONSOLE,
+    ASSERT_TEXT, BLACKOUT, CAPTURE_CONSOLE,
     CLICK, EXTRACT_INFO,
     HOVER, INPUT,
     NAVIGATE_URL,
@@ -12,6 +12,7 @@ import EventsController from "../EventsController";
 import FormWizard from "./formWizard";
 import LocalFrameStorage from "../../../utils/frameStorage";
 import {ACTION_TYPES} from "../../../constants/ActionTypes";
+import {getSelectors} from "../../../utils/selector";
 const {createPopper}  = require("@popperjs/core");
 
 export default class EventRecording{
@@ -37,7 +38,7 @@ export default class EventRecording{
     private _arrowOnAddIcon: any;
     private _modalHeading: any;
     private awake = false;
-    private showInspector = false;
+    private isInspectorMoving = false;
 
     constructor(options = {} as any) {
         this.state ={
@@ -61,18 +62,32 @@ export default class EventRecording{
     }
 
     toggleEventsBox(){
-        if(!this.showInspector){
-            this.showEventsFormWizard();
-            this.showInspector = true;
-            // this._addActionElement.style.display = 'block';
-            const {targetElement} = this.state;
-            if(targetElement){
-                this.highlightNode(targetElement);
-            }
+        if(!this.isInspectorMoving){
+           this.showEventsBox();
         } else {
+           this.hideEventsBoxIfShown();
+        }
+    }
+
+    showEventsBox(){
+        this.showEventsFormWizard();
+        this.isInspectorMoving = true;
+        // this._addActionElement.style.display = 'block';
+        const {targetElement} = this.state;
+        if(targetElement){
+            this.highlightNode(targetElement);
+        }
+    }
+
+    hideEventsBoxIfShown(){
             this.removeInspector();
-            this.showInspector = false;
-            // this._addActionElement.style.display = 'none';
+            this.isInspectorMoving = false;
+            this._addActionElement.style.display = 'none';
+    }
+
+    stopInspectorIfMoving(){
+        if(this.isInspectorMoving){
+            this.isInspectorMoving = false;
         }
     }
 
@@ -101,7 +116,7 @@ export default class EventRecording{
                     }
                 ],
             });
-            // this._addActionElement.style.display = 'block';
+            this._addActionElement.style.display = 'block';
         }
     }
 
@@ -111,17 +126,17 @@ export default class EventRecording{
         this.state.pinned = true;
 
         // Increase the height of actions container to give more space for not falling out of selection.
-        // this._addActionElement.style.height = this._overlayAddEventsContainer.getBoundingClientRect().height + "px";
+        this._addActionElement.style.height = this._overlayAddEventsContainer.getBoundingClientRect().height + "px";
 
         this.destoryEventsListTether();
-        // this._eventsListTether =  createPopper(this._addActionModal, this._overlayAddEventsContainer, {
-        //     placement: 'right-start',
-        //     modifiers: [
-        //         {
-        //             name: 'flip',
-        //             enabled: true,
-        //         },
-        //     ]});
+        this._eventsListTether =  createPopper(this._addActionModal, this._overlayAddEventsContainer, {
+            placement: 'right-start',
+            modifiers: [
+                {
+                    name: 'flip',
+                    enabled: true,
+                },
+            ]});
     }
 
     hideEventsList(){
@@ -170,7 +185,7 @@ export default class EventRecording{
             targetElement: target
         };
 
-        if(this.showInspector) {
+        if(this.isInspectorMoving) {
             this.highlightNode(target);
         }
         this.showAddIcon(target);
@@ -193,7 +208,8 @@ export default class EventRecording{
     }
 
     handleSelectedActionFromEventsList(event: any){
-       const action = event.target.getAttribute("data-action");
+        // If its coming from create_test popup use event.action
+       const action = event.action ? event.action : event.target.getAttribute("data-action");
         switch(action){
            case CLICK:
                 removeAllTargetBlankFromLinks();
@@ -204,6 +220,11 @@ export default class EventRecording{
                this.eventsController.simulateHoverOnElement(this.state.targetElement);
                this.eventsController.saveCapturedEventInBackground(HOVER, this.state.targetElement);
                break;
+            case BLACKOUT:
+                this.state.targetElement.style.visibility="hidden";
+                this.eventsController.saveCapturedEventInBackground(BLACKOUT, this.state.targetElement);
+
+                break;
            case SCREENSHOT:
                this.eventsController.saveCapturedEventInBackground(SCREENSHOT, this.state.targetElement);
                break;
@@ -230,7 +251,7 @@ export default class EventRecording{
 
         const {targetElement} = this.state;
 
-        if(targetElement !== event.target && this.showInspector){
+        if(targetElement !== event.target && this.isInspectorMoving){
             // Remove Highlight from last element hovered
             this.removeHighLightFromNode(targetElement);
             this.hideEventsList();
@@ -241,7 +262,18 @@ export default class EventRecording{
 
     handleAddIconClick(){
         // @TODO: Post message to parent frame to show the form.
-        // this.toggleEventsBox();
+        this.stopInspectorIfMoving();
+        this._addActionElement.style.display = "none";
+
+        window.top.postMessage(
+            {
+                type: ACTION_TYPES.SHOW_ELEMENT_FORM,
+                //@ts-ignore
+                frameId: LocalFrameStorage.get(),
+                value: getSelectors(this.state.targetElement)
+            },
+            '*'
+        );
     }
 
     handleEventsGridClick(event: Event){
@@ -257,6 +289,14 @@ export default class EventRecording{
         if(!isRecorder){
             this.state.pinned = false;
             const {target} = event;
+            if(target.tagName.toLowerCase() === "a"){
+                console.log("Clicked on a link");
+                const href = target.getAttribute("href");
+                if(href){
+                    window.location  = href;
+                }
+                return event.preventDefault();
+            }
             if(!event.simulatedEvent){
                 this.eventsController.saveCapturedEventInBackground(CLICK, event.target);
             }
@@ -276,12 +316,11 @@ export default class EventRecording{
     registerNodeListeners(){
         document.body.addEventListener("mousemove", this.handleMouseOver, true);
         document.body.addEventListener("blur", this.handleInputBlur, true);
-
         document.addEventListener( "click", this.handleDocumentClick, true);
     }
 
     registerNodeListenerForForm(){
-        this._addActionIcon.addEventListener("click", this.handleAddIconClick);
+        this._addActionElement.addEventListener("click", this.handleAddIconClick);
 
         this._overlayEventsGrid.addEventListener("click", this.handleEventsGridClick, true);
         this._closeActionIcon.addEventListener("click", this.toggleEventsBox, true);
@@ -323,11 +362,11 @@ export default class EventRecording{
     showEventsFormWizard(){
         this.initNodes();
         this.registerNodeListenerForForm();
-        if(this.showInspector){
+        if(this.isInspectorMoving){
             this.toggleEventsBox();
-            this.showInspector = false;
+            this.isInspectorMoving = false;
         } else {
-            this.showInspector = true;
+            this.isInspectorMoving = true;
             window.top.postMessage(
                 {
                     type: ACTION_TYPES.TOOGLE_INSPECTOR,

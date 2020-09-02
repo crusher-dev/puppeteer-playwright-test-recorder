@@ -17,6 +17,7 @@
     "@types/react-select": "^3.0.19",
     "@types/uuid": "^8.0.1",
     "child_process": "^1.0.2",
+    "css-selector-tools": "^1.0.9",
     "mkdirp": "^1.0.4",
     "preact": "^10.4.7",
     "react-dom": "^16.13.1",

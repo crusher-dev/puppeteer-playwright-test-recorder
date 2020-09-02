@@ -1,5 +1,5 @@
 Arguments: 
-  /usr/bin/node /usr/share/yarn/bin/yarn.js add mini-select
+  /usr/bin/node /usr/share/yarn/bin/yarn.js add @types/css-selector-tools
 
 PATH: 
   /home/utkarsh/.rvm/gems/ruby-2.7.1/bin:/home/utkarsh/.rvm/gems/ruby-2.7.1@global/bin:/home/utkarsh/.rvm/rubies/ruby-2.7.1/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/home/utkarsh/.rvm/bin:/home/utkarsh/.rvm/bin
@@ -14,7 +14,7 @@ Platform:
   linux x64
 
 Trace: 
-  Error: https://registry.yarnpkg.com/mini-select: Not found
+  Error: https://registry.yarnpkg.com/@types%2fcss-selector-tools: Not found
       at Request.params.callback [as _callback] (/usr/share/yarn/lib/cli.js:66987:18)
       at Request.self.callback (/usr/share/yarn/lib/cli.js:140748:22)
       at Request.emit (events.js:198:13)
@@ -31,7 +31,7 @@ npm manifest:
     "name": "crusher-recorder",
     "version": "0.0.1",
     "description": "",
-    "main": "src/index.tsx",
+    "main": "src/index.ts",
     "scripts": {
       "dev": "node scripts/dev",
       "build": "node scripts/build.js",
@@ -46,10 +46,12 @@ npm manifest:
       "@types/react-select": "^3.0.19",
       "@types/uuid": "^8.0.1",
       "child_process": "^1.0.2",
+      "css-selector-tools": "^1.0.9",
       "mkdirp": "^1.0.4",
       "preact": "^10.4.7",
       "react-dom": "^16.13.1",
       "react-select": "^3.1.0",
+      "simple-select": "^2.1.4",
       "url": "^0.11.0",
       "url-parse": "^1.4.7",
       "uuid": "^8.3.0"
@@ -2714,6 +2716,11 @@ Lockfile:
     resolved "https://registry.yarnpkg.com/crypto-random-string/-/crypto-random-string-2.0.0.tgz#ef2a7a966ec11083388369baa02ebead229b30d5"
     integrity sha512-v1plID3y9r/lPhviJ1wrXpLeyUIGAZ2SHNYTEapm7/8A9nLPoyvVp3RK/EPFqn5kEznyWgYZNsRtYYIWbuG8KA==
   
+  css-selector-tools@^1.0.9:
+    version "1.0.9"
+    resolved "https://registry.yarnpkg.com/css-selector-tools/-/css-selector-tools-1.0.9.tgz#4f7b14b61bc98a96d850c539f27090b7989e6047"
+    integrity sha512-8G8OzuuYD76whNA/sfUP5Yck7pvUmLyvzUnVadDK+2P5wsSOpuAg9M3JsL31189U0gVeNNpPEkEHkuXSnmN23Q==
+  
   csstype@^2.5.7:
     version "2.6.13"
     resolved "https://registry.yarnpkg.com/csstype/-/csstype-2.6.13.tgz#a6893015b90e84dd6e85d0e3b442a1e84f2dbe0f"
@@ -4471,6 +4478,11 @@ Lockfile:
     version "3.0.1"
     resolved "https://registry.yarnpkg.com/isobject/-/isobject-3.0.1.tgz#4e431e92b11a9731636aa1f9c8d1ccbcfdab78df"
     integrity sha1-TkMekrEalzFjaqH5yNHMvP2reN8=
+  
+  jquery@2.x, jquery@~2.2.4:
+    version "2.2.4"
+    resolved "https://registry.yarnpkg.com/jquery/-/jquery-2.2.4.tgz#2c89d6889b5eac522a7eea32c14521559c6cbf02"
+    integrity sha1-LInWiJterFIqfuoywUUhVZxsvwI=
   
   "js-tokens@^3.0.0 || ^4.0.0", js-tokens@^4.0.0:
     version "4.0.0"
@@ -6310,6 +6322,21 @@ Lockfile:
     version "3.0.3"
     resolved "https://registry.yarnpkg.com/signal-exit/-/signal-exit-3.0.3.tgz#a1410c2edd8f077b08b4e253c8eacfcaf057461c"
     integrity sha512-VUJ49FC8U1OxwZLxIbTTrDvLnf/6TDgxZcK8wxR8zs13xpx7xbG60ndBlhNrFi2EMuFRoeDoJO7wthSLq42EjA==
+  
+  simple-module@~2.0.6:
+    version "2.0.6"
+    resolved "https://registry.yarnpkg.com/simple-module/-/simple-module-2.0.6.tgz#cec8250325f8c7f575f4aa75c919b38396a6037b"
+    integrity sha1-zsglAyX4x/V19Kp1yRmzg5amA3s=
+    dependencies:
+      jquery "2.x"
+  
+  simple-select@^2.1.4:
+    version "2.1.4"
+    resolved "https://registry.yarnpkg.com/simple-select/-/simple-select-2.1.4.tgz#1e628cb1ed09f3653f3f9a1270c1b140df0f94ce"
+    integrity sha1-HmKMse0J82U/P5oScMGxQN8PlM4=
+    dependencies:
+      jquery "~2.2.4"
+      simple-module "~2.0.6"
   
   slash@^3.0.0:
     version "3.0.0"

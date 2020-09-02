@@ -2,6 +2,8 @@ import EventRecording from "./ui/eventRecording";
 import {ACTION_TYPES} from "../../constants/ActionTypes";
 import LocalFrameStorage from "../../utils/frameStorage";
 import {IS_RECORDING_USING_INSPECTOR, IS_RECORDING_WITHOUT_INSPECTOR, NOT_RECORDING} from "../../constants";
+import {ACTION_FORM_TYPE} from "../create_test/app";
+import {ASSERT_TEXT, CLICK, HOVER} from "../../constants/DOMEventsToRecord";
 
 // setInterval(function (){
 //     console.log("My next data: ");
@@ -11,7 +13,7 @@ import {IS_RECORDING_USING_INSPECTOR, IS_RECORDING_WITHOUT_INSPECTOR, NOT_RECORD
 if (top !== self) {
     fetch(chrome.runtime.getURL("inject.html") /*, options */)
         .then((response) => response.text())
-        .then(html=> {
+        .then(html => {
             try {
                 const htmlWrapper = document.createElement("div");
                 htmlWrapper.innerHTML = html;
@@ -20,7 +22,7 @@ if (top !== self) {
                 linkRel.setAttribute("rel", "stylesheet");
                 linkRel.setAttribute("href", chrome.runtime.getURL("styles/overlay.css"));
                 document.head.appendChild(linkRel);
-            } catch(ex){
+            } catch (ex) {
                 console.log("Exception");
                 console.error("This is the exception", ex);
             }
@@ -38,56 +40,74 @@ if (top !== self) {
         '*'
     );
 
-    window.addEventListener('message', (message)=>{
-        const {type, value} = message.data;
+    window.addEventListener('message', (message) => {
+        const {type, value, formType} = message.data;
         console.log(message.data);
-        if(!!type === false){
+        if (!!type === false) {
             return;
         }
 
-        switch(type){
-            case ACTION_TYPES.INSPECT:
-                if(value)
-                    recordingOverlay.showEventsFormWizard();
-                else
-                    recordingOverlay.removeEventsFormWizard();
-                break;
-            case ACTION_TYPES.SCREENSHOT:
-                recordingOverlay.takePageScreenShot();
-                break;
-            case ACTION_TYPES.CAPTURE_CONSOLE:
-                recordingOverlay.saveConsoleLogsAtThisMoment();
-                break;
-            case ACTION_TYPES.GO_BACK:
-                window.history.back();
-                break;
-            case ACTION_TYPES.GO_FORWARD:
-                window.history.forward();
-                break;
-            case ACTION_TYPES.REFRESH_PAGE:
-                window.location.reload();
-                break;
-            case ACTION_TYPES.TOOGLE_INSPECTOR:
-
-                break;
-            case ACTION_TYPES.RECORDING_STATUS_RESPONSE:
-                const {isFromParent} = message.data;
-                if(!isFromParent){
+        if(formType === ACTION_FORM_TYPE.PAGE_ACTIONS){
+            switch(type){
+                case ACTION_TYPES.INSPECT:
+                    if (value)
+                        recordingOverlay.showEventsFormWizard();
+                    else
+                        recordingOverlay.removeEventsFormWizard();
                     break;
-                }
-                if(value === IS_RECORDING_WITHOUT_INSPECTOR || value === NOT_RECORDING){
-                    recordingOverlay.boot(true);
-                } else if(value === IS_RECORDING_USING_INSPECTOR){
-                    recordingOverlay.boot();
-                    recordingOverlay.showEventsFormWizard();
-                }
-                break;
+                case ACTION_TYPES.SCREENSHOT:
+                    recordingOverlay.takePageScreenShot();
+                    break;
+                case ACTION_TYPES.CAPTURE_CONSOLE:
+                    recordingOverlay.saveConsoleLogsAtThisMoment();
+                    break;
+            }
+        } else if(formType === ACTION_FORM_TYPE.ELEMENT_ACTIONS){
+            recordingOverlay.hideEventsBoxIfShown();
+            if(type===ASSERT_TEXT){
+
+            } else {
+                recordingOverlay.handleSelectedActionFromEventsList({action: type});
+            }
+        } else {
+            switch (type) {
+                case ACTION_TYPES.GO_BACK:
+                    window.history.back();
+                    break;
+                case ACTION_TYPES.GO_FORWARD:
+                    window.history.forward();
+                    break;
+                case ACTION_TYPES.REFRESH_PAGE:
+                    window.location.reload();
+                    break;
+                case ACTION_TYPES.TOOGLE_INSPECTOR:
+
+                    break;
+                case ACTION_TYPES.RECORDING_STATUS_RESPONSE:
+                    const {isFromParent} = message.data;
+                    if (!isFromParent) {
+                        break;
+                    }
+                    if (value === IS_RECORDING_WITHOUT_INSPECTOR || value === NOT_RECORDING) {
+                        recordingOverlay.boot(true);
+                    } else if (value === IS_RECORDING_USING_INSPECTOR) {
+                        recordingOverlay.boot();
+                        recordingOverlay.showEventsFormWizard();
+                    }
+                    break;
+            }
         }
     }, false);
 
-    document.addEventListener("keydown", function(event: KeyboardEvent){
-        if(event.keyCode === 68 && event.shiftKey){
-            recordingOverlay.toggleEventsBox();
+    document.addEventListener("keydown", function (event: KeyboardEvent) {
+        if (event.repeat) { return; }
+
+        if (event.keyCode === 68 && event.shiftKey) {
+            recordingOverlay.showEventsBox();
         }
+    }, true);
+
+    document.addEventListener("keyup", function (event: KeyboardEvent) {
+        recordingOverlay.stopInspectorIfMoving();
     }, true);
 }

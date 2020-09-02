@@ -1,13 +1,18 @@
 import {ComponentProps} from 'preact';
 import React from 'preact/compat';
-import { useRef, useState} from "preact/hooks";
+import {useRef, useState} from "preact/hooks";
 import {addHttpToURLIfNotThere, getQueryStringParams} from "../../utils/url";
 import {sendPostDataWithForm} from "../../../../chrome-extension/src/utils/helpers";
 import {ACTION_TYPES} from "../../constants/ActionTypes";
-import {IS_RECORDING_USING_INSPECTOR, IS_RECORDING_WITHOUT_INSPECTOR, NOT_RECORDING} from "../../constants";
+import {EVENTS, IS_RECORDING_USING_INSPECTOR, IS_RECORDING_WITHOUT_INSPECTOR, NOT_RECORDING} from "../../constants";
 import devices from "../../constants/devices";
 import userAgents from "../../constants/userAgents";
-import {NAVIGATE_URL} from "../../constants/DOMEventsToRecord";
+import {ASSERT_TEXT, BLACKOUT, CLICK, HOVER, NAVIGATE_URL, SCREENSHOT} from "../../constants/DOMEventsToRecord";
+
+export const ACTION_FORM_TYPE = {
+    PAGE_ACTIONS: "PAGE_ACTIONS",
+    ELEMENT_ACTIONS: "ELEMENT_ACTIONS"
+};
 
 function Step(props: any) {
     const {type, path, value} = props;
@@ -45,58 +50,84 @@ function RenderSteps(props: any) {
 }
 
 function RenderActions(props: any) {
-    const {iframeRef} = props;
-    const actions = [
+    const {iframeRef, type, isShowingElementFormCallback} = props;
+    const pageActions = [
         {
             id: ACTION_TYPES.INSPECT,
             value: "Inspect",
             icon: chrome.runtime.getURL("icons/action.svg")
         },
         {
-            id: ACTION_TYPES.SEO_META,
-            value: "SEO/Meta",
-            icon: chrome.runtime.getURL("icons/action.svg")
-        },
-        {
-            id: ACTION_TYPES.NETWORK,
-            value: "Network",
-            icon: chrome.runtime.getURL("icons/action.svg")
-        },
-        {
-            id: ACTION_TYPES.CAPTURE_CONSOLE,
-            value: "Console",
-            icon: chrome.runtime.getURL("icons/action.svg")
-        },
-        {
             id: ACTION_TYPES.SCREENSHOT,
+            value: "Screenshot",
+            icon: chrome.runtime.getURL("icons/action.svg")
+        }
+    ];
+
+    const elementActions = [
+        {
+            id: CLICK,
+            value: "Click",
+            icon: chrome.runtime.getURL("icons/action.svg")
+        },
+        {
+            id: HOVER,
+            value: "Hover",
+            icon: chrome.runtime.getURL("icons/action.svg")
+        },
+        {
+            id: SCREENSHOT,
             value: "Screenshot",
             icon: chrome.runtime.getURL("icons/action.svg")
         },
         {
-            id: ACTION_TYPES.SANITY,
-            value: "Sanity",
+            id: ASSERT_TEXT,
+            value: "Assert Text",
+            icon: chrome.runtime.getURL("icons/action.svg")
+        },
+        {
+            id: BLACKOUT,
+            value: "Blackout",
             icon: chrome.runtime.getURL("icons/action.svg")
         }
-    ]
+    ];
 
     function handleActionClick(actionType: string) {
         const cn = (iframeRef).current.contentWindow;
 
         switch (actionType) {
             case ACTION_TYPES.INSPECT:
-                cn.postMessage({type: ACTION_TYPES.INSPECT, value: true}, '*');
+                cn.postMessage({type: ACTION_TYPES.INSPECT, formType: ACTION_FORM_TYPE.PAGE_ACTIONS, value: true}, '*');
                 break;
             case ACTION_TYPES.SCREENSHOT:
-                cn.postMessage({type: ACTION_TYPES.SCREENSHOT, value: true}, '*');
+                cn.postMessage({type: ACTION_TYPES.SCREENSHOT, formType: ACTION_FORM_TYPE.PAGE_ACTIONS, value: true}, '*');
                 break;
             case ACTION_TYPES.CAPTURE_CONSOLE:
-                cn.postMessage({type: ACTION_TYPES.CAPTURE_CONSOLE, value: true}, '*')
+                cn.postMessage({type: ACTION_TYPES.CAPTURE_CONSOLE, formType: ACTION_FORM_TYPE.PAGE_ACTIONS, value: true}, '*')
+                break;
+            case CLICK:
+                isShowingElementFormCallback(false);
+                cn.postMessage({type: CLICK, formType: ACTION_FORM_TYPE.ELEMENT_ACTIONS, value: true}, '*');
+                break;
+            case HOVER:
+                isShowingElementFormCallback(false);
+                cn.postMessage({type: HOVER, formType: ACTION_FORM_TYPE.ELEMENT_ACTIONS, value: true}, '*');
+                break;
+            case SCREENSHOT:
+                isShowingElementFormCallback(false);
+                cn.postMessage({type: SCREENSHOT, formType: ACTION_FORM_TYPE.ELEMENT_ACTIONS, value: true}, '*');
+                break;
+            case BLACKOUT:
+                isShowingElementFormCallback(false);
+                cn.postMessage({type: BLACKOUT, formType: ACTION_FORM_TYPE.ELEMENT_ACTIONS, value: true}, '*');
                 break;
         }
 
     }
 
     let out = [];
+    const actions = type === ACTION_FORM_TYPE.ELEMENT_ACTIONS ? elementActions : pageActions;
+
     for (let i = 0; i < actions.length; i += 2) {
         out.push(
             <div style={styles.actionRow}>
@@ -163,7 +194,7 @@ function RenderDesktopBrowser(props: any) {
         cn.postMessage({type: ACTION_TYPES.REFRESH_PAGE, value: true}, '*');
     }
 
-    function renderAddressbar(){
+    function renderAddressbar() {
         const urlEncoded = new URL(addressValue);
         urlEncoded.searchParams.delete("__crusherAgent__");
         return (
@@ -203,6 +234,7 @@ function RenderDesktopBrowser(props: any) {
                             <iframe ref={forwardRef}
                                     style={{...styles.browserFrame, width: "100%", height: "100%"}}
                                     scrolling="auto"
+                                    sandbox="allow-scripts allow-forms allow-same-origin"
                                     id="screen-iframe-5984a019-7f2b-4f58-ad11-e58cc3cfa634"
                                     title={selectedDevice.name}
                                     src={addressValue}
@@ -215,6 +247,7 @@ function RenderDesktopBrowser(props: any) {
                             style={{...styles.browserFrame, width: selectedDevice.width, height: selectedDevice.height}}
                             scrolling="auto"
                             id="screen-iframe-5984a019-7f2b-4f58-ad11-e58cc3cfa634"
+                            sandbox="allow-scripts allow-forms allow-same-origin"
                             title={selectedDevice.name}
                             src={addressValue}
                     ></iframe>
@@ -237,6 +270,7 @@ function App(props: ComponentProps<any>) {
 
     const [steps, setSteps] = useState([]);
     const [isRecording, setIsRecording] = useState(false);
+    const [isShowingElementForm, setIsShowingElementForm] = useState(false);
     const [isUsingElementInspector, setIsUsingElementInspector] = useState(false);
 
     const iframeRef = useRef(null);
@@ -251,11 +285,11 @@ function App(props: ComponentProps<any>) {
         console.log(event.data);
         if (eventType && path) {
             const lastStep = steps[steps.length - 1];
-            if(!lastStep) {
+            if (!lastStep) {
                 setSteps([...(getSteps()), {event_type: eventType, value, selector: path}]);
             } else {
-                if(lastStep.eventType === NAVIGATE_URL && eventType === NAVIGATE_URL && lastStep.value === value){
-                   console.log("Same navigation again", lastStep.value);
+                if (lastStep.eventType === NAVIGATE_URL && eventType === NAVIGATE_URL && lastStep.value === value) {
+                    console.log("Same navigation again", lastStep.value);
                 } else {
                     setSteps([...(getSteps()), {event_type: eventType, value, selector: path}]);
                     console.log("Not same navigation again", lastStep.value, eventType, path);
@@ -265,6 +299,9 @@ function App(props: ComponentProps<any>) {
             const cn = (iframeRef).current.contentWindow;
 
             switch (type) {
+                case ACTION_TYPES.SHOW_ELEMENT_FORM:
+                    setIsShowingElementForm(true);
+                    break;
                 case ACTION_TYPES.STARTED_RECORDING_EVENTS:
                     setIsRecording(true);
                     break;
@@ -284,7 +321,7 @@ function App(props: ComponentProps<any>) {
                     const userAgent = userAgents.find((agent => {
                         return agent.name === (crusherAgent ? crusherAgent : userAgents[6].value)
                     }));
-                    cn.postMessage({ type: ACTION_TYPES.SET_USER_AGENT, value: userAgent}, '*');
+                    cn.postMessage({type: ACTION_TYPES.SET_USER_AGENT, value: userAgent}, '*');
             }
         }
     }
@@ -296,7 +333,11 @@ function App(props: ComponentProps<any>) {
     }
 
     function cancelTest() {
-        window.close();
+        if(isShowingElementForm){
+            setIsShowingElementForm(false);
+        } else {
+            window.close();
+        }
     }
 
     return (
@@ -307,11 +348,21 @@ function App(props: ComponentProps<any>) {
             <div style={{...styles.sidebar, ...styles.paddingContainer}}>
                 <div style={styles.sectionHeading}>Steps</div>
 
-                <div style={{height: 300, minHeight: "30%", overflowY: "auto", marginBottom: '2rem'}}>
+                <div style={{height: 300, minHeight: "50%", overflowY: "auto", marginBottom: '2rem'}}>
                     <RenderSteps steps={steps}/>
                 </div>
-                <div style={styles.sectionHeading}>Test Actions</div>
-                <RenderActions iframeRef={iframeRef}/>
+                {isShowingElementForm && (
+                    <>
+                        <div style={styles.sectionHeading}>Element Actions</div>
+                        <RenderActions type={ACTION_FORM_TYPE.ELEMENT_ACTIONS} isShowingElementFormCallback={setIsShowingElementForm} iframeRef={iframeRef}/>
+                    </>
+                )}
+                {!isShowingElementForm && (
+                    <>
+                        <div style={styles.sectionHeading}>Page Actions</div>
+                        <RenderActions type={ACTION_FORM_TYPE.PAGE_ACTIONS} isShowingElementFormCallback={setIsShowingElementForm}  iframeRef={iframeRef}/>
+                    </>
+                )}
 
                 <div style={{display: "flex", marginTop: "auto"}}>
                     <div onClick={cancelTest} style={{
