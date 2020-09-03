@@ -24,4 +24,13 @@ const tasks = require('./tasks');
         console.log(`stdout: ${stdout}`);
         console.error(`stderr: ${stderr}`);
     });
+
+    exec('webpack --config webpack/webpack.content_script.js --progress --profile --colors', (error, stdout, stderr) => {
+        if (error) {
+            console.error(`exec error: ${error}`);
+            return;
+        }
+        console.log(`stdout: ${stdout}`);
+        console.error(`stderr: ${stderr}`);
+    });
 })();

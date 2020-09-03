@@ -90,11 +90,11 @@ function RenderActions(props: any) {
             value: "Screenshot",
             icon: chrome.runtime.getURL("icons/action.svg")
         },
-        {
-            id: ASSERT_TEXT,
-            value: "Assert Text",
-            icon: chrome.runtime.getURL("icons/action.svg")
-        },
+        // {
+        //     id: ASSERT_TEXT,
+        //     value: "Assert Text",
+        //     icon: chrome.runtime.getURL("icons/action.svg")
+        // },
         {
             id: BLACKOUT,
             value: "Blackout",

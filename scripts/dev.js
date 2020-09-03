@@ -30,7 +30,7 @@ async function initDevServer() {
     port: 2400,
   });
 
-  exec('nodemon --watch src --exec "webpack --config webpack/webpack.content_script.js --watch --progress --profile --colors"', (error, stdout, stderr) => {
+  exec('nodemon --watch src --exec "webpack --config webpack/webpack.content_script.dev.js --watch --progress --profile --colors"', (error, stdout, stderr) => {
     if (error) {
       console.error(`exec error: ${error}`);
       return;
