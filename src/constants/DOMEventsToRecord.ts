@@ -1,3 +1,4 @@
+export const SET_DEVICE = 'SET_DEVICE';
 export const NAVIGATE_URL = 'NAVIGATE_URL';
 export const CLICK = "CLICK";
 export const INPUT = "INPUT";

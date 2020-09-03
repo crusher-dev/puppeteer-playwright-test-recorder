@@ -47,7 +47,7 @@ export function getActiveTabId() {
     });
 }
 
-export function sendPostDataWithForm(url: string, options: any = {}){
+export function     sendPostDataWithForm(url: string, options: any = {}){
     const form = document.createElement('form');
     form.method = "post";
     form.action = url;

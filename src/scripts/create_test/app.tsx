@@ -2,12 +2,22 @@ import {ComponentProps} from 'preact';
 import React from 'preact/compat';
 import {useRef, useState} from "preact/hooks";
 import {addHttpToURLIfNotThere, getQueryStringParams} from "../../utils/url";
-import {sendPostDataWithForm} from "../../../../chrome-extension/src/utils/helpers";
+import {sendPostDataWithForm} from "../../utils/helpers";
 import {ACTION_TYPES} from "../../constants/ActionTypes";
 import {EVENTS, IS_RECORDING_USING_INSPECTOR, IS_RECORDING_WITHOUT_INSPECTOR, NOT_RECORDING} from "../../constants";
 import devices from "../../constants/devices";
 import userAgents from "../../constants/userAgents";
-import {ASSERT_TEXT, BLACKOUT, CLICK, HOVER, NAVIGATE_URL, SCREENSHOT} from "../../constants/DOMEventsToRecord";
+import {
+    ASSERT_TEXT,
+    BLACKOUT,
+    CLICK,
+    HOVER,
+    NAVIGATE_URL,
+    SCREENSHOT,
+    SET_DEVICE
+} from "../../constants/DOMEventsToRecord";
+import {Simulate} from "react-dom/test-utils";
+import select = Simulate.select;
 
 export const ACTION_FORM_TYPE = {
     PAGE_ACTIONS: "PAGE_ACTIONS",
@@ -267,8 +277,9 @@ window.addEventListener("message", (event) => {
 });
 
 function App(props: ComponentProps<any>) {
+    const selectedDeviceId = getQueryStringParams("device", window.location.href);
 
-    const [steps, setSteps] = useState([]);
+    const [steps, setSteps] = useState([{event_type: SET_DEVICE, selector: "body", value: selectedDeviceId}]);
     const [isRecording, setIsRecording] = useState(false);
     const [isShowingElementForm, setIsShowingElementForm] = useState(false);
     const [isUsingElementInspector, setIsUsingElementInspector] = useState(false);
@@ -288,7 +299,7 @@ function App(props: ComponentProps<any>) {
             if (!lastStep) {
                 setSteps([...(getSteps()), {event_type: eventType, value, selector: path}]);
             } else {
-                if (lastStep.eventType === NAVIGATE_URL && eventType === NAVIGATE_URL && lastStep.value === value) {
+                if (lastStep.event_type === NAVIGATE_URL && eventType === NAVIGATE_URL && lastStep.value === value) {
                     console.log("Same navigation again", lastStep.value);
                 } else {
                     setSteps([...(getSteps()), {event_type: eventType, value, selector: path}]);
