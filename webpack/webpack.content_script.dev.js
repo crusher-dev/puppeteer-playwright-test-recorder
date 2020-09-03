@@ -16,17 +16,17 @@ module.exports = {
             __HOST__: `'${host}'`,
             __PORT__: port,
             'process.env': {
-                NODE_ENV: JSON.stringify('production'),
+                NODE_ENV: JSON.stringify('development'),
             },
         })
     ],
     output: {
         filename: '[name].js',
-        path: path.resolve(__dirname, '../build/js/'),
+        path: path.resolve(__dirname, '../dev/js/'),
     },
     resolve: {
         extensions: ['.ts', '.tsx', '.js', '.jsx'],
-        modules: ["node_modules"]
+        // modules: ["node_modules"]
     },
     module: {
         rules: [{
