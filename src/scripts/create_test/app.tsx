@@ -299,7 +299,11 @@ function App(props: ComponentProps<any>) {
             if (!lastStep) {
                 setSteps([...(getSteps()), {event_type: eventType, value, selector: path}]);
             } else {
-                if (lastStep.event_type === NAVIGATE_URL && eventType === NAVIGATE_URL && lastStep.value === value) {
+                const navigateEventExist = steps.find(step =>{
+                    return step.event_type === NAVIGATE_URL;
+                });
+
+                if (navigateEventExist && eventType === NAVIGATE_URL) {
                     console.log("Same navigation again", lastStep.value);
                 } else {
                     setSteps([...(getSteps()), {event_type: eventType, value, selector: path}]);

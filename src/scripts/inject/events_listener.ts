@@ -103,7 +103,7 @@ if (top !== self) {
         if (event.repeat) { return; }
 
         if (event.keyCode === 68 && event.shiftKey) {
-            recordingOverlay.showEventsBox();
+            recordingOverlay.highlightInspectedElement();
         }
     }, true);
 
