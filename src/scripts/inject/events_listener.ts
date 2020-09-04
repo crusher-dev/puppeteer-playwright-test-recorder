@@ -5,11 +5,6 @@ import {IS_RECORDING_USING_INSPECTOR, IS_RECORDING_WITHOUT_INSPECTOR, NOT_RECORD
 import {ACTION_FORM_TYPE} from "../create_test/app";
 import {ASSERT_TEXT, CLICK, HOVER} from "../../constants/DOMEventsToRecord";
 
-// setInterval(function (){
-//     console.log("My next data: ");
-//     console.log(document.getElementById("__NEXT_DATA__"));
-// },100)
-
 if (top !== self) {
     fetch(chrome.runtime.getURL("inject.html") /*, options */)
         .then((response) => response.text())
