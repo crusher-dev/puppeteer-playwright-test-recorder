@@ -2,7 +2,7 @@
 # Created by https://www.toptal.com/developers/gitignore/api/node
 # Edit at https://www.toptal.com/developers/gitignore?templates=node
 .idea
- .DS_Store
+.DS_Store
 ### Node ###
 # Logs
 logs
