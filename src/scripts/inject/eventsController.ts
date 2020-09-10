@@ -1,10 +1,8 @@
 import {EVENT_CAPTURED, EVENTS} from "../../constants";
 import {CLICK} from "../../constants/DOMEventsToRecord";
-import {createSnackBar} from "./toast";
 import {getSentenceCaseString} from "../../utils/helpers";
 import EventRecording from "./ui/eventRecording";
 import {finder} from '@medv/finder'
-import FormWizard from "./ui/formWizard";
 import getDomFromPath from "../../utils/domPath";
 import FrameStorage from "../../utils/frameStorage";
 

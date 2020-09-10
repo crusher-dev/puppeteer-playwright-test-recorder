@@ -8,8 +8,7 @@ import {
     SCROLL_TO_VIEW
 } from "../../../constants/DOMEventsToRecord";
 import {hideAllChildNodes, removeAllTargetBlankFromLinks, setAttributeForAllChildNodes} from "../../../utils/dom";
-import EventsController from "../EventsController";
-import FormWizard from "./formWizard";
+import EventsController from "../eventsController";
 import LocalFrameStorage from "../../../utils/frameStorage";
 import {ACTION_TYPES} from "../../../constants/ActionTypes";
 import {getSelectors} from "../../../utils/selector";
@@ -20,7 +19,6 @@ export default class EventRecording{
 
     private state: any;
     private eventsController: EventsController;
-    private formWizard: FormWizard;
 
     private controller: any;
     private _overlayAddEventsContainer: any;
@@ -53,7 +51,6 @@ export default class EventRecording{
         this.handleDocumentClick = this.handleDocumentClick.bind(this);
         this.handleInputBlur = this.handleInputBlur.bind(this);
         this.eventsController = new EventsController(this);
-        this.formWizard = new FormWizard(this, this.eventsController);
         this.toggleEventsBox = this.toggleEventsBox.bind(this);
     }
 
@@ -63,14 +60,13 @@ export default class EventRecording{
 
     toggleEventsBox(){
         if(!this.isInspectorMoving){
-           this.showEventsBox();
+           this.highlightInspectedElement();
         } else {
            this.hideEventsBoxIfShown();
         }
     }
 
-    showEventsBox(){
-        this.showEventsFormWizard();
+    highlightInspectedElement(){
         this.isInspectorMoving = true;
         // this._addActionElement.style.display = 'block';
         const {targetElement} = this.state;
@@ -137,20 +133,6 @@ export default class EventRecording{
                     enabled: true,
                 },
             ]});
-    }
-
-    hideEventsList(){
-        if(this._arrowOnAddIcon && this._overlayEventsGrid && this._overlayAddEventsContainer && this._modalHeading && this._overlayEventsGrid) {
-            this._arrowOnAddIcon.removeAttribute('data-hide');
-            this._overlayAddEventsContainer.style.display = 'none';
-            this._addActionElement.style.height = "auto";
-            this.state.pinned = false;
-
-            hideAllChildNodes(this._modalContentContainer);
-            this._modalHeading.innerHTML = "Select action";
-            this._overlayEventsGrid.removeAttribute("data-gone");
-            this.destoryEventsListTether();
-        }
     }
 
     destroyAddTether(){
@@ -231,10 +213,6 @@ export default class EventRecording{
            case SCROLL_TO_VIEW:
                 this.eventsController.saveCapturedEventInBackground(SCROLL_TO_VIEW, this.state.targetElement);
                break;
-            case EXTRACT_INFO:
-                return this.formWizard.boot(action);
-            case ASSERT_TEXT:
-                return this.formWizard.boot(action);
             default:
                 break;
        }
@@ -254,7 +232,6 @@ export default class EventRecording{
         if(targetElement !== event.target && this.isInspectorMoving){
             // Remove Highlight from last element hovered
             this.removeHighLightFromNode(targetElement);
-            this.hideEventsList();
             this.updateEventTarget(event.target as HTMLElement);
         }
     }
@@ -292,6 +269,7 @@ export default class EventRecording{
             if(target.tagName.toLowerCase() === "a"){
                 console.log("Clicked on a link");
                 const href = target.getAttribute("href");
+                this.eventsController.saveCapturedEventInBackground(CLICK, event.target);
                 if(href){
                     window.location  = href;
                 }
