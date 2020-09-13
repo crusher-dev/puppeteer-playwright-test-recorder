@@ -76,7 +76,7 @@ export function getSentenceCaseString(str: string){
 }
 
 export function resolveToFrontendUrl(path: string){
-    return url.resolve("https://crusher-test.com", path);
+    return url.resolve("https://app.crusher.dev", path);
 }
 
 export function createNewTab(path: string){

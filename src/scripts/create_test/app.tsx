@@ -344,7 +344,7 @@ function App(props: ComponentProps<any>) {
 
     function saveTest() {
         console.log(steps);
-        sendPostDataWithForm("https://backend.crusher-test.com/test/goToEditor", {events: JSON.stringify(steps)})
+        sendPostDataWithForm("https://backend.crusher.dev/test/goToEditor", {events: JSON.stringify(steps)})
     }
 
     function cancelTest() {
