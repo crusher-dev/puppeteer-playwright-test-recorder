@@ -18,6 +18,7 @@ import {
 } from "../../constants/DOMEventsToRecord";
 import {Simulate} from "react-dom/test-utils";
 import select = Simulate.select;
+import {SERVER_ENDPOINT} from "../../constants/endpoints";
 
 export const ACTION_FORM_TYPE = {
     PAGE_ACTIONS: "PAGE_ACTIONS",
@@ -348,7 +349,7 @@ function App(props: ComponentProps<any>) {
 
     function saveTest() {
         console.log(steps);
-        sendPostDataWithForm("https://backend.crusher.dev/test/goToEditor", {events: JSON.stringify(steps)})
+        sendPostDataWithForm(SERVER_ENDPOINT + "test/goToEditor", {events: escape(JSON.stringify(steps))})
     }
 
     function cancelTest() {

@@ -1,3 +1,5 @@
+import {APP_ENDPOINT} from "../constants/endpoints";
+
 const url = require('url');
 
 export function loadScript(name: string, tabId: any, cb: any) {
@@ -76,7 +78,7 @@ export function getSentenceCaseString(str: string){
 }
 
 export function resolveToFrontendUrl(path: string){
-    return url.resolve("https://app.crusher.dev", path);
+    return url.resolve(APP_ENDPOINT, path);
 }
 
 export function createNewTab(path: string){
