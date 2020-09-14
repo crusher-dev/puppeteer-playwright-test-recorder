@@ -49,10 +49,12 @@ export default class EventRecording{
         this.takePageScreenShot = this.takePageScreenShot.bind(this);
         this.handleStopRecordingButtonClick = this.handleStopRecordingButtonClick.bind(this);
         this.handleDocumentClick = this.handleDocumentClick.bind(this);
-        this.handleInputBlur = this.handleInputBlur.bind(this);
+        this.handleInputChange = this.handleInputChange.bind(this);
         this.eventsController = new EventsController(this);
         this.toggleEventsBox = this.toggleEventsBox.bind(this);
     }
+
+
 
     getState(){
         return this.state;
@@ -281,19 +283,14 @@ export default class EventRecording{
         }
     }
 
-    handleInputBlur(event: any){
-        const isRecorder = event.target.getAttribute('data-recorder');
-        if(!isRecorder){
-            const targetElement = event.target;
-            if((targetElement.tagName === "INPUT" || targetElement.tagName === "TEXTAREA") && targetElement.value){
-                this.eventsController.saveCapturedEventInBackground(INPUT, event.target, targetElement.value);
-            }
-        }
+    handleInputChange(event: any){
+        const targetElement = event.target;
+        this.eventsController.saveCapturedEventInBackground(INPUT, event.target, targetElement.value);
     }
 
     registerNodeListeners(){
         document.body.addEventListener("mousemove", this.handleMouseOver, true);
-        document.body.addEventListener("blur", this.handleInputBlur, true);
+        document.body.addEventListener("input", this.handleInputChange,true);
         document.addEventListener( "click", this.handleDocumentClick, true);
     }
 

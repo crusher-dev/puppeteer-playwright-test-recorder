@@ -11,7 +11,7 @@ import {
     ASSERT_TEXT,
     BLACKOUT,
     CLICK,
-    HOVER,
+    HOVER, INPUT,
     NAVIGATE_URL,
     SCREENSHOT,
     SET_DEVICE
@@ -303,7 +303,11 @@ function App(props: ComponentProps<any>) {
                     return step.event_type === NAVIGATE_URL;
                 });
 
-                if (navigateEventExist && eventType === NAVIGATE_URL) {
+                if(eventType === INPUT && lastStep.event_type === INPUT && lastStep.selector === path){
+                    const _steps = steps;
+                    _steps[_steps.length - 1] = {event_type: INPUT, selector: path, value: value};
+                    setSteps(_steps);
+                } else if (navigateEventExist && eventType === NAVIGATE_URL) {
                     console.log("Same navigation again", lastStep.value);
                 } else {
                     setSteps([...(getSteps()), {event_type: eventType, value, selector: path}]);
