@@ -1,3 +1,5 @@
+import {finder} from "@medv/finder";
+
 const uniqueSelector = require('unique-selector');
 
 function getXpathTo(element: any) : any {
@@ -6,10 +8,10 @@ function getXpathTo(element: any) : any {
     if (element===document.body)
         return element.tagName;
 
-    var ix= 0;
-    var siblings= element.parentNode.childNodes;
-    for (var i= 0; i<siblings.length; i++) {
-        var sibling= siblings[i];
+    let ix = 0;
+    const siblings = element.parentNode.childNodes;
+    for (let i= 0; i<siblings.length; i++) {
+        const sibling = siblings[i];
         if (sibling===element)
             return getXpathTo(element.parentNode)+'/'+element.tagName+'['+(ix+1)+']';
         if (sibling.nodeType===1 && sibling.tagName===element.tagName)
@@ -17,6 +19,14 @@ function getXpathTo(element: any) : any {
     }
 }
 
+
+
+function getFinderSelector(elementNode: HTMLElement) {
+    const optimizedMinLength = (elementNode.getAttribute("id")) ? 2 : 10 // if the target has an id, use that instead of multiple frames selectors
+    // @ts-ignore
+    return finder(elementNode, {seedMinLength: 5, optimizedMinLength: optimizedMinLength});
+}
+
 export function getSelectors(elementNode: HTMLElement){
-    return [uniqueSelector.default(elementNode), getXpathTo(elementNode)];
+    return [uniqueSelector.default(elementNode), getXpathTo(elementNode), getFinderSelector(elementNode)];
 }

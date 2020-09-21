@@ -5,6 +5,7 @@ import EventRecording from "./ui/eventRecording";
 import {finder} from '@medv/finder'
 import getDomFromPath from "../../utils/domPath";
 import FrameStorage from "../../utils/frameStorage";
+import {getSelectors} from "../../utils/selector";
 
 export default class EventsController {
     recordingOverlay: EventRecording;
@@ -43,9 +44,7 @@ export default class EventsController {
     }
 
     saveCapturedEventInBackground(event_type: string, capturedTarget: any, value: any = "", callback?: any){
-        const optimizedMinLength = (capturedTarget.id) ? 2 : 10 // if the target has an id, use that instead of multiple frames selectors
-        // @ts-ignore
-        const selector = capturedTarget ? finder(capturedTarget, {seedMinLength: 5, optimizedMinLength: optimizedMinLength}) : null;
+        const selector = capturedTarget ?  getSelectors(capturedTarget)[0] : null;
         window.top.postMessage(
             {
                 eventType: event_type,

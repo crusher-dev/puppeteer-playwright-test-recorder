@@ -225,7 +225,7 @@ function RenderDesktopBrowser(props: any) {
     return (
         <div style={styles.browser}>
             <div style={styles.browserToolbar}>
-                <div style={styles.browserSmallShadow}></div>
+                <div style={styles.browserSmallShadow}/>
                 <div style={styles.browserMainToolbar}>
                     <div style={{display: "flex", alignItems: "center"}}><img
                         src={chrome.runtime.getURL("/icons/navigation-back.svg")} onClick={goBack}/></div>
@@ -242,25 +242,25 @@ function RenderDesktopBrowser(props: any) {
                     <div className="smartphone" style={{width: selectedDevice.width, height: selectedDevice.height}}>
                         <div className="content" style={{width: "100%", height: "100%"}}>
                             <iframe ref={forwardRef}
-                                    style={{...styles.browserFrame, width: "100%", height: "100%"}}
-                                    scrolling="auto"
-                                    sandbox="allow-scripts allow-forms allow-same-origin"
-                                    id="screen-iframe-5984a019-7f2b-4f58-ad11-e58cc3cfa634"
-                                    title={selectedDevice.name}
-                                    src={addressValue}
-                            ></iframe>
+    style={{...styles.browserFrame, width: "100%", height: "100%"}}
+    scrolling="auto"
+    sandbox="allow-scripts allow-forms allow-same-origin"
+    id="screen-iframe-5984a019-7f2b-4f58-ad11-e58cc3cfa634"
+    title={selectedDevice.name}
+    src={addressValue}
+    />
                         </div>
                     </div>
                 )}
                 {!isMobile && (
                     <iframe ref={forwardRef}
-                            style={{...styles.browserFrame, width: selectedDevice.width, height: selectedDevice.height}}
-                            scrolling="auto"
-                            id="screen-iframe-5984a019-7f2b-4f58-ad11-e58cc3cfa634"
-                            sandbox="allow-scripts allow-forms allow-same-origin"
-                            title={selectedDevice.name}
-                            src={addressValue}
-                    ></iframe>
+    style={{...styles.browserFrame, width: selectedDevice.width, height: selectedDevice.height}}
+    scrolling="auto"
+    id="screen-iframe-5984a019-7f2b-4f58-ad11-e58cc3cfa634"
+    sandbox="allow-scripts allow-forms allow-same-origin"
+    title={selectedDevice.name}
+    src={addressValue}
+    />
                 )}
 
             </div>
@@ -276,7 +276,7 @@ window.addEventListener("message", (event) => {
     }
 });
 
-function App(props: ComponentProps<any>) {
+function App() {
     const selectedDeviceId = getQueryStringParams("device", window.location.href);
 
     const [steps, setSteps] = useState([{event_type: SET_DEVICE, selector: "body", value: selectedDeviceId}]);
@@ -285,31 +285,33 @@ function App(props: ComponentProps<any>) {
     const [isUsingElementInspector, setIsUsingElementInspector] = useState(false);
 
     const iframeRef = useRef(null);
-    let hasRegisteredListener = false;
-
     function getSteps() {
         return steps;
+    }
+
+    function handleNavigationAndRemoveDuplicate(eventType: any, value: any, path: any) {
+        const lastStep = steps[steps.length - 1];
+        if (!lastStep) {
+            setSteps([...(getSteps()), {event_type: eventType, value, selector: path}]);
+        } else {
+            const navigateEventExist = steps.find(step => {
+                return step.event_type === NAVIGATE_URL;
+            });
+
+            if (navigateEventExist && eventType === NAVIGATE_URL) {
+                console.log("Duplicate navigation", lastStep.value);
+            } else {
+                setSteps([...(getSteps()), {event_type: eventType, value, selector: path}]);
+                console.log("New navigation", lastStep.value, eventType, path);
+            }
+        }
     }
 
     messageListenerCallback = function (event: any) {
         const {type, eventType, value, path} = event.data;
         console.log(event.data);
         if (eventType && path) {
-            const lastStep = steps[steps.length - 1];
-            if (!lastStep) {
-                setSteps([...(getSteps()), {event_type: eventType, value, selector: path}]);
-            } else {
-                const navigateEventExist = steps.find(step =>{
-                    return step.event_type === NAVIGATE_URL;
-                });
-
-                if (navigateEventExist && eventType === NAVIGATE_URL) {
-                    console.log("Same navigation again", lastStep.value);
-                } else {
-                    setSteps([...(getSteps()), {event_type: eventType, value, selector: path}]);
-                    console.log("Not same navigation again", lastStep.value, eventType, path);
-                }
-            }
+            handleNavigationAndRemoveDuplicate(eventType, value, path);
         } else if (type) {
             const cn = (iframeRef).current.contentWindow;
 
