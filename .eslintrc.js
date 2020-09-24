@@ -19,8 +19,7 @@ module.exports = {
         }
     },
     plugins: [
-        '@typescript-eslint',
-        "plugin:@typescript-eslint/recommended"
+        '@typescript-eslint'
     ],
     rules: {
         'no-console': 'off'

@@ -91,11 +91,6 @@ function RenderActions(props: any) {
             value: "Screenshot",
             icon: chrome.runtime.getURL("icons/action.svg")
         },
-        // {
-        //     id: ASSERT_TEXT,
-        //     value: "Assert Text",
-        //     icon: chrome.runtime.getURL("icons/action.svg")
-        // },
         {
             id: BLACKOUT,
             value: "Blackout",
@@ -290,29 +285,32 @@ function App() {
         return steps;
     }
 
-    function handleNavigationAndRemoveDuplicate(eventType: any, value: any, path: any) {
-        const lastStep = steps[steps.length - 1];
-        if (!lastStep) {
-            setSteps([...(getSteps()), {event_type: eventType, value, selector: path}]);
-        } else {
-            const navigateEventExist = steps.find(step => {
-                return step.event_type === NAVIGATE_URL;
-            });
-
-            if (navigateEventExist && eventType === NAVIGATE_URL) {
-                console.log("Duplicate navigation", lastStep.value);
-            } else {
-                setSteps([...(getSteps()), {event_type: eventType, value, selector: path}]);
-                console.log("New navigation", lastStep.value, eventType, path);
-            }
-        }
-    }
 
     messageListenerCallback = function (event: any) {
         const {type, eventType, value, path} = event.data;
         console.log(event.data);
+        const steps = getSteps();
         if (eventType && path) {
-            handleNavigationAndRemoveDuplicate(eventType, value, path);
+            const lastStep = steps[steps.length - 1];
+            if (!lastStep) {
+                setSteps([...(getSteps()), {event_type: eventType, value, selector: path}]);
+            } else {
+                const navigateEventExist = steps.find(step => {
+                    return step.event_type === NAVIGATE_URL;
+                });
+
+                if (navigateEventExist && eventType === NAVIGATE_URL) {
+                    console.log("Duplicate navigation", lastStep.value);
+                } else {
+                    if(lastStep.event_type === INPUT && eventType === INPUT && lastStep.selector === path){
+                        steps[steps.length - 1].value = value;
+                        setSteps(steps);
+                    } else {
+                        setSteps([...(getSteps()), {event_type: eventType, value, selector: path}]);
+                    }
+                    console.log("New navigation", lastStep.value, eventType, path);
+                }
+            }
         } else if (type) {
             const cn = (iframeRef).current.contentWindow;
 

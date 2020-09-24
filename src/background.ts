@@ -19,7 +19,6 @@ class ChromeEventsListener{
         this.onHeadersReceived = this.onHeadersReceived.bind(this);
         this.onBeforeSendHeaders = this.onBeforeSendHeaders.bind(this);
         this.onRuntimeMessage = this.onRuntimeMessage.bind(this);
-        this.onNavigationCompleted = this.onNavigationCompleted.bind(this);
         this.onBeforeNavigation = this.onBeforeNavigation.bind(this);
     }
 
@@ -137,14 +136,6 @@ class ChromeEventsListener{
 
     }
 
-    onNavigationCompleted(details: any){
-        const isAllowed = this.isAllowedToPerformAction(tabStorage.get(details.tabId))
-
-        if (!isAllowed || details.frameId === 0) {
-            return
-        }
-    }
-
     onBeforeNavigation(details: any){
         const isAllowed = this.isAllowedToPerformAction(tabStorage.get(details.tabId))
 
@@ -175,7 +166,6 @@ class ChromeEventsListener{
         chrome.webRequest.onHeadersReceived.addListener(this.onHeadersReceived, { urls: ['<all_urls>'], types: ['sub_frame', 'main_frame'] }, ['blocking', 'responseHeaders']);
         chrome.webRequest.onBeforeSendHeaders.addListener(this.onBeforeSendHeaders, { urls: ['<all_urls>'], types: ['sub_frame'] }, ['blocking', 'requestHeaders']);
         chrome.runtime.onMessage.addListener(this.onRuntimeMessage);
-        chrome.webNavigation.onCompleted.addListener(this.onNavigationCompleted);
         chrome.webNavigation.onBeforeNavigate.addListener(this.onBeforeNavigation);
     }
 

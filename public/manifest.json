@@ -8,7 +8,6 @@
     "webRequestBlocking",
     "browsingData",
     "webNavigation",
-    "management",
     "<all_urls>",
     "http://*/*",
     "https://*/*",
