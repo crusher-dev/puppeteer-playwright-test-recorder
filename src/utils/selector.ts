@@ -28,5 +28,5 @@ function getFinderSelector(elementNode: HTMLElement) {
 }
 
 export function getSelectors(elementNode: HTMLElement){
-    return [uniqueSelector.default(elementNode), getXpathTo(elementNode), getFinderSelector(elementNode)];
+    return [getFinderSelector(elementNode), uniqueSelector.default(elementNode), getXpathTo(elementNode)];
 }
