@@ -44,14 +44,14 @@ export default class EventsController {
     }
 
     saveCapturedEventInBackground(event_type: string, capturedTarget: any, value: any = "", callback?: any){
-        const selector = capturedTarget ?  getSelectors(capturedTarget)[0] : null;
+        const selectors = capturedTarget ?  getSelectors(capturedTarget) : null;
         window.top.postMessage(
             {
                 eventType: event_type,
                 //@ts-ignore
                 frameId: FrameStorage.get(),
                 value: value,
-                path: selector,
+                selectors: selectors,
             },
             '*'
         );

@@ -49,8 +49,8 @@ function RenderSteps(props: any) {
     const {steps} = props;
 
     const out = steps.map((step: any) => {
-        const {event_type, selector, value} = step;
-        return (<Step type={event_type} path={selector} value={value}/>)
+        const {event_type, selectors, value} = step;
+        return (<Step type={event_type} path={selectors[0].value} value={value}/>)
     });
     return (
         <ul style={styles.stepsContainer} className="margin-list-item">
@@ -275,7 +275,7 @@ window.addEventListener("message", (event) => {
 function App() {
     const selectedDeviceId = getQueryStringParams("device", window.location.href);
 
-    const [steps, setSteps] = useState([{event_type: SET_DEVICE, selector: "body", value: selectedDeviceId}]);
+    const [steps, setSteps] = useState([{event_type: SET_DEVICE, selectors: [{value: "body", uniquenessScore: 1, type: "body"}], value: selectedDeviceId}]);
     const [isRecording, setIsRecording] = useState(false);
     const [isShowingElementForm, setIsShowingElementForm] = useState(false);
     const [isUsingElementInspector, setIsUsingElementInspector] = useState(false);
@@ -287,13 +287,13 @@ function App() {
 
 
     messageListenerCallback = function (event: any) {
-        const {type, eventType, value, path} = event.data;
+        const {type, eventType, value, selectors} = event.data;
         console.log(event.data);
         const steps = getSteps();
-        if (eventType && path) {
+        if (eventType) {
             const lastStep = steps[steps.length - 1];
             if (!lastStep) {
-                setSteps([...(getSteps()), {event_type: eventType, value, selector: path}]);
+                setSteps([...(getSteps()), {event_type: eventType, value, selectors: selectors}]);
             } else {
                 const navigateEventExist = steps.find(step => {
                     return step.event_type === NAVIGATE_URL;
@@ -302,13 +302,13 @@ function App() {
                 if (navigateEventExist && eventType === NAVIGATE_URL) {
                     console.log("Duplicate navigation", lastStep.value);
                 } else {
-                    if(lastStep.event_type === INPUT && eventType === INPUT && lastStep.selector === path){
+                    if(lastStep.event_type === INPUT && eventType === INPUT && lastStep.selectors[0].value === selectors[0].value){
                         steps[steps.length - 1].value = value;
                         setSteps(steps);
                     } else {
-                        setSteps([...(getSteps()), {event_type: eventType, value, selector: path}]);
+                        setSteps([...(getSteps()), {event_type: eventType, value, selectors: selectors}]);
                     }
-                    console.log("New navigation", lastStep.value, eventType, path);
+                    console.log("New navigation", lastStep.value, eventType, selectors);
                 }
             }
         } else if (type) {

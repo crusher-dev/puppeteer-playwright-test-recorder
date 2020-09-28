@@ -1,6 +1,7 @@
 import {finder} from "@medv/finder";
 
 const uniqueSelector = require('unique-selector');
+const uniqueSelector2 = require('unique-selector-2');
 
 function getXpathTo(element: any) : any {
     if (element.id!=='')
@@ -28,5 +29,13 @@ function getFinderSelector(elementNode: HTMLElement) {
 }
 
 export function getSelectors(elementNode: HTMLElement){
-    return [getFinderSelector(elementNode), uniqueSelector.default(elementNode), getXpathTo(elementNode)];
+    const _uniqueSelector2 = new uniqueSelector2.default({});
+    const selectors = _uniqueSelector2.getUniqueSelector(elementNode);
+
+    return [
+        {type: "customFinder", value:getFinderSelector(elementNode), uniquenessScore: 1},
+        {type: "unqiueSelector", value: uniqueSelector.default(elementNode), uniquenessScore: 1},
+        {type: "xpath", value : getXpathTo(elementNode), uniquenessScore: 1},
+        ...selectors.list
+    ];
 }
