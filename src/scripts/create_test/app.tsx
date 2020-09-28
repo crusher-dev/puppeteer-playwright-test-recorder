@@ -72,7 +72,24 @@ function RenderActions(props: any) {
             id: ACTION_TYPES.SCREENSHOT,
             value: "Screenshot",
             icon: chrome.runtime.getURL("icons/action.svg")
+        },
+        {
+            id: ACTION_TYPES.SEO,
+            value: "SEO",
+            icon: chrome.runtime.getURL("icons/action.svg")
         }
+        // ,
+        // {
+        //     id: ACTION_TYPES.CAPTURE_CONSOLE,
+        //     value: "Console",
+        //     icon: chrome.runtime.getURL("icons/action.svg")
+        // }
+        // ,
+        // {
+        //     id: ACTION_TYPES.NETWORK,
+        //     value: "Network",
+        //     icon: chrome.runtime.getURL("icons/action.svg")
+        // }
     ];
 
     const elementActions = [
@@ -375,7 +392,7 @@ function App() {
                 )}
                 {!isShowingElementForm && (
                     <>
-                        <div style={styles.sectionHeading}>Page Actions</div>
+                        <div style={styles.sectionHeading}>Actions</div>
                         <RenderActions type={ACTION_FORM_TYPE.PAGE_ACTIONS} isShowingElementFormCallback={setIsShowingElementForm}  iframeRef={iframeRef}/>
                     </>
                 )}
@@ -393,7 +410,7 @@ function App() {
                         display: "flex",
                         alignItems: "center"
                     }}>
-                        Cancel
+                        Stop
                     </div>
                     <div style={{...styles.button, width: "auto"}} onClick={saveTest}>
                         <img style={styles.buttonImage} src={chrome.runtime.getURL("icons/record.svg")}/>
