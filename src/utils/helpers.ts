@@ -13,7 +13,7 @@ export function loadScript(name: string, tabId: any, cb: any) {
             });
         } else {
             // dev: async fetch bundle
-            fetch(`http://localhost:2400/js/${name}.js`)
+            fetch(`http://localhost:2400/${name}.js`)
                 .then((res) => res.text())
                 .then((fetchRes) => {
                     chrome.tabs.executeScript(tabId, { code: fetchRes, runAt: 'document_end' }, function(){
