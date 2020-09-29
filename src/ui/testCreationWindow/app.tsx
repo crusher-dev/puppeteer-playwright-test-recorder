@@ -20,6 +20,7 @@ import {
   SET_DEVICE,
 } from "../../constants/domEventsToRecord";
 import { SERVER_ENDPOINT } from "../../constants/endpoints";
+import {Modal} from "./components/modal.jsx";
 
 export const ACTION_FORM_TYPE = {
   PAGE_ACTIONS: "PAGE_ACTIONS",
@@ -632,7 +633,9 @@ function App() {
     );
   }
 
-  return (
+  // @ts-ignore
+    // @ts-ignore
+    return (
     <div style={styles.container}>
       <DesktopBrowser forwardRef={iframeRef} />
       <RightSection />
@@ -703,6 +706,9 @@ function App() {
         rel="stylesheet"
         href={chrome.runtime.getURL("/styles/fonts.css")}
       />
+        <Portal into="#modal">
+            dffd
+        </Portal>
     </div>
   );
 }
