@@ -3,8 +3,7 @@ import { useRef, useState } from 'preact/hooks';
 import { addHttpToURLIfNotThere, getQueryStringParams } from '../../utils/url';
 import { sendPostDataWithForm } from '../../utils/helpers';
 import { ACTION_TYPES } from '../../constants/actionTypes';
-import {IS_RECORDING_USING_INSPECTOR, IS_RECORDING_WITHOUT_INSPECTOR, NOT_RECORDING,
-} from '../../constants';
+import { IS_RECORDING_USING_INSPECTOR, IS_RECORDING_WITHOUT_INSPECTOR, NOT_RECORDING } from '../../constants';
 import devices from '../../constants/devices';
 import userAgents from '../../constants/userAgents';
 import {
@@ -21,6 +20,21 @@ export const ACTION_FORM_TYPE = {
   PAGE_ACTIONS: 'PAGE_ACTIONS',
   ELEMENT_ACTIONS: 'ELEMENT_ACTIONS',
 };
+
+function RecordingIcon(props: any) {
+  return (
+      <svg height="512pt" viewBox="0 0 512 512" width="512pt" {...props}>
+        <path
+            d="M512 256c0 141.387-114.613 256-256 256S0 397.387 0 256 114.613 0 256 0s256 114.613 256 256zm0 0"
+            fill="#e76e54"
+        />
+        <path
+            d="M384 256c0 70.691-57.309 128-128 128s-128-57.309-128-128 57.309-128 128-128 128 57.309 128 128zm0 0"
+            fill="#dd523c"
+        />
+      </svg>
+  )
+}
 
 function Step(props: any) {
   const { type, path, value } = props;
@@ -42,21 +56,26 @@ function Step(props: any) {
   );
 }
 
-function RenderSteps(props: any) {
+function Steps(props: any) {
   const { steps } = props;
 
-  const out = steps.map((step: any) => {
+  const stepList = steps.map((step: any) => {
     const { event_type, selectors, value } = step;
     return (<Step type={event_type} path={selectors[0].value} value={value}/>);
   });
+
   return (
+      <div style={{
+        height: 300, minHeight: '50%', overflowY: 'auto', marginBottom: '2rem',
+      }}>
         <ul style={styles.stepsContainer} className="margin-list-item">
-            {out}
+          {stepList}
         </ul>
+      </div>
   );
 }
 
-function RenderActions(props: any) {
+function Actions(props: any) {
   const { iframeRef, type, isShowingElementFormCallback } = props;
   const pageActions = [
     {
@@ -174,12 +193,12 @@ function RenderActions(props: any) {
   );
 }
 
-function RenderDesktopBrowser(props: any) {
+function DesktopBrowser(props: any) {
   const selectedDeviceId = getQueryStringParams('device', window.location.href);
   const urlParams = getQueryStringParams('url', window.location.href);
   const urlEncoded = new URL(urlParams);
   const url = urlEncoded ? decodeURI(urlEncoded.toString().replace(/^["']/, '').replace(/["']$/, '')) : 'https://google.com';
-  const {forwardRef } = props;
+  const { forwardRef } = props;
   const addressInput = useRef(null);
   const [addressValue, setAddressValue] = useState(url);
 
@@ -222,57 +241,68 @@ function RenderDesktopBrowser(props: any) {
                     <img style={{ width: '0.8rem' }} src={chrome.runtime.getURL('/icons/ssl.svg')}/>
                 </div>
                 <div ref={addressInput} style={styles.addressBarInput} onKeyDown={handleKeyDown}
-                     contentEditable={true}>{urlEncoded.toString().substr(0 ,50)}</div>
+                     contentEditable={true}>{urlEncoded.toString().substr(0, 50)}</div>
                 <div style={styles.recordingStatus}>
-                    Recording
+                    <RecordingIcon height={12} width={12} style={{marginRight: '.5rem'}}/>
+                    Recording Test
                 </div>
             </div>
     );
   }
 
-  return (
-        <div style={styles.browser}>
-            <div style={styles.browserToolbar}>
-                <div style={styles.browserSmallShadow}/>
-                <div style={styles.browserMainToolbar}>
-                    <div style={{ display: 'flex', alignItems: 'center' }}><img
-                        src={chrome.runtime.getURL('/icons/navigation-back.svg')} onClick={goBack}/></div>
-                    <div style={{ marginLeft: '0.7rem', display: 'flex', alignItems: 'center' }}><img
-                        src={chrome.runtime.getURL('/icons/navigation-forward.svg')} onClick={goForward}/></div>
-                    <div style={{ marginLeft: '0.9rem', display: 'flex', alignItems: 'center' }}><img
-                        style={{ width: '1.1rem' }} src={chrome.runtime.getURL('/icons/navigation-refresh.svg')}
-                        onClick={refreshPage}/></div>
-               <Addressbar/>
-                </div>
-            </div>
-            <div style={styles.previewBrowser}>
-                {isMobile && (
-                    <div className="smartphone" style={{ width: selectedDevice.width, height: selectedDevice.height }}>
-                        <div className="content" style={{ width: '100%', height: '100%' }}>
-                            <iframe ref={forwardRef}
-    style={{ ...styles.browserFrame, width: '100%', height: '100%' }}
-    scrolling="auto"
-    sandbox="allow-scripts allow-forms allow-same-origin"
-    id="screen-iframe-5984a019-7f2b-4f58-ad11-e58cc3cfa634"
-    title={selectedDevice.name}
-    src={addressValue}
-    />
-                        </div>
-                    </div>
-                )}
-                {!isMobile && (
-                    <iframe ref={forwardRef}
-    style={{ ...styles.browserFrame, width: selectedDevice.width, height: selectedDevice.height }}
-    scrolling="auto"
-    id="screen-iframe-5984a019-7f2b-4f58-ad11-e58cc3cfa634"
-    sandbox="allow-scripts allow-forms allow-same-origin"
-    title={selectedDevice.name}
-    src={addressValue}
-    />
-                )}
+  function Toolbar() {
+    return <div style={styles.browserToolbar}>
+      <div style={styles.browserSmallShadow}/>
+      <div style={styles.browserMainToolbar}>
+        <div style={{display: 'flex', alignItems: 'center'}}><img
+            src={chrome.runtime.getURL('/icons/navigation-back.svg')} onClick={goBack}/></div>
+        <div style={{marginLeft: '0.7rem', display: 'flex', alignItems: 'center'}}><img
+            src={chrome.runtime.getURL('/icons/navigation-forward.svg')} onClick={goForward}/></div>
+        <div style={{marginLeft: '0.9rem', display: 'flex', alignItems: 'center'}}><img
+            style={{width: '1.1rem'}} src={chrome.runtime.getURL('/icons/navigation-refresh.svg')}
+            onClick={refreshPage}/></div>
+        <Addressbar/>
+      </div>
+    </div>;
+  }
 
+  function IframeSection() {
+    return <div style={styles.previewBrowser}>
+      {isMobile && (
+          <div className="smartphone" style={{width: selectedDevice.width, height: selectedDevice.height}}>
+            <div className="content" style={{width: '100%', height: '100%'}}>
+              <iframe ref={forwardRef}
+                      style={{...styles.browserFrame, width: '100%', height: '100%'}}
+                      scrolling="auto"
+                      sandbox="allow-scripts allow-forms allow-same-origin"
+                      id="screen-iframe-5984a019-7f2b-4f58-ad11-e58cc3cfa634"
+                      title={selectedDevice.name}
+                      src={addressValue}
+              />
             </div>
+          </div>
+      )}
+      {!isMobile && (
+          <iframe ref={forwardRef}
+                  style={{...styles.browserFrame, width: selectedDevice.width, height: selectedDevice.height}}
+                  scrolling="auto"
+                  id="screen-iframe-5984a019-7f2b-4f58-ad11-e58cc3cfa634"
+                  sandbox="allow-scripts allow-forms allow-same-origin"
+                  title={selectedDevice.name}
+                  src={addressValue}
+          />
+      )}
+
+    </div>;
+  }
+
+  return (
+      <div style={styles.mainContainer}>
+        <div style={styles.browser}>
+          <Toolbar/>
+          <IframeSection/>
         </div>
+      </div>
   );
 }
 
@@ -364,55 +394,61 @@ function App() {
     }
   }
 
+  function RightBottomSection() {
+    return <div style={{ display: 'flex', marginTop: 'auto' }}>
+      <div onClick={cancelTest} style={{
+        marginLeft: 'auto',
+        width: 'auto',
+        marginRight: '3rem',
+        color: '#fff',
+        cursor: 'pointer',
+        fontFamily: 'DM Sans',
+        fontWeight: 500,
+        fontSize: '0.9rem',
+        display: 'flex',
+        alignItems: 'center',
+      }}>
+        Stop
+      </div>
+      <div style={{ ...styles.button, width: 'auto' }} onClick={saveTest}>
+        <img style={styles.buttonImage} src={chrome.runtime.getURL('icons/record.svg')}/>
+        <span>Save Test</span>
+      </div>
+    </div>;
+  }
+
+  function RightMiddleSection() {
+    const isElementSelected = isShowingElementForm;
+    return isElementSelected ? (
+          <>
+            <div style={styles.sectionHeading}>Element Actions</div>
+            <Actions type={ACTION_FORM_TYPE.ELEMENT_ACTIONS}
+                           isShowingElementFormCallback={setIsShowingElementForm} iframeRef={iframeRef}/>
+          </>
+    ) : (
+          <>
+            <div style={styles.sectionHeading}>Actions</div>
+            <Actions type={ACTION_FORM_TYPE.PAGE_ACTIONS} isShowingElementFormCallback={setIsShowingElementForm}
+                           iframeRef={iframeRef}/>
+          </>
+    );
+  }
+
+  function RightSection() {
+    return <div style={{ ...styles.sidebar, ...styles.paddingContainer }}>
+      <div style={styles.sectionHeading}>Steps</div>
+      <Steps steps={steps}/>
+      <RightMiddleSection/>
+      <RightBottomSection/>
+    </div>;
+  }
+
   return (
         <div style={styles.container}>
-            <div style={styles.mainContainer}>
-                <RenderDesktopBrowser forwardRef={iframeRef}/>
-            </div>
-            <div style={{ ...styles.sidebar, ...styles.paddingContainer }}>
-                <div style={styles.sectionHeading}>Steps</div>
-
-                <div style={{
-                  height: 300, minHeight: '50%', overflowY: 'auto', marginBottom: '2rem',
-                }}>
-                    <RenderSteps steps={steps}/>
-                </div>
-                {isShowingElementForm && (
-                    <>
-                        <div style={styles.sectionHeading}>Element Actions</div>
-                        <RenderActions type={ACTION_FORM_TYPE.ELEMENT_ACTIONS} isShowingElementFormCallback={setIsShowingElementForm} iframeRef={iframeRef}/>
-                    </>
-                )}
-                {!isShowingElementForm && (
-                    <>
-                        <div style={styles.sectionHeading}>Actions</div>
-                        <RenderActions type={ACTION_FORM_TYPE.PAGE_ACTIONS} isShowingElementFormCallback={setIsShowingElementForm} iframeRef={iframeRef}/>
-                    </>
-                )}
-
-                <div style={{ display: 'flex', marginTop: 'auto' }}>
-                    <div onClick={cancelTest} style={{
-                      marginLeft: 'auto',
-                      width: 'auto',
-                      marginRight: '3rem',
-                      color: '#fff',
-                      cursor: 'pointer',
-                      fontFamily: 'DM Sans',
-                      fontWeight: 500,
-                      fontSize: '0.9rem',
-                      display: 'flex',
-                      alignItems: 'center',
-                    }}>
-                        Stop
-                    </div>
-                    <div style={{ ...styles.button, width: 'auto' }} onClick={saveTest}>
-                        <img style={styles.buttonImage} src={chrome.runtime.getURL('icons/record.svg')}/>
-                        <span>Save Test</span>
-                    </div>
-                </div>
-            </div>
-            <style>
-                {`
+          <DesktopBrowser forwardRef={iframeRef}/>
+          <RightSection/>
+          <style>
+            {`
                     html, body{
                         height: 100%;
                         margin: 0;
@@ -469,9 +505,9 @@ function App() {
                       background: white;
                     }
                 `}
-            </style>
-            <link rel="stylesheet" href={chrome.runtime.getURL('/styles/devices.min.css')}/>
-            <link rel="stylesheet" href={chrome.runtime.getURL('/styles/fonts.css')}/>
+          </style>
+          <link rel="stylesheet" href={chrome.runtime.getURL('/styles/devices.min.css')}/>
+          <link rel="stylesheet" href={chrome.runtime.getURL('/styles/fonts.css')}/>
         </div>
   );
 }
@@ -587,6 +623,8 @@ const styles = {
     color: '#64707C',
     lineHeight: '1.15rem',
     fontSize: '0.6rem',
+    display: 'flex',
+    alignItems: 'center',
     fontWeight: '500',
     fontFamily: 'DM Sans',
     padding: '0 0.8rem',
