@@ -72,12 +72,12 @@ function RenderActions(props: any) {
             id: ACTION_TYPES.SCREENSHOT,
             value: "Screenshot",
             icon: chrome.runtime.getURL("icons/action.svg")
-        },
-        {
-            id: ACTION_TYPES.SEO,
-            value: "SEO",
-            icon: chrome.runtime.getURL("icons/action.svg")
         }
+        // {
+        //     id: ACTION_TYPES.SEO,
+        //     value: "SEO",
+        //     icon: chrome.runtime.getURL("icons/action.svg")
+        // }
         // ,
         // {
         //     id: ACTION_TYPES.CAPTURE_CONSOLE,
