@@ -87,6 +87,7 @@ class App extends Component<any, any> {
           id="slct"
           size={1}
           value={selectedDevice}
+          style={styles.selectBox}
           onChange={handleDeviceSelection.bind(this)}
         >
           <option selected disabled>
@@ -188,8 +189,13 @@ const styles = {
     fontWeight: 500,
     fontFamily: "DM Sans",
     color: "#fff",
-    fontSize: "0.9rem",
+    fontSize: "1rem",
     borderWidth: 0,
+  },
+  selectBox:{
+    borderRadius: "0.2rem",
+    width:'100%',
+    padding: ".75rem"
   },
   button: {
     background: "#5B76F7",
