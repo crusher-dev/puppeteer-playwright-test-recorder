@@ -8,6 +8,7 @@ if (process.env.NODE_ENV === 'production') {
   // the iframe of injectpage cannot get correct path,
   // it need to get parent page protocol.
   const path = `//${__HOST__}:${__PORT__}/js/`;
+  // eslint-disable-next-line no-restricted-globals
   if (location.protocol === 'https:' || location.search.indexOf('protocol=https') !== -1) {
     __webpack_public_path__ = `https:${path}`;
   } else {

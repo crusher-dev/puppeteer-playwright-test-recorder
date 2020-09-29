@@ -16,8 +16,8 @@ module.exports = {
   externals: ["fs", "request", "yamlparser"],
   entry: {
     background: [customPath, path.resolve(__dirname, '../src/background.ts')],
-    popup: [customPath, path.resolve(__dirname, '../src/scripts/chrome_dropdown_section/index.tsx')],
-    create_test: [customPath, path.resolve(__dirname, '../src/scripts/create_test/index.tsx')]
+    popup: [customPath, path.resolve(__dirname, '../src/ui/chromeDropdownSection/index.tsx')],
+    create_test: [customPath, path.resolve(__dirname, '../src/ui/testCreationWindow/index.tsx')]
   },
   plugins: [
     new webpack.DefinePlugin({

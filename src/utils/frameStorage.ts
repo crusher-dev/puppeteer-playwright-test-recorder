@@ -3,7 +3,7 @@ const frames : any = {};
 export default class FrameStorage {
 
     static makeFrameId(tabId: number, frameId: any) : string {
-        return `${tabId}-${frameId}`
+        return `${tabId}-${frameId}`;
     }
 
     static set(details: any) {

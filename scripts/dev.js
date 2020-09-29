@@ -11,11 +11,11 @@ async function initDevServer() {
   console.log('Assets copied to dev build');
   console.log('-'.repeat(80));
 
-  console.log('[Bundle templates]');
+  console.log('[Bundle chromeFrontendTemplate]');
   console.log('-'.repeat(80));
   await tasks.bundleTemplates('dev');
   console.log('-'.repeat(80));
-  console.log('==> [Watching assets and templates]');
+  console.log('==> [Watching assets and chromeFrontendTemplate]');
   console.log('-'.repeat(80));
   await tasks.watchFolders();
 

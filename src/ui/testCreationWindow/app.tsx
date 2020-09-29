@@ -1,17 +1,13 @@
-import { ComponentProps } from 'preact';
 import React from 'preact/compat';
 import { useRef, useState } from 'preact/hooks';
-import { Simulate } from 'react-dom/test-utils';
 import { addHttpToURLIfNotThere, getQueryStringParams } from '../../utils/url';
 import { sendPostDataWithForm } from '../../utils/helpers';
 import { ACTION_TYPES } from '../../constants/actionTypes';
-import {
-  EVENTS, IS_RECORDING_USING_INSPECTOR, IS_RECORDING_WITHOUT_INSPECTOR, NOT_RECORDING,
+import {IS_RECORDING_USING_INSPECTOR, IS_RECORDING_WITHOUT_INSPECTOR, NOT_RECORDING,
 } from '../../constants';
 import devices from '../../constants/devices';
 import userAgents from '../../constants/userAgents';
 import {
-  ASSERT_TEXT,
   BLACKOUT,
   CLICK,
   HOVER, INPUT,
@@ -20,7 +16,6 @@ import {
   SET_DEVICE,
 } from '../../constants/domEventsToRecord';
 import { SERVER_ENDPOINT } from '../../constants/endpoints';
-import select = Simulate.select;
 
 export const ACTION_FORM_TYPE = {
   PAGE_ACTIONS: 'PAGE_ACTIONS',
@@ -184,7 +179,7 @@ function RenderDesktopBrowser(props: any) {
   const urlParams = getQueryStringParams('url', window.location.href);
   const urlEncoded = new URL(urlParams);
   const url = urlEncoded ? decodeURI(urlEncoded.toString().replace(/^["']/, '').replace(/["']$/, '')) : 'https://google.com';
-  const { changeURLCallback, forwardRef } = props;
+  const {forwardRef } = props;
   const addressInput = useRef(null);
   const [addressValue, setAddressValue] = useState(url);
 
@@ -215,7 +210,7 @@ function RenderDesktopBrowser(props: any) {
     cn.postMessage({ type: ACTION_TYPES.REFRESH_PAGE, value: true }, '*');
   }
 
-  function renderAddressbar() {
+  function Addressbar() {
     const urlEncoded = new URL(addressValue);
     urlEncoded.searchParams.delete('__crusherAgent__');
     return (
@@ -227,9 +222,9 @@ function RenderDesktopBrowser(props: any) {
                     <img style={{ width: '0.8rem' }} src={chrome.runtime.getURL('/icons/ssl.svg')}/>
                 </div>
                 <div ref={addressInput} style={styles.addressBarInput} onKeyDown={handleKeyDown}
-                     contentEditable={true}>{urlEncoded.toString()}</div>
+                     contentEditable={true}>{urlEncoded.toString().substr(0 ,50)}</div>
                 <div style={styles.recordingStatus}>
-                    RECORDING
+                    Recording
                 </div>
             </div>
     );
@@ -247,7 +242,7 @@ function RenderDesktopBrowser(props: any) {
                     <div style={{ marginLeft: '0.9rem', display: 'flex', alignItems: 'center' }}><img
                         style={{ width: '1.1rem' }} src={chrome.runtime.getURL('/icons/navigation-refresh.svg')}
                         onClick={refreshPage}/></div>
-                    {renderAddressbar()}
+               <Addressbar/>
                 </div>
             </div>
             <div style={styles.previewBrowser}>

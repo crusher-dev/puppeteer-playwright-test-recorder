@@ -9,7 +9,7 @@ const tasks = require('./tasks');
     console.log('Assets copied to dev build');
     console.log('-'.repeat(80));
 
-    console.log('[Bundle templates]');
+    console.log('[Bundle chromeFrontendTemplate]');
     console.log('-'.repeat(80));
     await tasks.bundleTemplates('build');
     console.log('-'.repeat(80));

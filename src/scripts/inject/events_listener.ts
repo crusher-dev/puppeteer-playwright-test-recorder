@@ -2,7 +2,7 @@ import EventRecording from './ui/eventRecording';
 import { ACTION_TYPES } from '../../constants/actionTypes';
 import LocalFrameStorage from '../../utils/frameStorage';
 import { IS_RECORDING_USING_INSPECTOR, IS_RECORDING_WITHOUT_INSPECTOR, NOT_RECORDING } from '../../constants';
-import { ACTION_FORM_TYPE } from '../create_test/app';
+import { ACTION_FORM_TYPE } from '../../ui/testCreationWindow/app';
 import { ASSERT_TEXT } from '../../constants/domEventsToRecord';
 
 if (top !== self) {

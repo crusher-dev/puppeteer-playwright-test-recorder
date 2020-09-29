@@ -49,7 +49,7 @@ class App extends Component<any, any> {
       const iframeURL = new URL(tab.url);
       const crusherAgent = devices.find((device) => device.id === selectedDevice);
       iframeURL.searchParams.set('__crusherAgent__', encodeURI(crusherAgent.userAgent));
-      chrome.tabs.create({ url: `${chrome.extension.getURL('create_test.html')}?url=${iframeURL}&device=${selectedDevice}` });
+      chrome.tabs.create({ url: `${chrome.extension.getURL('testCreationWindow.html')}?url=${iframeURL}&device=${selectedDevice}` });
 
       window.close();
     }));
@@ -100,7 +100,7 @@ class App extends Component<any, any> {
                         </div>
                     </a>
                 </div>
-                <link rel="stylesheet" href={chrome.runtime.getURL('/styles/chrome_dropdown_section.css')}/>
+                <link rel="stylesheet" href={chrome.runtime.getURL('/styles/chromeDropdownSection.css')}/>
                 <link rel="stylesheet" href={chrome.runtime.getURL('/styles/fonts.css')}/>
                 <style>
                     {

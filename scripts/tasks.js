@@ -2,7 +2,7 @@ const { exec } = require('child_process');
 
 async function bundleTemplates(type) {
   const env = type === 'build' ? 'prod' : type;
-  exec(`pug -O "{ env: '${env}' }" -o ${type} ./src/templates/`, (error, stdout, stderr) => {
+  exec(`pug -O "{ env: '${env}' }" -o ${type} ./src/ui/chromeFrontendTemplate`, (error, stdout, stderr) => {
     if (error) {
       console.error(`exec error: ${error}`);
       return;
@@ -38,7 +38,7 @@ async function watchFolders() {
   });
 
   // Watch Templates Folder
-  exec('npx nodemon --watch ./src/templates scripts/watch/bundleTemplates.js -e pug', (error, stdout, stderr) => {
+  exec('npx nodemon --watch ./src/chromeFrontendTemplate scripts/watch/bundleTemplates.js -e pug', (error, stdout, stderr) => {
     if (error) {
       console.error(`exec error: ${error}`);
       return;

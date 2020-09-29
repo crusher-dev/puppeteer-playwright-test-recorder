@@ -10,8 +10,8 @@ const port = 3000;
 module.exports = {
     entry: {
         background: [customPath, path.resolve(__dirname, '../src/background.ts')],
-        popup: [customPath, path.resolve(__dirname, '../src/scripts/chrome_dropdown_section/index.tsx')],
-        create_test: [customPath, path.resolve(__dirname, '../src/scripts/create_test/index.tsx')]
+        chromeDropdown: [customPath, path.resolve(__dirname, '../src/scripts/chromeDropdownSection/index.tsx')],
+        testCreationWindow: [customPath, path.resolve(__dirname, '../src/scripts/testCreationWindow/index.tsx')]
     },
     plugins: [
         new webpack.DefinePlugin({

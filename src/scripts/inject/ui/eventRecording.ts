@@ -204,7 +204,7 @@ export default class EventRecording {
     }
 
     handleSelectedActionFromEventsList(event: any) {
-      // If its coming from create_test chrome_dropdown_section use event.action
+      // If its coming from testCreationWindow chromeDropdownSection use event.action
       const action = event.action ? event.action : event.target.getAttribute('data-action');
       switch (action) {
         case CLICK:
