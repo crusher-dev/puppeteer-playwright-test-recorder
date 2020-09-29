@@ -1,17 +1,21 @@
-import { ACTION_TYPES } from '../../constants/actionTypes';
-import LocalFrameStorage from '../../utils/frameStorage';
+import { ACTION_TYPES } from "../../constants/actionTypes";
+import LocalFrameStorage from "../../utils/frameStorage";
 
-const actualCode = `(${(userAgent: string, appVersion: string, platformVersion: string) => {
+const actualCode = `(${(
+  userAgent: string,
+  appVersion: string,
+  platformVersion: string
+) => {
   const { navigator } = window;
   let modifiedNavigator;
-  if ('userAgent' in Navigator.prototype) {
+  if ("userAgent" in Navigator.prototype) {
     // Chrome 43+ moved all properties from navigator to the prototype,
     // so we have to modify the prototype instead of navigator.
     modifiedNavigator = Navigator.prototype;
   } else {
     // Chrome 42- defined the property on navigator.
     modifiedNavigator = Object.create(navigator);
-    Object.defineProperty(window, 'navigator', {
+    Object.defineProperty(window, "navigator", {
       value: modifiedNavigator,
       configurable: false,
       enumerable: false,
@@ -41,18 +45,17 @@ window.top.postMessage(
     frameId: LocalFrameStorage.get(),
     value: true,
   },
-  '*',
+  "*"
 );
 
-window.addEventListener('message', (message) => {
+window.addEventListener("message", (message) => {
   const { type, value: userAgent } = message.data;
-  console.log('Adding this to user_agent', type, userAgent);
 
   if (!!type === false) {
     return;
   }
   if (type === ACTION_TYPES.SET_USER_AGENT) {
-    const s = document.createElement('script');
+    const s = document.createElement("script");
     s.textContent = `${actualCode}('${userAgent.value}', '${userAgent.appVersion}', '${userAgent.platform}');`;
     document.documentElement.appendChild(s);
     s.remove();

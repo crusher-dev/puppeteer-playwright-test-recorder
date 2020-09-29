@@ -12,7 +12,7 @@ function getDomPath(el: Element) {
         sibCount++;
       }
     }
-    if (el.hasAttribute('id') && el.id != '') {
+    if (el.hasAttribute("id") && el.id != "") {
       stack.unshift(`${el.nodeName.toLowerCase()}#${el.id}`);
     } else if (sibCount > 1) {
       stack.unshift(`${el.nodeName.toLowerCase()}:eq(${sibIndex})`);
@@ -38,7 +38,7 @@ function getPaths(el: Element) {
         sibCount++;
       }
     }
-    if (el.hasAttribute('id') && el.id != '') {
+    if (el.hasAttribute("id") && el.id != "") {
       stack.unshift(`${el.nodeName.toLowerCase()}#${el.id}`);
     } else if (sibCount > 1) {
       stack.unshift(`${el.nodeName.toLowerCase()}:eq(${sibIndex})`);
@@ -50,4 +50,4 @@ function getPaths(el: Element) {
   return stack.slice(1); // removes the html element
 }
 
-export default (element: Element) => getDomPath(element).join(' > ');
+export default (element: Element) => getDomPath(element).join(" > ");

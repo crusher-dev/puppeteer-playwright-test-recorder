@@ -6,7 +6,9 @@
   "scripts": {
     "dev": "node scripts/dev",
     "build": "node scripts/build.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "commit": "cz",
+    "prettify": "npx prettier --write ."
   },
   "author": "",
   "license": "ISC",
@@ -43,12 +45,13 @@
     "@typescript-eslint/parser": "^4.2.0",
     "babel-loader": "^8.1.0",
     "babel-preset-react": "^6.24.1",
-    "cz-conventional-changelog": "^3.2.0",
+    "cz-conventional-changelog": "^3.3.0",
     "eslint": "^7.6.0",
     "eslint-config-airbnb-base": "^14.2.0",
     "eslint-plugin-import": "^2.22.0",
     "husky": "^4.2.5",
     "nodemon": "^2.0.4",
+    "prettier": "2.1.2",
     "shelljs": "^0.8.4",
     "ts-loader": "^8.0.2",
     "typescript": "^3.9.7",
@@ -59,5 +62,10 @@
     "webpack-httpolyglot-server": "^0.3.0",
     "webpack-node-externals": "^2.5.1",
     "wepback": "^1.0.0"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
   }
 }

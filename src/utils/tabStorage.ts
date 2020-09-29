@@ -1,4 +1,4 @@
-import { isOfCrusherExtension } from './url';
+import { isOfCrusherExtension } from "./url";
 import Tab = chrome.tabs.Tab;
 
 export default {

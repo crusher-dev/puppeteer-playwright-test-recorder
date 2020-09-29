@@ -1,6 +1,6 @@
 export function loadContentInBody(content: string) {
   // @ts-ignore
-  document.body.insertAdjacentHTML('beforeend', content);
+  document.body.insertAdjacentHTML("beforeend", content);
 }
 
 export function removeAllTargetBlankFromLinks() {
@@ -9,7 +9,7 @@ export function removeAllTargetBlankFromLinks() {
   let length;
 
   for (i = 0, length = links.length; i < length; i++) {
-    links[i].target == '_blank' && links[i].removeAttribute('target');
+    links[i].target == "_blank" && links[i].removeAttribute("target");
   }
 }
 
@@ -31,35 +31,39 @@ export function isSessionGoingOn() {
 export function loadCSSIfNotAlreadyLoadedForSomeReason(href: any) {
   const ss = document.styleSheets;
   for (let i = 0, max = ss.length; i < max; i++) {
-    if (ss[i].href == '/path/to.css') return;
+    if (ss[i].href == "/path/to.css") return;
   }
-  const link = document.createElement('link');
-  link.rel = 'stylesheet';
+  const link = document.createElement("link");
+  link.rel = "stylesheet";
   link.href = href;
-  link.id = 'overlay_css';
+  link.id = "overlay_css";
 
-  document.getElementsByTagName('head')[0].appendChild(link);
+  document.getElementsByTagName("head")[0].appendChild(link);
 }
 
-export function setAttributeForAllChildNodes(parent: any, attributeKey: string, attributeValue: string) {
+export function setAttributeForAllChildNodes(
+  parent: any,
+  attributeKey: string,
+  attributeValue: string
+) {
   return [...parent.children].map((children: any) => {
     children.setAttribute(attributeKey, attributeValue);
   });
 }
 
 export function hideAllChildNodes(parent: any) {
-  return setAttributeForAllChildNodes(parent, 'data-gone', 'true');
+  return setAttributeForAllChildNodes(parent, "data-gone", "true");
 }
 
 export function sendPostDataWithForm(url: string, options: any = {}) {
-  const form = document.createElement('form');
-  form.method = 'post';
+  const form = document.createElement("form");
+  form.method = "post";
   form.action = url;
-  form.target = '_blank';
+  form.target = "_blank";
   const optionKeys = Object.keys(options);
   for (const optionKey of optionKeys) {
-    const hiddenField = document.createElement('input');
-    hiddenField.type = 'hidden';
+    const hiddenField = document.createElement("input");
+    hiddenField.type = "hidden";
     hiddenField.name = optionKey;
     hiddenField.value = options[optionKey];
 
