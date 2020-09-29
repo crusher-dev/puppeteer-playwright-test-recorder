@@ -1,11 +1,7 @@
 import { Component } from 'preact';
 import React from 'preact/compat';
-import Select from 'react-select';
-import * as url from 'url';
 import { loadScript } from '../../utils/helpers';
 import devices from '../../constants/devices';
-import userAgents from '../../constants/userAgents';
-import Tab = chrome.tabs.Tab;
 
 class App extends Component<any, any> {
   constructor(props: any) {
@@ -82,7 +78,7 @@ class App extends Component<any, any> {
     return (
             <div id="container" style={styles.container}>
                 <div style={styles.headingBlock}>
-                    <div style={styles.heading}>Record your test</div>
+                    <div style={styles.heading}>Record a test</div>
 
                     {/* <img style={{cursor: "pointer"}} src={chrome.runtime.getURL("icons/settings.svg")}/> */}
                 </div>
@@ -104,7 +100,7 @@ class App extends Component<any, any> {
                         </div>
                     </a>
                 </div>
-                <link rel="stylesheet" href={chrome.runtime.getURL('/styles/popup.css')}/>
+                <link rel="stylesheet" href={chrome.runtime.getURL('/styles/chrome_dropdown_section.css')}/>
                 <link rel="stylesheet" href={chrome.runtime.getURL('/styles/fonts.css')}/>
                 <style>
                     {
@@ -139,19 +135,19 @@ const styles = {
   },
   heading: {
     fontFamily: 'DM Sans',
-    fontSize: '1rem',
+    fontSize: '1.1rem',
     fontWeight: 700,
-      lineHeight: '1rem',
+    lineHeight: '1rem',
     marginRight: 'auto',
   },
-    subHeading: {
-        fontFamily: 'DM Sans',
-        fontSize: '.9rem',
-        fontWeight: 400,
-        marginRight: 'auto',
-        padding: '0rem .5rem 1.25rem 1.5rem',
-        marginTop:".5rem",
-    },
+  subHeading: {
+    fontFamily: 'DM Sans',
+    fontSize: '.9rem',
+    fontWeight: 400,
+    marginRight: 'auto',
+    padding: '0rem .5rem 1.25rem 1.25rem',
+    marginTop: '.5rem',
+  },
   selectInputContainer: {
     borderRadius: '0.2rem',
     marginTop: '1rem',
@@ -183,7 +179,7 @@ const styles = {
     justifyContent: 'center',
     alignItems: 'center',
     cursor: 'pointer',
-      textDecoration: 'none'
+    textDecoration: 'none',
   },
   watchText: {
     marginLeft: '1.1rem',

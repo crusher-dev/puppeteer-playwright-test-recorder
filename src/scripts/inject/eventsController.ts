@@ -1,5 +1,5 @@
 import {EVENT_CAPTURED, EVENTS} from "../../constants";
-import {CLICK} from "../../constants/DOMEventsToRecord";
+import {CLICK} from "../../constants/domEventsToRecord";
 import {getSentenceCaseString} from "../../utils/helpers";
 import EventRecording from "./ui/eventRecording";
 import {finder} from '@medv/finder'
