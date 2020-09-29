@@ -192,10 +192,10 @@ const styles = {
     fontSize: "1rem",
     borderWidth: 0,
   },
-  selectBox:{
+  selectBox: {
     borderRadius: "0.2rem",
-    width:'100%',
-    padding: ".75rem"
+    width: "100%",
+    padding: ".75rem",
   },
   button: {
     background: "#5B76F7",

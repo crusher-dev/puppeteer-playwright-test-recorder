@@ -272,10 +272,9 @@ export default class EventRecording {
 
   handleMouseOver(event: MouseEvent) {
     if (this._addActionElement) {
-
       if (
         this._addActionElement.contains(event.target) ||
-          // @ts-ignore
+        // @ts-ignore
         event.target.hasAttribute("data-recorder") ||
         this.state.pinned
       ) {

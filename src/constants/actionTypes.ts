@@ -16,3 +16,7 @@ export const ACTION_TYPES = {
   SET_USER_AGENT: "SET_USER_AGENT",
   SHOW_ELEMENT_FORM: "SHOW_ELEMENT_FORM",
 };
+
+export const STATE = {
+  SEO: "SEO",
+};
