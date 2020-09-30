@@ -1,71 +1,76 @@
 export function loadContentInBody(content: string) {
-    // @ts-ignore
-    document.body.insertAdjacentHTML( 'beforeend', content );
-};
-
-export function removeAllTargetBlankFromLinks(){
-    let links = document.links, i, length;
-
-    for (i = 0, length = links.length; i < length; i++) {
-        links[i].target == '_blank' && links[i].removeAttribute('target');
-    }
+  // @ts-ignore
+  document.body.insertAdjacentHTML("beforeend", content);
 }
 
-export function startSession(){
-    // @ts-ignore
-    window.sessionStarted = true;
+export function removeAllTargetBlankFromLinks() {
+  const { links } = document;
+  let i;
+  let length;
+
+  for (i = 0, length = links.length; i < length; i++) {
+    links[i].target == "_blank" && links[i].removeAttribute("target");
+  }
 }
 
-export function stopSession(){
-    // @ts-ignore
-    window.sessionStarted = false;
+export function startSession() {
+  // @ts-ignore
+  window.sessionStarted = true;
 }
 
-export function isSessionGoingOn(){
-    // @ts-ignore
-    return !!window.sessionStarted;
+export function stopSession() {
+  // @ts-ignore
+  window.sessionStarted = false;
 }
 
-export function loadCSSIfNotAlreadyLoadedForSomeReason (href: any) {
-    let ss = document.styleSheets;
-    for (let i = 0, max = ss.length; i < max; i++) {
-        if (ss[i].href == "/path/to.css")
-            return;
-    }
-    let link = document.createElement("link");
-    link.rel = "stylesheet";
-    link.href = href;
-    link.id="overlay_css";
-
-    document.getElementsByTagName("head")[0].appendChild(link);
+export function isSessionGoingOn() {
+  // @ts-ignore
+  return !!window.sessionStarted;
 }
 
-export function setAttributeForAllChildNodes(parent: any, attributeKey: string, attributeValue: string){
-    return [...parent.children].map((children: any)=>{
-        children.setAttribute(attributeKey, attributeValue);
-    });
+export function loadCSSIfNotAlreadyLoadedForSomeReason(href: any) {
+  const ss = document.styleSheets;
+  for (let i = 0, max = ss.length; i < max; i++) {
+    if (ss[i].href == "/path/to.css") return;
+  }
+  const link = document.createElement("link");
+  link.rel = "stylesheet";
+  link.href = href;
+  link.id = "overlay_css";
+
+  document.getElementsByTagName("head")[0].appendChild(link);
 }
 
-export function hideAllChildNodes(parent: any){
-    return setAttributeForAllChildNodes(parent, "data-gone", "true");
+export function setAttributeForAllChildNodes(
+  parent: any,
+  attributeKey: string,
+  attributeValue: string
+) {
+  return [...parent.children].map((children: any) => {
+    children.setAttribute(attributeKey, attributeValue);
+  });
 }
 
-export function sendPostDataWithForm(url: string, options: any = {}){
-    const form = document.createElement('form');
-    form.method = "post";
-    form.action = url;
-    form.target = "_blank";
-    const optionKeys = Object.keys(options);
-    for(let optionKey of optionKeys){
-        const hiddenField = document.createElement('input');
-        hiddenField.type = 'hidden';
-        hiddenField.name = optionKey;
-        hiddenField.value = options[optionKey];
+export function hideAllChildNodes(parent: any) {
+  return setAttributeForAllChildNodes(parent, "data-gone", "true");
+}
 
-        form.appendChild(hiddenField);
-    }
+export function sendPostDataWithForm(url: string, options: any = {}) {
+  const form = document.createElement("form");
+  form.method = "post";
+  form.action = url;
+  form.target = "_blank";
+  const optionKeys = Object.keys(options);
+  for (const optionKey of optionKeys) {
+    const hiddenField = document.createElement("input");
+    hiddenField.type = "hidden";
+    hiddenField.name = optionKey;
+    hiddenField.value = options[optionKey];
 
-    document.body.appendChild(form);
-    form.submit();
-    form.remove();
+    form.appendChild(hiddenField);
+  }
+
+  document.body.appendChild(form);
+  form.submit();
+  form.remove();
 }
