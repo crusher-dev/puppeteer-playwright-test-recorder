@@ -1,2 +1,2 @@
 Install pug-cli globally
-```npm install -g pug```
+`npm install -g pug`
