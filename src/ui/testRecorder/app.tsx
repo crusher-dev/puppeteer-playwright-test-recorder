@@ -2,7 +2,7 @@ import React from "preact/compat";
 import { useRef, useState } from "preact/hooks";
 import { addHttpToURLIfNotThere, getQueryStringParams } from "../../utils/url";
 import { sendPostDataWithForm } from "../../utils/helpers";
-import { ACTION_TYPES } from "../../constants/actionTypes";
+import { ACTION_TYPES, STATE } from "../../constants/actionTypes";
 import {
   IS_RECORDING_USING_INSPECTOR,
   IS_RECORDING_WITHOUT_INSPECTOR,
@@ -20,6 +20,8 @@ import {
   SET_DEVICE,
 } from "../../constants/domEventsToRecord";
 import { SERVER_ENDPOINT } from "../../constants/endpoints";
+import { Modal } from "./components/modal";
+import {PreactElement} from "preact/src/internal";
 
 export const ACTION_FORM_TYPE = {
   PAGE_ACTIONS: "PAGE_ACTIONS",
@@ -95,7 +97,7 @@ function Steps(props: any) {
 }
 
 function Actions(props: any) {
-  const { iframeRef, type, isShowingElementFormCallback } = props;
+  const { iframeRef, type, isShowingElementFormCallback, updateState } = props;
   const pageActions = [
     {
       id: ACTION_TYPES.INSPECT,
@@ -107,12 +109,11 @@ function Actions(props: any) {
       value: "Screenshot",
       icon: chrome.runtime.getURL("icons/action.svg"),
     },
-    // {
-    //     id: ACTION_TYPES.SEO,
-    //     value: "SEO",
-    //     icon: chrome.runtime.getURL("icons/action.svg")
-    // }
-    // ,
+    {
+      id: ACTION_TYPES.SEO,
+      value: "SEO",
+      icon: chrome.runtime.getURL("icons/action.svg"),
+    },
     // {
     //     id: ACTION_TYPES.CAPTURE_CONSOLE,
     //     value: "Console",
@@ -149,7 +150,7 @@ function Actions(props: any) {
     },
   ];
 
-  function handleActionClick(actionType: string) {
+  function handleElementActionClick(actionType: string, updateState: Function) {
     const cn = iframeRef.current.contentWindow;
 
     switch (actionType) {
@@ -172,6 +173,10 @@ function Actions(props: any) {
           },
           "*"
         );
+        break;
+      case ACTION_TYPES.SEO:
+        console.log();
+        updateState(STATE.SEO);
         break;
       case ACTION_TYPES.CAPTURE_CONSOLE:
         cn.postMessage(
@@ -234,31 +239,40 @@ function Actions(props: any) {
   const actions =
     type === ACTION_FORM_TYPE.ELEMENT_ACTIONS ? elementActions : pageActions;
 
-  for (let i = 0; i < actions.length; i += 2) {
+  for (let i = 0; i < actions.length; i+=2) {
+    const shouldAddMarginRight = i % 2 && i !== actions.length - 1;
     out.push(
       <div style={styles.actionRow}>
         <div
-          style={{ ...styles.actionItem, ...styles.oddItem }}
+          style={
+            shouldAddMarginRight
+              ? { ...styles.actionItem, ...styles.oddItem }
+              : { ...styles.actionItem}
+          }
           id={actions[i].id}
           onClick={() => {
-            handleActionClick(actions[i].id);
+            handleElementActionClick(actions[i].id, updateState);
           }}
         >
           <img style={styles.actionImage} src={actions[i].icon} />
           <span style={styles.actionText}>{actions[i].value}</span>
         </div>
-        {actions[i + 1] && (
-          <div
-            style={styles.actionItem}
-            id={actions[i + 1].id}
-            onClick={() => {
-              handleActionClick(actions[i + 1].id);
-            }}
-          >
-            <img style={styles.actionImage} src={actions[i + 1].icon} />
-            <span style={styles.actionText}>{actions[i + 1].value}</span>
-          </div>
-        )}
+          {i + 1 < actions.length && (
+              <div
+                  style={
+                      shouldAddMarginRight
+                          ? { ...styles.actionItem, ...styles.oddItem }
+                          : { ...styles.actionItem }
+                  }
+                  id={actions[i+1].id}
+                  onClick={() => {
+                      handleElementActionClick(actions[i].id, updateState);
+                  }}
+              >
+                  <img style={styles.actionImage} src={actions[i+1].icon} />
+                  <span style={styles.actionText}>{actions[i+1].value}</span>
+              </div>
+          )}
       </div>
     );
   }
@@ -396,7 +410,7 @@ function DesktopBrowser(props: any) {
     );
   }
 
-  function IframeSection() {
+  const IframeSection = ()=> {
     return (
       <div style={styles.previewBrowser}>
         {isMobile && (
@@ -447,7 +461,7 @@ function DesktopBrowser(props: any) {
     <div style={styles.mainContainer}>
       <div style={styles.browser}>
         <Toolbar />
-        <IframeSection />
+        {IframeSection()}
       </div>
     </div>
   );
@@ -598,7 +612,7 @@ function App() {
     );
   }
 
-  function RightMiddleSection() {
+  function RightMiddleSection(props: any) {
     const isElementSelected = isShowingElementForm;
     return isElementSelected ? (
       <>
@@ -607,6 +621,7 @@ function App() {
           type={ACTION_FORM_TYPE.ELEMENT_ACTIONS}
           isShowingElementFormCallback={setIsShowingElementForm}
           iframeRef={iframeRef}
+          updateState={()=>{}}
         />
       </>
     ) : (
@@ -616,22 +631,26 @@ function App() {
           type={ACTION_FORM_TYPE.PAGE_ACTIONS}
           isShowingElementFormCallback={setIsShowingElementForm}
           iframeRef={iframeRef}
+          updateState={updateState}
         />
       </>
     );
   }
+
+  const [state, updateState] = useState(null);
 
   function RightSection() {
     return (
       <div style={{ ...styles.sidebar, ...styles.paddingContainer }}>
         <div style={styles.sectionHeading}>Steps</div>
         <Steps steps={steps} />
-        <RightMiddleSection />
+        <RightMiddleSection state={state} updateState={updateState} />
         <RightBottomSection />
       </div>
     );
   }
 
+  // @ts-ignore
   return (
     <div style={styles.container}>
       <DesktopBrowser forwardRef={iframeRef} />
@@ -703,6 +722,7 @@ function App() {
         rel="stylesheet"
         href={chrome.runtime.getURL("/styles/fonts.css")}
       />
+      <Modal state={state} updateState={updateState} />
     </div>
   );
 }

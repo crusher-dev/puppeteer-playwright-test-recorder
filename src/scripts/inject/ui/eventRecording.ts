@@ -141,7 +141,7 @@ export default class EventRecording {
     this._overlayAddEventsContainer.style.display = "block";
     this.state.pinned = true;
 
-    // Increase the height of actions container to give more space for not falling out of selection.
+    // Increase the height of actions containers to give more space for not falling out of selection.
     this._addActionElement.style.height = `${
       this._overlayAddEventsContainer.getBoundingClientRect().height
     }px`;
@@ -272,10 +272,9 @@ export default class EventRecording {
 
   handleMouseOver(event: MouseEvent) {
     if (this._addActionElement) {
-
       if (
         this._addActionElement.contains(event.target) ||
-          // @ts-ignore
+        // @ts-ignore
         event.target.hasAttribute("data-recorder") ||
         this.state.pinned
       ) {
@@ -348,6 +347,7 @@ export default class EventRecording {
   }
 
   registerNodeListeners() {
+    alert("GODD");
     document.body.addEventListener("mousemove", this.handleMouseOver, true);
     document.body.addEventListener("input", this.handleInputChange, true);
     document.addEventListener("click", this.handleDocumentClick, true);
