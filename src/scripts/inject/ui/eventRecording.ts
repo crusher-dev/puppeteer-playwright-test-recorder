@@ -224,7 +224,7 @@ export default class EventRecording {
   }
 
   handleSelectedActionFromEventsList(event: any) {
-    // If its coming from testCreationWindow chromeDropdownSection use event.action
+    // If its coming from testRecorder popup use event.action
     const action = event.action
       ? event.action
       : event.target.getAttribute("data-action");

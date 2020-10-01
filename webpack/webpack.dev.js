@@ -18,11 +18,11 @@ module.exports = {
     background: [customPath, path.resolve(__dirname, "../src/background.ts")],
     popup: [
       customPath,
-      path.resolve(__dirname, "../src/ui/chromeDropdownSection/index.tsx"),
+      path.resolve(__dirname, "../src/ui/popup/index.tsx"),
     ],
-    create_test: [
+    record_test: [
       customPath,
-      path.resolve(__dirname, "../src/ui/testCreationWindow/index.tsx"),
+      path.resolve(__dirname, "../src/ui/testRecorder/index.tsx"),
     ],
   },
   plugins: [

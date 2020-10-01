@@ -62,7 +62,7 @@ class App extends Component<any, any> {
       );
       chrome.tabs.create({
         url: `${chrome.extension.getURL(
-          "testCreationWindow.html"
+          "test_recorder.html"
         )}?url=${iframeURL}&device=${selectedDevice}`,
       });
 
@@ -132,7 +132,7 @@ class App extends Component<any, any> {
         </div>
         <link
           rel="stylesheet"
-          href={chrome.runtime.getURL("/styles/chromeDropdownSection.css")}
+          href={chrome.runtime.getURL("/styles/popup.css")}
         />
         <link
           rel="stylesheet"

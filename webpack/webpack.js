@@ -10,13 +10,13 @@ const port = 3000;
 module.exports = {
   entry: {
     background: [customPath, path.resolve(__dirname, "../src/background.ts")],
-    chromeDropdown: [
+    popup: [
       customPath,
-      path.resolve(__dirname, "../src/scripts/chromeDropdownSection/index.tsx"),
+      path.resolve(__dirname, "../src/ui/popup/index.tsx"),
     ],
-    testCreationWindow: [
+    record_test: [
       customPath,
-      path.resolve(__dirname, "../src/scripts/testCreationWindow/index.tsx"),
+      path.resolve(__dirname, "../src/ui/testRecorder/index.tsx"),
     ],
   },
   plugins: [

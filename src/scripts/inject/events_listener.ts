@@ -6,11 +6,11 @@ import {
   IS_RECORDING_WITHOUT_INSPECTOR,
   NOT_RECORDING,
 } from "../../constants";
-import { ACTION_FORM_TYPE } from "../../ui/testCreationWindow/app";
+import { ACTION_FORM_TYPE } from "../../ui/testRecorder/app";
 import { ASSERT_TEXT } from "../../constants/domEventsToRecord";
 
 if (top !== self) {
-  fetch(chrome.runtime.getURL("inject.html") /* , options */)
+  fetch(chrome.runtime.getURL("iframe_inject.html") /* , options */)
     .then((response) => response.text())
     .then((html) => {
       try {

@@ -15,9 +15,9 @@
     "tabs"
   ],
   "web_accessible_resources": [
-    "inject.html",
-    "overlay.html",
-    "testCreationWindow.html",
+    "iframe_inject.html",
+    "test_recorder.html",
+    "popup.html",
     "styles/*",
     "icons/*",
     "fonts/*"
@@ -39,10 +39,10 @@
   "browser_action": {
     "default_icon": "icons/extension_icon.png",
     "default_title": "Start recording your test",
-    "default_popup": "chromeDropdown.html"
+    "default_popup": "popup.html"
   },
   "background": {
-    "page": "background.html",
+    "page": "background_script.html",
     "persistent": true
   },
   "content_security_policy": "script-src 'self' 'sha256-jpNXPlC1/SNQKoWM2XzhImd1yZRB19KfIvY+f8P+b88=' unsafe-inline http://localhost:2400 https://localhost:2400; object-src 'self'; form-action 'self' http: https:"
