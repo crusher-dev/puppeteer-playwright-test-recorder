@@ -19,7 +19,7 @@
     "child_process": "^1.0.2",
     "css-selector-tools": "^1.0.9",
     "mkdirp": "^1.0.4",
-    "preact": "^10.4.7",
+    "preact": "^10.4.8",
     "pug-cli": "^1.0.0-alpha6",
     "react-dom": "^16.13.1",
     "react-select": "^3.1.0",
