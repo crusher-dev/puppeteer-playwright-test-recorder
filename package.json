@@ -13,7 +13,7 @@
   "dependencies": {
     "@medv/finder": "^2.0.0",
     "@popperjs/core": "^2.4.4",
-    "@types/node": "^14.0.27",
+    "@types/node": "^14.6.3",
     "@types/react-select": "^3.0.19",
     "@types/uuid": "^8.0.1",
     "child_process": "^1.0.2",
