@@ -247,7 +247,7 @@ function Actions(props: any) {
           style={
             shouldAddMarginRight
               ? { ...styles.actionItem, ...styles.oddItem }
-              : { ...styles.actionItem}
+              : { ...styles.actionItem, ...styles.oddItem }
           }
           id={actions[i].id}
           onClick={() => {
@@ -262,7 +262,7 @@ function Actions(props: any) {
                   style={
                       shouldAddMarginRight
                           ? { ...styles.actionItem, ...styles.oddItem }
-                          : { ...styles.actionItem }
+                          : { ...styles.actionItem, ...styles.oddItem }
                   }
                   id={actions[i+1].id}
                   onClick={() => {
@@ -410,7 +410,7 @@ function DesktopBrowser(props: any) {
     );
   }
 
-  const IframeSection = ()=> {
+  const IframeSection = () => {
     return (
       <div style={styles.previewBrowser}>
         {isMobile && (
