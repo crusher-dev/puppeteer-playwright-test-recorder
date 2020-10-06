@@ -1,5 +1,6 @@
 export const SET_DEVICE = "SET_DEVICE";
 export const NAVIGATE_URL = "NAVIGATE_URL";
+export const VALIDATE_SEO = "VALIDATE_SEO";
 export const CLICK = "CLICK";
 export const INPUT = "INPUT";
 export const HOVER = "HOVER";

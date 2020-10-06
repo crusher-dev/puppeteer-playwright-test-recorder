@@ -1,6 +1,9 @@
 export const ACTION_TYPES = {
   INSPECT: "inspect",
   SEO: "seo",
+  GET_SEO_META: "GET_SEO_META",
+  SET_SEO_META: "SET_SEO_META",
+  ASSERT_ELEMENT: "assert_element",
   NETWORK: "network",
   CAPTURE_CONSOLE: "console",
   SCREENSHOT: "screenshot",
