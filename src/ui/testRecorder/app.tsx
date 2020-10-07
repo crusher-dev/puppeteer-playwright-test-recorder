@@ -274,7 +274,7 @@ function Actions(props: any) {
                         }
                         id={actions[i + 1].id}
                         onClick={() => {
-                            handleElementActionClick(actions[i].id, updateState);
+                            handleElementActionClick(actions[i+1].id, updateState);
                         }}
                     >
                         <img style={styles.actionImage} src={actions[i + 1].icon}/>
