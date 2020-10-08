@@ -1,12 +1,13 @@
 import {Component} from "preact";
 import React from "preact/compat";
 import {SEOModelContent} from "../containers/modal/seoModelContent";
+import {STATE} from "../../../constants/actionTypes";
 
-export class Modal extends Component<any, any> {
+export class SeoModel extends Component<any, any> {
     render() {
         const {state, seoMeta, updateState, saveSeoValidationCallback} = this.props;
         return (
-            state && (
+            state && state === STATE.SEO && (
                 <div id="modal-overlay" style={styles.modalOverlay}>
                     <SEOModelContent seoMeta={seoMeta} handleCloseCallback={(options : any) => {
                         if (!!options) {

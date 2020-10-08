@@ -12,6 +12,7 @@ import devices from "../../constants/devices";
 import userAgents from "../../constants/userAgents";
 import {
     BLACKOUT,
+    ASSERT_ELEMENT,
     CLICK,
     HOVER,
     INPUT,
@@ -20,8 +21,9 @@ import {
     SET_DEVICE, VALIDATE_SEO,
 } from "../../constants/domEventsToRecord";
 import {SERVER_ENDPOINT} from "../../constants/endpoints";
-import {Modal} from "./components/modal";
+import {SeoModel} from "./components/seoModel";
 import {PreactElement} from "preact/src/internal";
+import {AssertModel} from "./components/assertModel";
 
 export const ACTION_FORM_TYPE = {
     PAGE_ACTIONS: "PAGE_ACTIONS",
@@ -149,6 +151,11 @@ function Actions(props: any) {
             value: "Blackout",
             icon: chrome.runtime.getURL("icons/action.svg"),
         },
+        {
+            id: ASSERT_ELEMENT,
+            value: "Assert",
+            icon: chrome.runtime.getURL("icons/action.svg")
+        }
     ];
 
     function handleElementActionClick(actionType: string, updateState: Function) {
@@ -239,6 +246,9 @@ function Actions(props: any) {
                     },
                     "*"
                 );
+                break;
+            case ASSERT_ELEMENT:
+                updateState(STATE.ASSERT);
                 break;
         }
     }
@@ -497,7 +507,7 @@ function App() {
     const [isRecording, setIsRecording] = useState(false);
     const [isShowingElementForm, setIsShowingElementForm] = useState(false);
     const [isUsingElementInspector, setIsUsingElementInspector] = useState(false);
-
+    const [currentElementSelectors, setCurrentElementSelectors] = useState(null);
     const iframeRef = useRef(null);
 
     function getSteps() {
@@ -506,6 +516,12 @@ function App() {
 
     function saveSeoValidation(options: any) {
         setSteps([...getSteps(), {event_type: VALIDATE_SEO, value: options, selectors: ["body"]}] as any);
+    }
+
+    function saveAssertionCallback(options: any){
+        const cn = iframeRef.current.contentWindow;
+
+        setSteps([...getSteps(), {event_type: ASSERT_ELEMENT, value: options, selectors: currentElementSelectors}] as any);
     }
 
     messageListenerCallback = function (event: any) {
@@ -542,6 +558,7 @@ function App() {
             switch (type) {
                 case ACTION_TYPES.SHOW_ELEMENT_FORM:
                     setIsShowingElementForm(true);
+                    setCurrentElementSelectors(selectors);
                     break;
                 case ACTION_TYPES.STARTED_RECORDING_EVENTS:
                     setIsRecording(true);
@@ -592,6 +609,7 @@ function App() {
     function cancelTest() {
         if (isShowingElementForm) {
             setIsShowingElementForm(false);
+            setCurrentElementSelectors(null);
         } else {
             window.close();
         }
@@ -628,6 +646,9 @@ function App() {
         );
     }
 
+
+    const [state, updateState] = useState(null);
+
     function RightMiddleSection(props: any) {
         const isElementSelected = isShowingElementForm;
         return isElementSelected ? (
@@ -637,8 +658,7 @@ function App() {
                     type={ACTION_FORM_TYPE.ELEMENT_ACTIONS}
                     isShowingElementFormCallback={setIsShowingElementForm}
                     iframeRef={iframeRef}
-                    updateState={() => {
-                    }}
+                    updateState={updateState}
                 />
             </>
         ) : (
@@ -653,8 +673,6 @@ function App() {
             </>
         );
     }
-
-    const [state, updateState] = useState(null);
 
     function RightSection() {
         return (
@@ -739,7 +757,8 @@ function App() {
                 rel="stylesheet"
                 href={chrome.runtime.getURL("/styles/fonts.css")}
             />
-            <Modal seoMeta={seoMeta} state={state} updateState={updateState} saveSeoValidationCallback={saveSeoValidation}/>
+            <AssertModel seoMeta={seoMeta} state={state} updateState={updateState} saveAssertionCallback={saveAssertionCallback}/>
+            <SeoModel seoMeta={seoMeta} state={state} updateState={updateState} saveSeoValidationCallback={saveSeoValidation}/>
         </div>
     );
 }

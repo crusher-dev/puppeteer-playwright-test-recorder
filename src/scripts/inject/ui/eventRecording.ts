@@ -302,6 +302,7 @@ export default class EventRecording {
         // @ts-ignore
         frameId: LocalFrameStorage.get(),
         value: getSelectors(this.state.targetElement),
+        selectors: getSelectors(this.state.targetElement)
       },
       "*"
     );

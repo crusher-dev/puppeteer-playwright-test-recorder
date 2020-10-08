@@ -1,7 +1,7 @@
 import React from "preact/compat";
 import {useEffect, useState} from "preact/hooks";
 
-export function SEOModelContent({handleCloseCallback, seoMeta}: any) {
+export function AssertModalContent({handleCloseCallback, seoMeta}: any) {
     return (
         <div id="seo-modal" style={styles.modalOverlay}>
             {TopBar(handleCloseCallback)}
@@ -11,12 +11,14 @@ export function SEOModelContent({handleCloseCallback, seoMeta}: any) {
 }
 
 function Row({name, state, setState} : any) {
+    const method = state.selectedValidationMethod[name.toString().toLowerCase()];
     const onValidationMethodChange = (event: any) => {
+        console.log("Method change", event.target.value);
         setState({
             ...state,
             selectedValidationMethod: {
                 ...state.selectedValidationMethod,
-                [name.toLowerCase()]: event.target.value
+                [name.toString().toLowerCase()]: event.target.value
             }
         })
     };
@@ -26,72 +28,96 @@ function Row({name, state, setState} : any) {
             ...state,
             assertValues: {
                 ...state.assertValues,
-                [name.toLowerCase()]: event.target.value
+                [name.toString().toLowerCase()]: event.target.value
+            }
+        });
+    }
+
+    const onNameChange = (event: any)=>{
+        setState({
+            ...state,
+            attributes: {
+                ...state.attributes,
+                [name.toString().toLowerCase()]: event.target.value
             }
         });
     }
 
     return (
         <div className={"middleRow"} style={styles.middleRow}>
-            <div style={{flex: 1}}>{name}</div>
-            <select style={{...styles.select, flex: 0.5, marginRight: 108}} value={state.selectedValidationMethod[name.toLowerCase()]} onChange={onValidationMethodChange}>
+            <div style={{flex: 1}}>
+                <input onChange={onNameChange} value={state.attributes[name.toString().toLowerCase()]} style={{...styles.input}} placeholder={`Attribute here`}/>
+            </div>
+            <select style={{...styles.select, flex: 0.5, marginRight: 108}} value={state.selectedValidationMethod[name.toString().toLowerCase()]} onChange={onValidationMethodChange}>
                 <option value="matches">matches</option>
                 <option value="contains">contains</option>
                 <option value="regex">regex</option>
             </select>
-            <input onChange={onInputChange} value={state.assertValues[name.toLowerCase()]} style={{...styles.input}} placeholder={`Your assertion ${name}`}/>
+            {method === "regex" ? (
+                <textarea onChange={onInputChange} value={state.assertValues[name.toString().toLowerCase()]} style={{...styles.input}} placeholder={`Assertion value`}/>
+            ) : (
+                <input onChange={onInputChange} value={state.assertValues[name.toString().toLowerCase()]} style={{...styles.input}} placeholder={`Assertion value`}/>
+            )}
         </div>
     );
 }
 
 function MiddleSection({handleCloseCallback, seoMeta}: any) {
     const [state, setState] = useState({
+        rows: [],
         selectedValidationMethod: {
-            title: "matches",
-            description: "matches"
+
         },
         assertValues: {
-            title: null,
-            description: null
+
+        },
+        attributes: {
+
         }
     });
 
-    useEffect(()=>{
-        setState({
-            ...state,
-            assertValues: {
-                ...state.assertValues,
-                title: state.assertValues.title ? state.assertValues.title : seoMeta.title,
-                description: state.assertValues.description ? state.assertValues.description : seoMeta.description
-            }
-        })
-    },[seoMeta]);
-
     const saveSeoAssertion = ()=>{
         const out = [];
-
-        if(!!state.assertValues.title){
-            out.push({name: "title", method: state.assertValues.title, assertValue: state.assertValues.title});
+        console.log(state);
+        for(let i = 0; i < state.rows.length; i++){
+            const key = state.rows[i].id.toString();
+            // @ts-ignore
+            if(state.assertValues[key] && state.selectedValidationMethod[key] && state.attributes[key]){
+                // @ts-ignore
+                out.push({value: state.assertValues[key], method: state.selectedValidationMethod[key], attribute: state.attributes[key]});
+            } else {
+                alert("Please fill all the inputs provided");
+                return;
+            }
         }
-        if(!!state.assertValues.description){
-            out.push({name: "description", method: state.assertValues.description, assertValue: state.assertValues.description});
-        }
-
-        if(!state.assertValues.title && !state.assertValues.description){
-            alert("No values provided");
-        } else {
-            handleCloseCallback(out);
-        }
+        handleCloseCallback(out);
     };
 
+    const addRow = () => {
+        const key = Date.now();
+        setState({
+            ...state,
+            rows: [
+                ...state.rows,
+                {id: key}
+            ],
+            selectedValidationMethod: {
+                ...state.selectedValidationMethod,
+                [key]: "matches"
+            }
+        })
+    }
 
+    const rowsOut = state.rows.map(row=>{
+        return <Row name={row.id} key={row.id} state={state} setState={setState}/>
+    });
 
     return (
         <>
             <div className={"middle-section"} style={styles.middleSection}>
-                <Row name={"Title"} key={"title"} state={state} setState={setState}/>
-                <Row name={"Description"} key={"description"} state={state} setState={setState}/>
+                {rowsOut}
             </div>
+            <div style={{cursor: "pointer"}} onClick={addRow}>+ Add a row</div>
             <div style={styles.bottomBar}>
                 <BulbIcon style={{marginRight: 4}}/>
                 <div id={"modal-generate-test"} style={styles.generateText}>
@@ -113,10 +139,10 @@ function TopBar(handleClick: any) {
                 <BrowserIcons height={37} width={37} style={{marginRight: 20}}/>
                 <div className="heading_container" style={styles.headingContainer}>
                     <div className={"heading_title"} style={styles.heading}>
-                        SEO Checks
+                        Assert element
                     </div>
                     <div className={"heading_sub_title"} style={styles.subHeading}>
-                        These are run when page is loaded
+                        These are used to assert the selected element
                     </div>
                 </div>
             </div>

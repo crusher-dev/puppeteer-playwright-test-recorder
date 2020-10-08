@@ -22,4 +22,5 @@ export const ACTION_TYPES = {
 
 export const STATE = {
   SEO: "SEO",
+  ASSERT: "ASSERT"
 };

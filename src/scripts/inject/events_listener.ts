@@ -7,7 +7,7 @@ import {
     NOT_RECORDING,
 } from "../../constants";
 import {ACTION_FORM_TYPE} from "../../ui/testRecorder/app";
-import {ASSERT_TEXT} from "../../constants/domEventsToRecord";
+import {ASSERT_ELEMENT} from "../../constants/domEventsToRecord";
 
 if (top !== self) {
     fetch(chrome.runtime.getURL("iframe_inject.html") /* , options */)
@@ -81,7 +81,7 @@ if (top !== self) {
                 }
             } else if (formType === ACTION_FORM_TYPE.ELEMENT_ACTIONS) {
                 recordingOverlay.hideEventsBoxIfShown();
-                if (type === ASSERT_TEXT) {
+                if (type === ASSERT_ELEMENT) {
                 } else {
                     recordingOverlay.handleSelectedActionFromEventsList({action: type});
                 }
