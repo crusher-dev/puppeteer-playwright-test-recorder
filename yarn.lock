@@ -1203,10 +1203,10 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react-select@^3.0.19":
-  version "3.0.19"
-  resolved "https://registry.yarnpkg.com/@types/react-select/-/react-select-3.0.19.tgz#f73b04b8113451b0597df8a8315f9bf8ce03eb44"
-  integrity sha512-d+6qtfFXZeIOAABlVL1e50RZn8ctOABE4tFDxM6KW4lKuXgTTgLVrSik5AX9XjBjV7N80FtS6GTN/WeoXL9Jww==
+"@types/react-select@^3.0.20":
+  version "3.0.21"
+  resolved "https://registry.yarnpkg.com/@types/react-select/-/react-select-3.0.21.tgz#089e1caa98dd653347cf4057b087957d26580d67"
+  integrity sha512-jVtukxaARMQCJC74ikGzpxrzxDFPkcGEwLsFIsc/bAn2rcBUlJ0WgP71ShUc/Q0nnk4ClZn2jBm2tbh6HtxB3A==
   dependencies:
     "@types/react" "*"
     "@types/react-dom" "*"
