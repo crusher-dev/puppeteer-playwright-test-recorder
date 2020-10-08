@@ -101,3 +101,10 @@ export function createNewTab(path: string) {
     });
   });
 }
+
+export function getAllAttributes(element: any) {
+  const attributeNamesArr : Array<string> = element.getAttributeNames();
+  return attributeNamesArr.map(attributeName => {
+    return {name: attributeName, value: element.getAttribute(attributeName)}
+  })
+}

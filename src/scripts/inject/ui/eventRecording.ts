@@ -14,6 +14,7 @@ import EventsController from "../eventsController";
 import LocalFrameStorage from "../../../utils/frameStorage";
 import { ACTION_TYPES } from "../../../constants/actionTypes";
 import { getSelectors } from "../../../utils/selector";
+import {getAllAttributes} from "../../../utils/helpers";
 
 const { createPopper } = require("@popperjs/core");
 
@@ -302,7 +303,8 @@ export default class EventRecording {
         // @ts-ignore
         frameId: LocalFrameStorage.get(),
         value: getSelectors(this.state.targetElement),
-        selectors: getSelectors(this.state.targetElement)
+        selectors: getSelectors(this.state.targetElement),
+        attributes: getAllAttributes(this.state.targetElement)
       },
       "*"
     );

@@ -6,12 +6,12 @@ import {AssertModalContent} from "../containers/modal/assertModelContent";
 
 export class AssertModel extends Component<any, any> {
     render() {
-        const {state, seoMeta, updateState, saveAssertionCallback} = this.props;
+        const {state, seoMeta, attributes, updateState, saveAssertionCallback} = this.props;
 
         return (
             state && state === STATE.ASSERT && (
                 <div id="modal-overlay" style={styles.modalOverlay}>
-                    <AssertModalContent seoMeta={seoMeta} handleCloseCallback={(options : any) => {
+                    <AssertModalContent attributes={attributes} seoMeta={seoMeta} handleCloseCallback={(options : any) => {
                         if (!!options) {
                             saveAssertionCallback(options);
                         }

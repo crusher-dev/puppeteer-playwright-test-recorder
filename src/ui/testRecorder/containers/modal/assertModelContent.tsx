@@ -1,16 +1,16 @@
 import React from "preact/compat";
 import {useEffect, useState} from "preact/hooks";
 
-export function AssertModalContent({handleCloseCallback, seoMeta}: any) {
+export function AssertModalContent({handleCloseCallback, seoMeta, attributes}: any) {
     return (
         <div id="seo-modal" style={styles.modalOverlay}>
             {TopBar(handleCloseCallback)}
-            <MiddleSection seoMeta={seoMeta} handleCloseCallback={handleCloseCallback}/>
+            <MiddleSection attributes={attributes} seoMeta={seoMeta} handleCloseCallback={handleCloseCallback}/>
         </div>
     );
 }
 
-function Row({name, state, setState} : any) {
+function Row({name, state, setState, attributes} : any) {
     const method = state.selectedValidationMethod[name.toString().toLowerCase()];
     const onValidationMethodChange = (event: any) => {
         console.log("Method change", event.target.value);
@@ -34,19 +34,32 @@ function Row({name, state, setState} : any) {
     }
 
     const onNameChange = (event: any)=>{
+        console.log(event);
         setState({
             ...state,
             attributes: {
                 ...state.attributes,
-                [name.toString().toLowerCase()]: event.target.value
+                [name.toString().toLowerCase()]: event.target.options[event.target.selectedIndex].value
             }
         });
     }
 
+    const attributesOut = attributes ? attributes.map((attr: any)=>{
+        return (<option name={attr.name} value={attr.name}>{attr.name}</option>)
+    }) : [];
+
+    const value = state.assertValues[name.toString().toLowerCase()];
+    const currentNameIndex = attributes.findIndex((attribute : any) => {
+        return attribute.name === state.attributes[name.toString().toLowerCase()];
+    })
+
+    console.log(state);
     return (
         <div className={"middleRow"} style={styles.middleRow}>
             <div style={{flex: 1}}>
-                <input onChange={onNameChange} value={state.attributes[name.toString().toLowerCase()]} style={{...styles.input}} placeholder={`Attribute here`}/>
+                <select onChange={onNameChange} style={{...styles.select}} value={state.attributes[name.toString().toLowerCase()]}>
+                    {attributesOut}
+                </select>
             </div>
             <select style={{...styles.select, flex: 0.5, marginRight: 108}} value={state.selectedValidationMethod[name.toString().toLowerCase()]} onChange={onValidationMethodChange}>
                 <option value="matches">matches</option>
@@ -54,15 +67,15 @@ function Row({name, state, setState} : any) {
                 <option value="regex">regex</option>
             </select>
             {method === "regex" ? (
-                <textarea onChange={onInputChange} value={state.assertValues[name.toString().toLowerCase()]} style={{...styles.input}} placeholder={`Assertion value`}/>
+                <textarea onChange={onInputChange} value={value} style={{...styles.input}} placeholder={`Assertion value`}/>
             ) : (
-                <input onChange={onInputChange} value={state.assertValues[name.toString().toLowerCase()]} style={{...styles.input}} placeholder={`Assertion value`}/>
+                <input onChange={onInputChange} value={value ? value : attributes[currentNameIndex === -1 ? 0 : currentNameIndex].value} style={{...styles.input}} placeholder={`Assertion value`}/>
             )}
         </div>
     );
 }
 
-function MiddleSection({handleCloseCallback, seoMeta}: any) {
+function MiddleSection({handleCloseCallback, seoMeta, attributes}: any) {
     const [state, setState] = useState({
         rows: [],
         selectedValidationMethod: {
@@ -109,7 +122,7 @@ function MiddleSection({handleCloseCallback, seoMeta}: any) {
     }
 
     const rowsOut = state.rows.map(row=>{
-        return <Row name={row.id} key={row.id} state={state} setState={setState}/>
+        return <Row name={row.id} attributes={attributes} key={row.id} state={state} setState={setState}/>
     });
 
     return (

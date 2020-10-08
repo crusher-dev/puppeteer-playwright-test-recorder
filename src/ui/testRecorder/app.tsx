@@ -508,6 +508,8 @@ function App() {
     const [isShowingElementForm, setIsShowingElementForm] = useState(false);
     const [isUsingElementInspector, setIsUsingElementInspector] = useState(false);
     const [currentElementSelectors, setCurrentElementSelectors] = useState(null);
+    const [currentElementAttributes, setCurrentElementAttributes] = useState(null);
+
     const iframeRef = useRef(null);
 
     function getSteps() {
@@ -559,6 +561,7 @@ function App() {
                 case ACTION_TYPES.SHOW_ELEMENT_FORM:
                     setIsShowingElementForm(true);
                     setCurrentElementSelectors(selectors);
+                    setCurrentElementAttributes(event.data.attributes);
                     break;
                 case ACTION_TYPES.STARTED_RECORDING_EVENTS:
                     setIsRecording(true);
@@ -610,6 +613,7 @@ function App() {
         if (isShowingElementForm) {
             setIsShowingElementForm(false);
             setCurrentElementSelectors(null);
+            setCurrentElementAttributes(null);
         } else {
             window.close();
         }
@@ -757,7 +761,7 @@ function App() {
                 rel="stylesheet"
                 href={chrome.runtime.getURL("/styles/fonts.css")}
             />
-            <AssertModel seoMeta={seoMeta} state={state} updateState={updateState} saveAssertionCallback={saveAssertionCallback}/>
+            <AssertModel attributes={currentElementAttributes} seoMeta={seoMeta} state={state} updateState={updateState} saveAssertionCallback={saveAssertionCallback}/>
             <SeoModel seoMeta={seoMeta} state={state} updateState={updateState} saveSeoValidationCallback={saveSeoValidation}/>
         </div>
     );
