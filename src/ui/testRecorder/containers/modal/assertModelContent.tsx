@@ -10,7 +10,7 @@ export function AssertModalContent({handleCloseCallback, seoMeta, attributes}: a
     );
 }
 
-function Row({name, state, setState, attributes} : any) {
+function Row({name, state, setState, attributes, isValid}: any) {
     const method = state.selectedValidationMethod[name.toString().toLowerCase()];
     const onValidationMethodChange = (event: any) => {
         console.log("Method change", event.target.value);
@@ -23,7 +23,7 @@ function Row({name, state, setState, attributes} : any) {
         })
     };
 
-    const onInputChange = (event: any)=>{
+    const onInputChange = (event: any) => {
         setState({
             ...state,
             assertValues: {
@@ -33,7 +33,7 @@ function Row({name, state, setState, attributes} : any) {
         });
     }
 
-    const onNameChange = (event: any)=>{
+    const onNameChange = (event: any) => {
         console.log(event);
         setState({
             ...state,
@@ -44,32 +44,42 @@ function Row({name, state, setState, attributes} : any) {
         });
     }
 
-    const attributesOut = attributes ? attributes.map((attr: any)=>{
+    const attributesOut = attributes ? attributes.map((attr: any) => {
         return (<option name={attr.name} value={attr.name}>{attr.name}</option>)
     }) : [];
 
     const value = state.assertValues[name.toString().toLowerCase()];
-    const currentNameIndex = attributes.findIndex((attribute : any) => {
+    const currentNameIndex = attributes.findIndex((attribute: any) => {
         return attribute.name === state.attributes[name.toString().toLowerCase()];
     })
 
-    console.log(state);
     return (
         <div className={"middleRow"} style={styles.middleRow}>
-            <div style={{flex: 1}}>
-                <select onChange={onNameChange} style={{...styles.select}} value={state.attributes[name.toString().toLowerCase()]}>
+            <div style={{flex: 1, display: "flex", alignItems: "center"}}>
+                <select onChange={onNameChange} style={{...styles.select}}
+                        value={state.attributes[name.toString().toLowerCase()]}>
                     {attributesOut}
                 </select>
+                {isValid ? (
+                    <img src={chrome.runtime.getURL("icons/correct.svg")} style={{width: "1.4rem", marginLeft: "1.1rem"}}/>
+                ) : (
+                    <img src={chrome.runtime.getURL("icons/cross.svg")} style={{width: "0.9rem", marginLeft: "1.1rem"}}/>
+                )}
             </div>
-            <select style={{...styles.select, flex: 0.5, marginRight: 108}} value={state.selectedValidationMethod[name.toString().toLowerCase()]} onChange={onValidationMethodChange}>
+            <select style={{...styles.select, flex: 0.5, marginRight: 108}}
+                    value={state.selectedValidationMethod[name.toString().toLowerCase()]}
+                    onChange={onValidationMethodChange}>
                 <option value="matches">matches</option>
                 <option value="contains">contains</option>
                 <option value="regex">regex</option>
             </select>
             {method === "regex" ? (
-                <textarea onChange={onInputChange} value={value} style={{...styles.input}} placeholder={`Assertion value`}/>
+                <textarea onChange={onInputChange} value={value} style={{...styles.input}}
+                          placeholder={`Assertion value`}/>
             ) : (
-                <input onChange={onInputChange} value={value ? value : attributes[currentNameIndex === -1 ? 0 : currentNameIndex].value} style={{...styles.input}} placeholder={`Assertion value`}/>
+                <input onChange={onInputChange}
+                       value={value ? value : (value === "" ? "" : attributes[currentNameIndex === -1 ? 0 : currentNameIndex].value)}
+                       style={{...styles.input}} placeholder={`Assertion value`}/>
             )}
         </div>
     );
@@ -78,24 +88,19 @@ function Row({name, state, setState, attributes} : any) {
 function MiddleSection({handleCloseCallback, seoMeta, attributes}: any) {
     const [state, setState] = useState({
         rows: [],
-        selectedValidationMethod: {
-
-        },
-        assertValues: {
-
-        },
-        attributes: {
-
-        }
+        selectedValidationMethod: {},
+        assertValues: {},
+        attributes: {},
+        validMap: {}
     });
 
-    const saveSeoAssertion = ()=>{
+    const saveSeoAssertion = () => {
         const out = [];
-        console.log(state);
-        for(let i = 0; i < state.rows.length; i++){
+
+        for (let i = 0; i < state.rows.length; i++) {
             const key = state.rows[i].id.toString();
             // @ts-ignore
-            if(state.assertValues[key] && state.selectedValidationMethod[key] && state.attributes[key]){
+            if (state.assertValues[key] && state.selectedValidationMethod[key] && state.attributes[key]) {
                 // @ts-ignore
                 out.push({value: state.assertValues[key], method: state.selectedValidationMethod[key], attribute: state.attributes[key]});
             } else {
@@ -105,6 +110,62 @@ function MiddleSection({handleCloseCallback, seoMeta, attributes}: any) {
         }
         handleCloseCallback(out);
     };
+
+    const validator = (rowValues: any) => {
+        const validMap = rowValues.reduce((prev : any, current : any )=>{
+            return {
+                ...prev,
+                [current.id]: true
+            }
+        }, {});
+        for (let rowValue of rowValues) {
+            const {id, value, method, attribute: attributeName} = rowValue;
+            const attributeInfo = attributes.find((_attribute : any) => {
+                return _attribute.name === attributeName
+            });
+            switch (method) {
+                case "matches":
+                    // @ts-ignore
+                    if(attributeInfo && attributeInfo.value === value){
+                    } else {
+                        validMap[id] = false;
+                    }
+                    break;
+                case "regex":
+                    try{
+                        const rgx = new RegExp(value);
+                        if(rgx.test(attributeInfo.value)){
+
+                        } else{
+                            validMap[id] = false;
+                        }
+                    } catch(err){
+                        validMap[id] = false;
+                    }
+                    break;
+                case "contains":
+                    if(attributeInfo && attributeInfo.value.includes(value)){
+                    } else {
+                        validMap[id] = false;
+                    }
+                    break;
+            }
+        }
+        return validMap;
+    }
+
+    const setStateMiddleware = (newState: any) => {
+        const out = [];
+
+        for (let i = 0; i < state.rows.length; i++) {
+            const key = state.rows[i].id.toString();
+
+            // @ts-ignore
+            out.push({ id: key, value: newState.assertValues[key], method: newState.selectedValidationMethod[key], attribute: newState.attributes[key]});
+        }
+        const validMap = validator(out);
+        setState({...newState, validMap: validMap});
+    }
 
     const addRow = () => {
         const key = Date.now();
@@ -117,12 +178,21 @@ function MiddleSection({handleCloseCallback, seoMeta, attributes}: any) {
             selectedValidationMethod: {
                 ...state.selectedValidationMethod,
                 [key]: "matches"
+            },
+            attributes: {
+                ...state.attributes,
+                [key]: attributes[0].name
+            },
+            validMap: {
+                ...state.validMap,
+                [key]: true
             }
         })
     }
 
-    const rowsOut = state.rows.map(row=>{
-        return <Row name={row.id} attributes={attributes} key={row.id} state={state} setState={setState}/>
+    const rowsOut = state.rows.map(row => {
+        //@ts-ignore
+        return <Row isValid={state.validMap[row.id]} name={row.id} attributes={attributes} key={row.id} state={state} setState={setStateMiddleware}/>
     });
 
     return (
@@ -161,7 +231,7 @@ function TopBar(handleClick: any) {
             </div>
             <div
                 id="close-button"
-                onClick={()=> handleClick()}
+                onClick={() => handleClick()}
                 style={{cursor: "pointer"}}
             >
                 <CloseIcon/>
